@@ -1,0 +1,19 @@
+Load (LD): Load data from memory into the systolic array.
+
+Store (ST): Store data from the systolic array back to memory.
+
+Matrix Multiply (MATMUL): Perform matrix multiplication.
+
+Add (ADD): Perform element-wise addition.
+
+Multiply (MUL): Perform element-wise multiplication.
+
+Broadcast (BROADCAST): Broadcast a value or vector to all PEs.
+
+Synchronize (SYNC): Synchronize the operations of all PEs.
+
+
+
+instruction word might have to be 14 bytes long.... no way. need to make it more minimal
+
+
