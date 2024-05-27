@@ -1,28 +1,55 @@
+/* 
+This is the highest level module
+*/
+
 module TPU (
     input wire clk,
     input wire rst,
-    input wire [31:0] instruction,
-    // Other inputs and outputs
+    input wire [15:0] instruction
 );
 
-    // Control signals
-    wire load, store, broadcast, sync, matmul, add, mul;
+    wire load, store, matmul, broadcast;
+    wire [15:0] addr, data_in, data_out, weight_out;
 
-    // Instantiate the Control Unit
+    // Instantiate Control Unit
     ControlUnit cu (
+        // inputs
         .clk(clk),
         .rst(rst),
         .instruction(instruction),
-        .load(load), //output
-        .store(store), //output
-        .broadcast(broadcast), //output
-        .sync(sync), //output 
-        .matmul(matmul), //output
-        .add(add), //output
-        .mul(mul) //output
+        // outputs
+        .load(load),
+        .store(store), 
+        .matmul(matmul),  
+        .broadcast(broadcast)
     );
 
-    // Instantiate Systolic Array and Memory Interface
-    // Add the rest of integration code here
+    // Instantiate Memory Interface
+        MemoryInterface mi (
+        // inputs
+        .clk(clk),
+        .rst(rst),
+        .addr(addr),
+        .data_in(data_in),
+        .load(load),
+        .store(store),
+        .read_weights(broadcast),
+        // outputs
+        .data_out(data_out), 
+        .weight_out(weight_out)
+    );
+
+    // Instantiate Systolic Array
+    SystolicArray sa (
+        // inputs
+        .clk(clk),
+        .rst(rst),
+        .matmul_convolve(matmul),
+        .data_in(data_out), 
+        .weights(weight_out), 
+        // output
+        .out(data_in)
+    );
 
 endmodule
+
