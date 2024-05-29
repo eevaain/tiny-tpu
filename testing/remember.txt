@@ -1,0 +1,3 @@
+iverilog -o testbench tb_processing_element.v processing_element.v
+
+vvp testbench

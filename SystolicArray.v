@@ -1,46 +1,60 @@
-module SystolicArray (
+module SystolicArray #(
+    parameter N = `N
+    parameter DATA_WIDTH = `DATA_W
+)(
     input wire clk,
     input wire rst,
-    input wire matmul_convolve,
-    input wire [`DATA_W-1:0] data_in,
-    input wire [`DATA_W-1:0] weights,
-    output wire [`DATA_W-1:0] out
+    input wire matmul,  // Control signal for matrix multiplication
+    input wire [DATA_WIDTH-1:0] a [N-1:0][N-1:0],  // Input matrix A
+    input wire [DATA_WIDTH-1:0] b [N-1:0][N-1:0],  // Input matrix B
+    output reg [(2*DATA_WIDTH)-1:0] c [N-1:0][N-1:0]  // Output matrix C
 );
-    parameter ARRAY_SIZE = 4; // Adjust as necessary
 
-    wire [`DATA_W-1:0] x_internal [0:ARRAY_SIZE][0:ARRAY_SIZE-1];
-    wire [`DATA_W-1:0] partial_sums [0:ARRAY_SIZE][0:ARRAY_SIZE-1];
+    // Internal wires for interconnecting PEs
+    wire [DATA_WIDTH-1:0] x_inter [N-1:0][N:0];  // x_in and x_out connections for each PE
+    wire [DATA_WIDTH-1:0] y_inter [N:0][N-1:0];  // y_in and y_out connections for each PE
+    wire [2*DATA_WIDTH-1:0] partial_sums [N-1:0][N-1:0]; // Partial sum connections
 
     genvar i, j;
     generate
-        for (i = 0; i < ARRAY_SIZE; i = i + 1) begin : row
-            for (j = 0; j < ARRAY_SIZE; j = j + 1) begin : col
-                if (j == 0) begin
-                    assign x_internal[i][j] = data_in; // Initial input from data_in
-                end else begin
-                    assign x_internal[i][j] = x_internal[i][j-1]; // Data flow in rows
-                end
-
-                if (i == 0) begin
-                    assign partial_sums[i][j] = 0; // Initial partial sum is zero for the first row
-                end
-
-                PE pe_inst (
+        for (i = 0; i < N; i = i + 1) begin : row
+            for (j = 0; j < N; j = j + 1) begin : col
+                PE #(
+                    .DATA_WIDTH(DATA_WIDTH)
+                ) pe_inst (
                     .clk(clk),
                     .rst(rst),
-                    .x_in(x_internal[i][j]),
-                    .weight(weights), // Weight input from weights array
-                    .partial_sum_in(partial_sums[i][j]),
-                    .x_out(x_internal[i][j+1]), // Pass to the next PE in the row
-                    .partial_sum_out(partial_sums[i+1][j]) // Pass to the next PE in the column
+                    .x_in(x_inter[i][j]),
+                    .y_in(y_inter[i][j]),
+                    .partial_sum_in((j == 0) ? 0 : partial_sums[i][j-1]),
+                    .x_out(x_inter[i][j+1]),
+                    .y_out(y_inter[i+1][j]),
+                    .partial_sum_out(partial_sums[i][j])
                 );
             end
         end
     endgenerate
 
-    generate
-        for (j = 0; j < ARRAY_SIZE; j = j + 1) begin
-            assign out = partial_sums[ARRAY_SIZE][j]; // Output the final sums
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            for (int i = 0; i < N; i = i + 1) begin
+                for (int j = 0; j < N; j = j + 1) begin
+                    c[i][j] <= 0;
+                end
+            end
+        end else if (matmul) begin
+            // Load inputs into internal wires
+            for (int i = 0; i < N; i = i + 1) begin
+                x_inter[i][0] <= a[i][0];
+                y_inter[0][i] <= b[0][i];
+            end
+
+            // Store results from partial sums
+            for (int i = 0; i < N; i = i + 1) begin
+                for (int j = 0; j < N; j = j + 1) begin
+                    c[i][j] <= partial_sums[i][j];
+                end
+            end
         end
-    endgenerate
+    end
 endmodule

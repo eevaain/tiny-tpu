@@ -1,42 +1,45 @@
-/*
-This module can read weights from an external memory...
-... and make them available to the systolic array.
+`define DATA_W 16
+`define N 2
 
-*/
-
-module MemoryInterface (
+module MemoryInterface #(
+    parameter N = `N
+    parameter DATA_WIDTH = `DATA_W
+)(
     input wire clk,
     input wire rst,
-    input wire [15:0] addr,
-    input wire [`DATA_W-1:0] data_in,
-    input wire load,             // Read from host memory
-    input wire store,            // Write to host memory
-    input wire read_weights,     // Read weights from weight memory
+    input wire [$clog2(N*N)-1:0] addr_top,  // Address for top matrix
+    input wire [$clog2(N*N)-1:0] addr_left, // Address for left matrix
+    input wire [DATA_WIDTH-1:0] data_in,  // Data input for store operation
+    input wire load,                // Load control signal
+    input wire store,               // Store control signal
 
-    output reg [`DATA_W-1:0] data_out,
-    output reg [`DATA_W-1:0] weight_out
+    output reg [DATA_WIDTH-1:0] data_out_top [N-1:0],  // Data output for top matrix
+    output reg [DATA_WIDTH-1:0] data_out_left [N-1:0]  // Data output for left matrix
 );
-    reg [`DATA_W-1:0] host_memory [0:1023];  // Example memory size
-    reg [`DATA_W-1:0] weight_memory [0:255]; // Example weight memory size
+
+    // Memory for top and left matrices with sufficient size for NxN elements
+    reg [DATA_WIDTH-1:0] host_memory_top [0:N*N-1];  
+    reg [DATA_WIDTH-1:0] host_memory_left [0:N*N-1]; 
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            data_out <= 0;
-            weight_out <= 0;
+            for (int i = 0; i < N; i = i + 1) begin
+                data_out_top[i] <= 0;
+                data_out_left[i] <= 0;
+            end
         end else begin
             if (load) begin
-                data_out <= host_memory[addr];  // Read data from host memory
+                for (int i = 0; i < N; i = i + 1) begin
+                    data_out_top[i] <= host_memory_top[addr_top + i];  // Read data from top matrix memory
+                    data_out_left[i] <= host_memory_left[addr_left + i];  // Read data from left matrix memory
+                end
             end
             if (store) begin
-                host_memory[addr] <= data_in;  // Write data to host memory
-            end
-            if (read_weights) begin
-                weight_out <= weight_memory[addr];  // Read weights from weight memory
+                for (int i = 0; i < N; i = i + 1) begin
+                    host_memory_top[addr_top + i] <= data_in;  // Store data_in to top memory
+                    host_memory_left[addr_left + i] <= data_in; // Store data_in to left memory
+                end
             end
         end
     end
 endmodule
-
-
-
-

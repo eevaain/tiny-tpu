@@ -1,15 +1,17 @@
-/* 
+/*
 This is the highest level module
 */
 
 module TPU (
     input wire clk,
     input wire rst,
-    input wire [15:0] instruction
+    input wire [15:0] instruction,
+    input wire [`DATA_W-1:0] matrix_top [0:ARRAY_SIZE-1],  // Direct input for top matrix
+    input wire [`DATA_W-1:0] matrix_left [0:ARRAY_SIZE-1]  // Direct input for left matrix
 );
 
-    wire load, store, matmul, broadcast;
-    wire [15:0] addr, data_in, data_out, weight_out;
+    wire load, store, matmul;
+    wire [`DATA_W-1:0] data_in, data_out_top, data_out_left;
 
     // Instantiate Control Unit
     ControlUnit cu (
@@ -20,23 +22,22 @@ module TPU (
         // outputs
         .load(load),
         .store(store), 
-        .matmul(matmul),  
-        .broadcast(broadcast)
+        .matmul(matmul)
     );
 
     // Instantiate Memory Interface
-        MemoryInterface mi (
+    MemoryInterface mi (
         // inputs
         .clk(clk),
         .rst(rst),
-        .addr(addr),
+        .matrix_top(matrix_top),     // Direct input for top matrix
+        .matrix_left(matrix_left),   // Direct input for left matrix
         .data_in(data_in),
-        .load(load),
+        .load(load),  // Single load signal for both matrices
         .store(store),
-        .read_weights(broadcast),
         // outputs
-        .data_out(data_out), 
-        .weight_out(weight_out)
+        .data_out_top(data_out_top), 
+        .data_out_left(data_out_left)
     );
 
     // Instantiate Systolic Array
@@ -44,12 +45,11 @@ module TPU (
         // inputs
         .clk(clk),
         .rst(rst),
+        .data_in_top(data_out_top), 
+        .data_in_left(data_out_left), 
         .matmul_convolve(matmul),
-        .data_in(data_out), 
-        .weights(weight_out), 
         // output
-        .out(data_in)
+        .out(data_in)  // Resulting data to be stored in memory
     );
 
 endmodule
-
