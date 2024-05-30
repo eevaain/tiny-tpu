@@ -1,3 +1,6 @@
 iverilog -o testbench tb_processing_element.v processing_element.v
+iverilog -o testbench tb_systolic_array.v systolic_array.v processing_element.v
 
 vvp testbench
+
+$finish

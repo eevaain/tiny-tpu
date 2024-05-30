@@ -1,29 +1,37 @@
 module processing_element (
   input clk,
   input reset,
-  input [15:0] a_in,  // Input A from left neighbor
-  input [15:0] b_in,  // Input B from top neighbor
+  input load_weight,       // Signal to load weight
+  input valid,             // Valid signal indicating new data is available
 
-  input [31:0] c_in,  // Accumulated sum from top neighbor
-  output reg [15:0] a_out, // Output A to right neighbor
-  output reg [15:0] b_out, // Output B to bottom neighbor
-  output reg [31:0] c_out  // Output C to bottom neighbor
+  input [15:0] a_in,       // Input A from left neighbor
+  input [15:0] weight,     // Weight input
+  input [31:0] acc_in,     // Accumulated value from the PE above
+
+  output reg [15:0] a_out,    // Output A to right neighbor
+  output reg [15:0] w_out,    // Weight output
+  output reg [31:0] acc_out   // Accumulated value to the PE below
 );
-  reg [31:0] product;
+  reg [15:0] weight_reg; // Register to hold the stationary weight
 
   always @(posedge clk or posedge reset) begin
     if (reset) begin
       a_out <= 16'b0;
-      b_out <= 16'b0;
-      c_out <= 32'b0;
-      product <= 32'b0;
+      acc_out <= 32'b0;
+      weight_reg <= 16'b0;
     end else begin
-      // the cells stores the product of the two inputs, and adds it to the previous product
-      product <= a_in * b_in;
-      c_out <= c_in + product;
-      // the same inputs into the element immediately become the outputs
-      a_out <= a_in; 
-      b_out <= b_in;
+      if (load_weight) begin
+        // Load the weight when the load_weight signal is high
+        weight_reg <= weight;
+      end
+      if (valid) begin
+        // Calculate the new accumulated value
+        acc_out <= acc_in + (a_in * weight_reg);
+        // Propagate input A to output A
+        a_out <= a_in;
+        // Propagate weight to output w_out
+        w_out <= weight_reg; 
+      end
     end
   end
 endmodule
