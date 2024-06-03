@@ -67,6 +67,9 @@ module tb_top_level_module;
     load_weight = 0;
 
 
+  // TODO: figure out how to load in new matrix inputs EVERY CLOCK CYCLE. 
+  // ^^ referring to a_in1 and a_in2 (but without manual loading like below)
+
     // Apply the 2x2 matrix inputs
     valid = 1;
     // First clock cycle - inputs for the top-left and bottom-left PEs
@@ -108,6 +111,8 @@ module tb_top_level_module;
     // valid = 0;
     #10;
     #10;
+    #10;
+  
 
 
 
