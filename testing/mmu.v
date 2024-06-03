@@ -1,4 +1,4 @@
-module systolic_array(
+module mmu(
   input clk,
   input reset,
   input load_weight,    // Signal to load weight
@@ -6,13 +6,17 @@ module systolic_array(
 
   input [15:0] a_in1,   // Input A for PE(0,0)
   input [15:0] a_in2,   // Input A for PE(1,0)
+
   input [15:0] weight1, // Weight for PE(0,0)
   input [15:0] weight2, // Weight for PE(0,1)
   input [15:0] weight3, // Weight for PE(1,0)
   input [15:0] weight4, // Weight for PE(1,1)
 
+  // i dont think i need these two?
   output [15:0] a_out1, // Output A from PE(0,1)
   output [15:0] a_out2, // Output A from PE(1,1)
+
+  // these values need to be stored in a register in matrix format
   output [31:0] acc_out1, // Accumulated value from PE(1,0)
   output [31:0] acc_out2  // Accumulated value from PE(1,1)
 );

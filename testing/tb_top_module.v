@@ -1,6 +1,6 @@
 `timescale 1ns / 1ns
 
-module tb_systolic_array;
+module tb_top_level_module;
   // Inputs
   reg clk;
   reg reset;
@@ -15,13 +15,11 @@ module tb_systolic_array;
   reg [15:0] weight4;
 
   // Outputs
-  wire [15:0] a_out1;
-  wire [15:0] a_out2;
   wire [31:0] acc_out1;
   wire [31:0] acc_out2;
 
-  // Instantiate the systolic_array_2x2 module
-  systolic_array uut (
+  // Instantiate the top_level_module
+  top_level_module uut (
     .clk(clk),
     .reset(reset),
     .load_weight(load_weight),
@@ -32,8 +30,6 @@ module tb_systolic_array;
     .weight2(weight2),
     .weight3(weight3),
     .weight4(weight4),
-    .a_out1(a_out1),
-    .a_out2(a_out2),
     .acc_out1(acc_out1),
     .acc_out2(acc_out2)
   );
@@ -62,17 +58,6 @@ module tb_systolic_array;
     #10;
 
     // Load all weights into the PEs in one clock cycle.
-
-    /* 
-    weight matrix looks like
-
-    [3 4]
-    [5 6]
-
-    When we load the weight matrix, we reverse rows and columns.
-
-    */
-    
     load_weight = 1;
     weight1 = 3;  // Weight for PE(0,0)
     weight2 = 5;  // Weight for PE(0,1)
@@ -80,7 +65,7 @@ module tb_systolic_array;
     weight4 = 6;  // Weight for PE(1,1)
     #10;
     load_weight = 0;
-    #10;
+
 
     // Apply the 2x2 matrix inputs
     valid = 1;
@@ -88,39 +73,56 @@ module tb_systolic_array;
     a_in1 = 11;  // a11
     a_in2 = 0;   // Zero input for the first cycle in the bottom-left PE
     #10;
-    valid = 0;
-    #10;
+    // valid = 0;
+
 
     // Second clock cycle - inputs for the top-left and bottom-left PEs
     valid = 1;
     a_in1 = 12;  // a12
     a_in2 = 21;  // a21
     #10;
-    valid = 0;
-    #10;
+    // valid = 0;
+
 
     // Third clock cycle - input for the bottom-left PE
     valid = 1;
     a_in1 = 0;   // No new input for the top-left PE
     a_in2 = 22;  // a22
     #10;
-    valid = 0;
-    #10;
+    // valid = 0;
+
 
     // Fourth clock cycle - input for the bottom-left PE
     valid = 1;
     a_in1 = 0;   // No new input for the top-left PE
     a_in2 = 0;  // No new input for the bottom-left PE
     #10;
-    valid = 0;
+    // valid = 0;
+
+
+    // Fifth clock cycle - input for the bottom-left PE
+    valid = 1;
+    a_in1 = 0;   // No new input for the top-left PE
+    a_in2 = 0;  // No new input for the bottom-left PE
     #10;
+    // valid = 0;
+    #10;
+    #10;
+
+
 
     // Finish the simulation
     $finish;
   end
 
-  // Monitor the outputs
-  initial begin
-    $monitor("At time %t: a_out1 = %d, a_out2 = %d, acc_out1 = %d, acc_out2 = %d", $time, a_out1, a_out2, acc_out1, acc_out2);
+
+  // Monitor accumulators per clock cycle
+  always @(posedge clk) begin
+    if (!reset) begin
+      $display("At time %t:", $time);
+      uut.acc1.print_contents();
+      uut.acc2.print_contents();
+    end
   end
+
 endmodule

@@ -9,7 +9,7 @@ module processing_element (
   input [31:0] acc_in,     // Accumulated value from the PE above
 
   output reg [15:0] a_out,    // Output A to right neighbor
-  output reg [15:0] w_out,    // Weight output
+  output reg [15:0] w_out,    // Weight output (i think this can be removed ngl)
   output reg [31:0] acc_out   // Accumulated value to the PE below
 );
   reg [15:0] weight_reg; // Register to hold the stationary weight
