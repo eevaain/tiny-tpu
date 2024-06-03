@@ -20,10 +20,6 @@ module top_level_module(
   wire [31:0] systolic_acc_out1;
   wire [31:0] systolic_acc_out2;
 
-  // Index counter for storing the values in the accumulators
-  reg [3:0] index1;
-  reg [3:0] index2;
-
   // Instantiate the systolic array
   mmu systolic_array_inst (
     .clk(clk),
@@ -46,7 +42,6 @@ module top_level_module(
     .reset(reset),
     .valid(valid),
     .acc_in(systolic_acc_out1),
-    .index(index1),   // Pass the index to the accumulator
     .acc_out(acc_out1)
   );
 
@@ -56,22 +51,7 @@ module top_level_module(
     .reset(reset),
     .valid(valid),
     .acc_in(systolic_acc_out2),
-    .index(index2),   // Pass the index to the accumulator
     .acc_out(acc_out2)
   );
-
-  // Control logic to manage the indices
-  always @(posedge clk or posedge reset) begin
-    if (reset) begin
-      index1 <= 0;
-      index2 <= 0;
-    end else if (valid) begin
-      // Increment indices to store the next values
-      if (index1 < 3) index1 <= index1 + 1;
-      if (index2 < 3) index2 <= index2 + 1;
-    // index1 <= index1 + 1;
-    // index2 <= index2 + 1;
-    end
-  end
 
 endmodule

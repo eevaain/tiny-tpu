@@ -3,28 +3,29 @@ module accumulator (
   input reset,
   input valid,
   input [31:0] acc_in,
-  input [3:0] index, // New input to specify the index for storing/loading data
   output reg [31:0] acc_out
 );
 
   // Define a register array to store multiple accumulated values
   reg [31:0] acc_mem [0:3]; // Example with 4 entries (could also do 2)
-
+  reg [1:0] index; // Index to manage storage locations
   integer i; // Declare integer outside of the always block
 
   always @(posedge clk or posedge reset) begin
     if (reset) begin
       // Initialize all accumulated values to 0 on reset
       for (i = 0; i < 4; i = i + 1) begin
-        acc_mem[i] <= 0; // OKAY IF I SET THIS TO ONE THEN I CAN SEE ITS CUS OF THE ZEROS 
+        acc_mem[i] <= 0;
       end
       acc_out <= 0;
-    end else if (valid) begin
-      // Accumulate input value at the specified index
-    //   acc_mem[index] <= acc_mem[index] + acc_in;
-        acc_mem[index] <= acc_in;
+      index <= 0; // Reset index
+    end else if (valid && acc_in != 0) begin
+      // Store input value at the current index
+      acc_mem[index] <= acc_in;
       // Update output with the new accumulated value
       acc_out <= acc_mem[index];
+      // Increment index to store the next value
+      if (index < 3) index <= index + 1;
     end
   end
 
