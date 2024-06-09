@@ -4,14 +4,21 @@ module tb_top_level_module;
   // Inputs
   reg clk;
   reg reset;
-  reg load_weight;
   reg valid;
   reg [15:0] a_in1;
   reg [15:0] a_in2;
-  reg [15:0] weight1;
-  reg [15:0] weight2;
-  reg [15:0] weight3;
-  reg [15:0] weight4;
+  reg [15:0] instruction;
+
+  // Internal variables
+  reg [12:0] base_address;
+
+  reg [15:0] memory [0:255]; // Simple memory to store weights
+  
+  reg load_weight;  // Changed from wire to reg
+  reg [15:0] weight1;  // Changed from wire to reg
+  reg [15:0] weight2;  // Changed from wire to reg
+  reg [15:0] weight3;  // Changed from wire to reg
+  reg [15:0] weight4;  // Changed from wire to reg
 
   // Outputs
   wire [31:0] acc1_mem_0;
@@ -53,14 +60,22 @@ module tb_top_level_module;
     // Initialize inputs
     clk = 0;
     reset = 0;
-    load_weight = 0;
     valid = 0;
     a_in1 = 0;
     a_in2 = 0;
-    weight1 = 0;
-    weight2 = 0;
-    weight3 = 0;
-    weight4 = 0;
+    instruction = 0;
+    base_address = 0;
+    load_weight = 0;  // Initialize load_weight
+    weight1 = 0;  // Initialize weight1
+    weight2 = 0;  // Initialize weight2
+    weight3 = 0;  // Initialize weight3
+    weight4 = 0;  // Initialize weight4
+
+    // Initialize memory with weights
+    memory[16'h0000] = 3;
+    memory[16'h0001] = 5;
+    memory[16'h0002] = 4;
+    memory[16'h0003] = 6;
 
     // Apply reset
     reset = 1;
@@ -68,12 +83,38 @@ module tb_top_level_module;
     reset = 0;
     #10;
 
-    // Load all weights into the PEs in one clock cycle.
-    load_weight = 1;
-    weight1 = 3;  // Weight for PE(0,0)
-    weight2 = 5;  // Weight for PE(0,1)
-    weight3 = 4;  // Weight for PE(1,0)
-    weight4 = 6;  // Weight for PE(1,1)
+    // Load base address for weights
+    instruction = 16'b000_0000000000000;  // LOAD_ADDR 0x1000
+    #10;
+
+    // Decode and execute the instruction
+    case (instruction[15:13])
+      3'b000: begin  // LOAD_ADDR
+        base_address = instruction[12:0];
+      end
+      default: begin
+        // Handle other instructions
+      end
+    endcase
+    #10;
+
+    // Load weights into systolic array
+    instruction = 16'b001_0000000000000;  // LOAD_WEIGHT
+    #10;
+
+    // Decode and execute the instruction
+    case (instruction[15:13])
+      3'b001: begin  // LOAD_WEIGHT
+        load_weight = 1;
+        weight1 = memory[base_address];
+        weight2 = memory[base_address + 1];
+        weight3 = memory[base_address + 2];
+        weight4 = memory[base_address + 3];
+      end
+      default: begin
+        // Handle other instructions
+      end
+    endcase
     #10;
     load_weight = 0;
 
@@ -115,12 +156,11 @@ module tb_top_level_module;
     #10;
 
     // Monitor unified buffer
-  $display("Unified Buffer at time %t:", $time);
-  $display("unified_mem_0 = %0d", unified_mem_0);
-  $display("unified_mem_1 = %0d", unified_mem_1);
-  $display("unified_mem_2 = %0d", unified_mem_2);
-  $display("unified_mem_3 = %0d", unified_mem_3);
-
+    $display("Unified Buffer at time %t:", $time);
+    $display("unified_mem_0 = %0d", unified_mem_0);
+    $display("unified_mem_1 = %0d", unified_mem_1);
+    $display("unified_mem_2 = %0d", unified_mem_2);
+    $display("unified_mem_3 = %0d", unified_mem_3);
 
     // Finish the simulation
     $finish;
@@ -130,8 +170,6 @@ module tb_top_level_module;
   always @(posedge clk) begin
     if (!reset) begin
       $display("At time %t:", $time);
-      // $display("Accumulator 1 memory contents: [%0d, %0d]", uut.acc1_mem_0, uut.acc1_mem_1);
-      // $display("Accumulator 2 memory contents: [%0d, %0d]", uut.acc2_mem_0, uut.acc2_mem_1);
       uut.acc1.print_contents();
       uut.acc2.print_contents();
     end
