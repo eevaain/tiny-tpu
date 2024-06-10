@@ -1,5 +1,4 @@
 FSM_assembly_inspo.v
-processing_element.v
 remember.txt
 tb_systolic_array.v
 tb_processing_element.v
