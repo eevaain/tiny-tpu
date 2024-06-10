@@ -12,11 +12,11 @@ module control_unit (
       load_weight = 0;
     end else begin
       case (instruction[15:13])
-        3'b000: begin  // LOAD_ADDR
+        3'b001: begin  // LOAD_ADDR
           base_address = instruction[12:0];
           load_weight = 0;
         end
-        3'b001: begin  // LOAD_WEIGHT
+        3'b010: begin  // LOAD_WEIGHT
           load_weight = 1;
         end
         default: begin

@@ -43,33 +43,6 @@ module tb_top_level_module;
     .unified_mem_3(unified_mem_3)
   );
 
-  // Instantiate processing elements to monitor their acc_out
-  processing_element pe1 (
-    .clk(clk),
-    .reset(reset),
-    .load_weight(1'b0),
-    .valid(valid),
-    .a_in(a_in1),
-    .weight(16'd3),
-    .acc_in(32'd0),
-    .a_out(pe_a_out1),
-    .w_out(),
-    .acc_out(pe_acc_out1)
-  );
-
-  processing_element pe2 (
-    .clk(clk),
-    .reset(reset),
-    .load_weight(1'b0),
-    .valid(valid),
-    .a_in(a_in2),
-    .weight(16'd4),
-    .acc_in(pe_acc_out1),
-    .a_out(pe_a_out2),
-    .w_out(),
-    .acc_out(pe_acc_out2)
-  );
-
   // Clock generation
   always #5 clk = ~clk;
 
@@ -89,16 +62,22 @@ module tb_top_level_module;
     reset = 0;
     #10;
 
+
     // Load base address for weights
-    instruction = 16'b000_0000000000000;  // LOAD_ADDR 0x0000
+    instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F
     #10;
 
     // Load weights into systolic array
-    instruction = 16'b001_0000000000000;  // LOAD_WEIGHT
+    instruction = 16'b010_0000000000000;  // LOAD_WEIGHT
     #10;
+
+    // need an instruction here to take inputs from unified buffer into another memory partition which sets up the systolic array data. instead of doing the zero padding thing, load a new row after each clock cycle? might be less "hacky"....
+    // need an instruction here to do the computation once the input array is fully loaded
 
     // Apply the 2x2 matrix inputs
     valid = 1;
+
+
     a_in1 = 11;  // a11
     a_in2 = 0;   // Zero input for the first cycle in the bottom-left PE
     #10;
@@ -137,17 +116,5 @@ module tb_top_level_module;
     // Finish the simulation
     $finish;
   end
-
-  // // Monitor accumulators and inputs per clock cycle
-  // always @(posedge clk) begin
-  //   if (!reset) begin
-  //     $display("At time %t:", $time);
-  //     $display("Accumulator 1 memory contents: [%0d, %0d]", acc1_mem_0, acc1_mem_1);
-  //     $display("Accumulator 2 memory contents: [%0d, %0d]", acc2_mem_0, acc2_mem_1);
-  //     $display("Inputs: a_in1 = %0d, a_in2 = %0d", a_in1, a_in2);
-  //     $display("Processing Element 1 acc_out: %0d", pe_acc_out1);
-  //     $display("Processing Element 2 acc_out: %0d", pe_acc_out2);
-  //   end
-  // end
 
 endmodule

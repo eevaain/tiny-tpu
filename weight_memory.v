@@ -10,10 +10,10 @@ module weight_memory (
 
   initial begin
     // Initialize memory with weights
-    memory[16'h0000] <= 3;
-    memory[16'h0001] <= 5;
-    memory[16'h0002] <= 4;
-    memory[16'h0003] <= 6;
+    memory[16'h000F] <= 3;
+    memory[16'h0010] <= 5;
+    memory[16'h0011] <= 4;
+    memory[16'h0012] <= 6;
   end
 
   always @(*) begin
