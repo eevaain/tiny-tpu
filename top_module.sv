@@ -101,4 +101,16 @@ module top_level_module (
     .unified_mem(unified_mem)
   );
 
+  // Track and display accumulator values per clock cycle
+  // OK SO I HAVE AN ISSUE THAT THE FULL FLAG IS BEING SET ONE CLOCK CYCLE TOO EARLY
+  // but why is this happen? 
+  always @(posedge clk or posedge reset) begin
+    if (reset) begin
+      // Do nothing on reset
+    end else begin
+      $display("Time: %0t, acc1_mem_0: %0d, acc1_mem_1: %0d, acc2_mem_0: %0d, acc2_mem_1: %0d, acc1_full: %0d, acc2_full: %0d", 
+               $time, acc1_mem_0_to_ub, acc1_mem_1_to_ub, acc2_mem_0_to_ub, acc2_mem_1_to_ub, acc1_full, acc2_full);
+    end
+  end
+
 endmodule

@@ -1,3 +1,5 @@
+// TODO: FIX TIMING ISSUE WITH FULL FLAGS
+
 module accumulator (
   input clk,
   input reset,
@@ -13,6 +15,7 @@ module accumulator (
   reg [1:0] index; // Index to manage storage locations
   integer i; // Declare integer outside of the always block
 
+
   always @(posedge clk or posedge reset) begin
     if (reset) begin
       // Initialize all accumulated values to 0 on reset
@@ -23,10 +26,10 @@ module accumulator (
       full <= 0; // Reset full flag
     end else if (valid && acc_in != 0) begin // This might be a cheap fix...
       // Store input value at the current index
-      acc_mem[index] <= acc_in;
+      acc_mem[index] = acc_in;
       // Increment index to store the next value (INCREMENT ONLY HAPPENS WHEN acc_in ISN'T zero!!)
-      if (index < 1) index <= index + 1;
-      else full <= 1; // Set full flag when all memory locations are filled
+      if (index < 1) index = index + 1;
+      else full = 1; // Set full flag when all memory locations are filled
     end
 
     // Update the output registers for each memory location

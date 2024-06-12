@@ -12,7 +12,7 @@ module mmu(
   input [15:0] weight3, // Weight for PE(1,0)
   input [15:0] weight4, // Weight for PE(1,1)
 
-  // i dont think i need these two?
+  // i do not need these two but keep these wires exposed. they are not defined in the top level module so dont touch that. 
   output [15:0] a_out1, // Output A from PE(0,1)
   output [15:0] a_out2, // Output A from PE(1,1)
 

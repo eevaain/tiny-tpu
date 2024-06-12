@@ -79,21 +79,17 @@ module tb_top_level_module;
     a_in2 = 0;   // No new input for the bottom-left PE
     #10;
 
-    a_in1 = 0;   // No new input for the top-left PE
-    a_in2 = 0;   // No new input for the bottom-left PE
-    #10;
-
-    a_in1 = 0;   // No new input for the top-left PE
-    a_in2 = 0;   // No new input for the bottom-left PE
-    #10;
+////////////// SHOWS THREE OUTPUT ELEMENTS HERE ^^^^
 
     // a_in1 = 0;   // No new input for the top-left PE
     // a_in2 = 0;   // No new input for the bottom-left PE
     // #10;
 
-    // a_in1 = 0;   // No new input for the top-left PE
-    // a_in2 = 0;   // No new input for the bottom-left PE
-    // #10;
+//////////////  SHOWS ALL OUTPUT ELEMENTS HERE ^^^^
+
+
+
+
 
     // Monitor unified buffer
     $display("Unified Buffer at time %t:", $time);
