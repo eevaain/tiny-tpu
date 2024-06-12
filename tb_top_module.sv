@@ -10,20 +10,9 @@ module tb_top_level_module;
   reg [15:0] a_in2;
 
   // Outputs
-  wire [31:0] acc1_mem_0;
-  wire [31:0] acc1_mem_1;
-  wire [31:0] acc2_mem_0;
-  wire [31:0] acc2_mem_1;
-  wire [31:0] unified_mem_0;
-  wire [31:0] unified_mem_1;
-  wire [31:0] unified_mem_2;
-  wire [31:0] unified_mem_3;
+  wire [31:0] unified_mem [0:63];
 
   // Internal wires to connect to the processing elements
-  wire [31:0] pe_acc_out1;
-  wire [31:0] pe_acc_out2;
-  wire [15:0] pe_a_out1;
-  wire [15:0] pe_a_out2;
 
   // Instantiate the top level module
   top_level_module uut (
@@ -33,14 +22,7 @@ module tb_top_level_module;
     .valid(valid),
     .a_in1(a_in1),
     .a_in2(a_in2),
-    .acc1_mem_0(acc1_mem_0),
-    .acc1_mem_1(acc1_mem_1),
-    .acc2_mem_0(acc2_mem_0),
-    .acc2_mem_1(acc2_mem_1),
-    .unified_mem_0(unified_mem_0),
-    .unified_mem_1(unified_mem_1),
-    .unified_mem_2(unified_mem_2),
-    .unified_mem_3(unified_mem_3)
+    .unified_mem(unified_mem)
   );
 
   // Clock generation
@@ -48,20 +30,20 @@ module tb_top_level_module;
 
   // Initial block to initialize inputs and apply test vectors
   initial begin
-    // Initialize inputs
+    // Initialize inputs (registers outside the module)
     clk = 0;
     reset = 0;
     valid = 0;
     a_in1 = 0;
     a_in2 = 0;
     instruction = 0;
+    // perhaps create an assembly instruction that when on reset for each module that uses these bits, set them to zero within the module
 
-    // Apply reset
+    // Apply reset (these are also registers outside the module)
     reset = 1;
     #10;
     reset = 0;
     #10;
-
 
     // Load base address for weights
     instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F
@@ -76,7 +58,6 @@ module tb_top_level_module;
 
     // Apply the 2x2 matrix inputs
     valid = 1;
-
 
     a_in1 = 11;  // a11
     a_in2 = 0;   // Zero input for the first cycle in the bottom-left PE
@@ -106,12 +87,19 @@ module tb_top_level_module;
     a_in2 = 0;   // No new input for the bottom-left PE
     #10;
 
+    // a_in1 = 0;   // No new input for the top-left PE
+    // a_in2 = 0;   // No new input for the bottom-left PE
+    // #10;
+
+    // a_in1 = 0;   // No new input for the top-left PE
+    // a_in2 = 0;   // No new input for the bottom-left PE
+    // #10;
+
     // Monitor unified buffer
     $display("Unified Buffer at time %t:", $time);
-    $display("unified_mem_0 = %0d", unified_mem_0);
-    $display("unified_mem_1 = %0d", unified_mem_1);
-    $display("unified_mem_2 = %0d", unified_mem_2);
-    $display("unified_mem_3 = %0d", unified_mem_3);
+    for (integer i = 0; i < 64; i = i + 1) begin
+      $display("unified_mem[%0d] = %0d", i, unified_mem[i]);
+    end
 
     // Finish the simulation
     $finish;

@@ -4,6 +4,7 @@ module control_unit (
   input [15:0] instruction,
   output reg load_weight,
   output reg [12:0] base_address
+  // perhaps create a flag for selecting between weight memory or activation memory
 );
 
   always @(*) begin

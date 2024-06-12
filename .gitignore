@@ -3,5 +3,6 @@ remember.txt
 tb_systolic_array.v
 tb_processing_element.v
 testbench
+define.v
 
 .gitignore
