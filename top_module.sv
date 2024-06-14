@@ -12,6 +12,7 @@ module top_level_module (
 
   // Internal signals for control unit
   wire load_weight;
+  wire load_input;
   wire [12:0] base_address;
 
   // Internal signals for accumulated values from the systolic array
@@ -38,7 +39,8 @@ module top_level_module (
     .reset(reset),
     .instruction(instruction),
     .load_weight(load_weight),
-    .base_address(base_address)
+    .base_address(base_address),
+    .load_input(load_input)
   );
 
   // Instantiate the weight memory

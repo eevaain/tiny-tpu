@@ -5,6 +5,7 @@ module accumulator (
   input reset,
   input valid,
   input [31:0] acc_in,
+
   output reg [31:0] acc_mem_0, // Output for the first memory location
   output reg [31:0] acc_mem_1, // Output for the second memory location
   output reg full // Flag to indicate when the accumulator is full
@@ -24,17 +25,26 @@ module accumulator (
       end
       index <= 0; // Reset index
       full <= 0; // Reset full flag
-    end else if (valid && acc_in != 0) begin // This might be a cheap fix...
+      acc_mem_0 <= 0;
+      acc_mem_1 <= 0; 
+    end 
+
+    else if (valid && acc_in != 0) begin // This might be a cheap fix...
       // Store input value at the current index
       acc_mem[index] = acc_in;
       // Increment index to store the next value (INCREMENT ONLY HAPPENS WHEN acc_in ISN'T zero!!)
-      if (index < 1) index = index + 1;
-      else full = 1; // Set full flag when all memory locations are filled
+      if (index < 1) begin 
+        index = index + 1;
+      end else begin 
+        full = 1; // Set full flag when all memory locations are filled
+      end
+      if (full) begin 
+        acc_mem_0 = acc_mem[0]; // I feel like i should be using non-blocking assignments here???
+        acc_mem_1 = acc_mem[1];
+      end
     end
 
-    // Update the output registers for each memory location
-    acc_mem_0 <= acc_mem[0];
-    acc_mem_1 <= acc_mem[1];
+    
   end
 
   // Task to print the contents of the accumulator

@@ -3,7 +3,8 @@ module control_unit (
   input reset,
   input [15:0] instruction,
   output reg load_weight,
-  output reg [12:0] base_address
+  output reg [12:0] base_address,
+  output reg load_input
   // perhaps create a flag for selecting between weight memory or activation memory
 );
 
@@ -19,6 +20,9 @@ module control_unit (
         end
         3'b010: begin  // LOAD_WEIGHT
           load_weight = 1;
+        end
+        3'b011: begin // LOAD INPUTS
+          load_input = 1; 
         end
         default: begin
           load_weight = 0;
