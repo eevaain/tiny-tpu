@@ -39,8 +39,8 @@ module accumulator (
         full = 1; // Set full flag when all memory locations are filled
       end
       if (full) begin 
-        acc_mem_0 = acc_mem[0]; // I feel like i should be using non-blocking assignments here???
-        acc_mem_1 = acc_mem[1];
+        acc_mem_0 <= acc_mem[0]; 
+        acc_mem_1 <= acc_mem[1];
       end
     end
 

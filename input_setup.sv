@@ -31,14 +31,16 @@ module input_setup(
             a_in2 <= 0; 
         end else begin
             if (valid && counter < 3) begin
-                augmented_activation_row1[0] = a11;
-                augmented_activation_row1[1] = a12;
-                augmented_activation_row1[2] = 0;
 
-                augmented_activation_row2[0] = 0; // Initialize first element to zero for padding
-                augmented_activation_row2[1] = a21;
-                augmented_activation_row2[2] = a22;
+                if (counter == 0 ) begin 
+                    augmented_activation_row1[0] = a11;
+                    augmented_activation_row1[1] = a12;
+                    augmented_activation_row1[2] = 0;
 
+                    augmented_activation_row2[0] = 0; // Initialize first element to zero for padding
+                    augmented_activation_row2[1] = a21;
+                    augmented_activation_row2[2] = a22;
+                end
                 // Output the values to a_in1 and a_in2
                 a_in1 <= augmented_activation_row1[counter];
                 a_in2 <= augmented_activation_row2[counter];

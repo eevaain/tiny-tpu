@@ -31,13 +31,13 @@ module unified_buffer (
       unified_mem[16'h0021] <= 22;
 
     end else begin
-      if (store_acc1 && store_acc2) begin 
-        if (write_pointer < 63) begin // changed to non blocking! probably will make performance faster? 
+      if (store_acc1 && store_acc2 && write_pointer < 63) begin 
+        // if (write_pointer < 63) begin // changed to non blocking! probably will make performance faster? 
           unified_mem[write_pointer] <= acc1_mem_0;
           unified_mem[write_pointer + 1] <= acc1_mem_1;
           unified_mem[write_pointer + 2] <= acc2_mem_0;
           unified_mem[write_pointer + 3] <= acc2_mem_1;
-        end
+        // end
       end
     end
   end
