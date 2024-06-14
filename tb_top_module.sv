@@ -52,41 +52,19 @@ module tb_top_level_module;
     instruction = 16'b010_0000000000000;  // LOAD_WEIGHT
     #10;
 
-    // need an instruction here to take inputs from unified buffer into another memory partition which sets up the systolic array data. instead of doing the zero padding thing, load a new row after each clock cycle? might be less "hacky"....
+    // TODO: need an instruction here to take inputs from unified buffer into another memory partition which sets up the systolic array data. instead of doing the zero padding thing, load a new row after each clock cycle? might be less "hacky"....
 
-
-    // Apply the 2x2 matrix inputs
-    // valid = 1;
     instruction = 16'b100_0000000000000;  // VALID (compute)
 
-    // a_in1 = 11;  // a11
-    // a_in2 = 0;   // Zero input for the first cycle in the bottom-left PE
+    #10; // now how can i get rid of this extra clock cycle?
 
-      #10;
+    #10; // loads in a_in1 = 11; a_in2 = 0;
+    #10; // loads in a_in1 = 12; a_in2 = 21;
+    #10; // loads in a_in1 = 0; a_in2 = 22;
 
-    // added two extra clock cycles worked???
+    #10; // mandatory empty input to allow partial sums to go into accumulator
+    #10; // mandatory empty input to allow partial sums to go into accumulator
 
-    #10; // should be good here but why is it not??? 
-
-    //////////
- 
-
-    // a_in1 = 12;  // a12
-    // a_in2 = 21;  // a21
-    #10;
-
-    // a_in1 = 0;   // No new input for the top-left PE
-    // a_in2 = 22;  // a22
-    #10;
-
-    // a_in1 = 0;   // No new input for the top-left PE
-    // a_in2 = 0;   // No new input for the bottom-left PE
-    #10;
-
-    // a_in1 = 0;   // No new input for the top-left PE
-    // a_in2 = 0;   // No new input for the bottom-left PE
-    #10;
-////////////// SHOWS THREE OUTPUT ELEMENTS HERE ^^^^
 
     // Monitor unified buffer
     $display("Unified Buffer at time %t:", $time);

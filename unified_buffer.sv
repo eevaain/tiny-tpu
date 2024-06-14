@@ -41,11 +41,11 @@ module unified_buffer (
   end
 
   // Print the accumulator inputs every clock cycle
-  always @(posedge clk) begin
-    $display("At time %t:", $time);
-    $display("store_acc1 = %0d, store_acc2 = %0d", store_acc1, store_acc2);
-    $display("acc1_mem_0 = %0d, acc1_mem_1 = %0d", acc1_mem_0, acc1_mem_1);
-    $display("acc2_mem_0 = %0d, acc2_mem_1 = %0d", acc2_mem_0, acc2_mem_1);
-  end
+  // always @(posedge clk) begin
+  //   $display("At time %t:", $time);
+  //   $display("store_acc1 = %0d, store_acc2 = %0d", store_acc1, store_acc2);
+  //   $display("acc1_mem_0 = %0d, acc1_mem_1 = %0d", acc1_mem_0, acc1_mem_1);
+  //   $display("acc2_mem_0 = %0d, acc2_mem_1 = %0d", acc2_mem_0, acc2_mem_1);
+  // end
 
 endmodule
