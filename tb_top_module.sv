@@ -66,8 +66,7 @@ module tb_top_level_module;
 
     // added two extra clock cycles worked???
 
-       #10; // should be good here but why is it not??? 
-      // #10;
+    #10; // should be good here but why is it not??? 
 
     //////////
  

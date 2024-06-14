@@ -29,10 +29,10 @@ module input_setup(
             counter <= 0; 
             a_in1 <= 0;
             a_in2 <= 0; 
-        end else begin
-            if (valid && counter < 3) begin
+        end else if (valid && counter < 3) begin
+      
 
-                if (counter == 0 ) begin 
+                if (counter == 0) begin 
                     augmented_activation_row1[0] = a11;
                     augmented_activation_row1[1] = a12;
                     augmented_activation_row1[2] = 0;
@@ -42,6 +42,7 @@ module input_setup(
                     augmented_activation_row2[2] = a22;
                 end
                 // Output the values to a_in1 and a_in2
+                // If you want to assign values to a signal within an always block, that signal must be declared as reg
                 a_in1 <= augmented_activation_row1[counter];
                 a_in2 <= augmented_activation_row2[counter];
 
@@ -51,11 +52,12 @@ module input_setup(
                 // $display("augmented_activation_row2[%d] = %d", counter, augmented_activation_row2[counter]);
 
                 counter <= counter + 1; 
-            end else begin
+         
+        end
+            else begin
                 // Output zeros when counter exceeds valid range
                 a_in1 <= 0;
                 a_in2 <= 0;
             end
-        end
     end
 endmodule
