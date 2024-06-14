@@ -5,13 +5,12 @@ module tb_top_level_module;
   reg clk;
   reg reset;
   reg [15:0] instruction;
-  reg valid;
-  reg [15:0] a_in1;
-  reg [15:0] a_in2;
+  // reg valid;
+  // reg [15:0] a_in1;
+  // reg [15:0] a_in2;
 
   // Outputs
   wire [31:0] unified_mem [0:63];
-
   // Internal wires to connect to the processing elements
 
   // Instantiate the top level module
@@ -19,9 +18,7 @@ module tb_top_level_module;
     .clk(clk),
     .reset(reset),
     .instruction(instruction),
-    .valid(valid),
-    .a_in1(a_in1),
-    .a_in2(a_in2),
+    // .valid(valid),
     .unified_mem(unified_mem)
   );
 
@@ -35,9 +32,9 @@ module tb_top_level_module;
     // Initialize inputs (registers outside the module)
     clk = 0;
     reset = 0;
-    valid = 0;
-    a_in1 = 0;
-    a_in2 = 0;
+    // valid = 0;
+    // a_in1 = 0;
+    // a_in2 = 0;
     instruction = 0;
     // perhaps create an assembly instruction that when on reset for each module that uses these bits, set them to zero within the module
 
@@ -56,30 +53,39 @@ module tb_top_level_module;
     #10;
 
     // need an instruction here to take inputs from unified buffer into another memory partition which sets up the systolic array data. instead of doing the zero padding thing, load a new row after each clock cycle? might be less "hacky"....
-    // need an instruction here to do the computation once the input array is fully loaded
 
 
     // Apply the 2x2 matrix inputs
-    valid = 1;
+    // valid = 1;
+    instruction = 16'b100_0000000000000;  // VALID (compute)
 
-    a_in1 = 11;  // a11
-    a_in2 = 0;   // Zero input for the first cycle in the bottom-left PE
+    // a_in1 = 11;  // a11
+    // a_in2 = 0;   // Zero input for the first cycle in the bottom-left PE
+
+      #10;
+
+    // added two extra clock cycles worked???
+
+       #10;
+        #10;
+
+    //////////
+ 
+
+    // a_in1 = 12;  // a12
+    // a_in2 = 21;  // a21
     #10;
 
-    a_in1 = 12;  // a12
-    a_in2 = 21;  // a21
+    // a_in1 = 0;   // No new input for the top-left PE
+    // a_in2 = 22;  // a22
     #10;
 
-    a_in1 = 0;   // No new input for the top-left PE
-    a_in2 = 22;  // a22
+    // a_in1 = 0;   // No new input for the top-left PE
+    // a_in2 = 0;   // No new input for the bottom-left PE
     #10;
 
-    a_in1 = 0;   // No new input for the top-left PE
-    a_in2 = 0;   // No new input for the bottom-left PE
-    #10;
-
-    a_in1 = 0;   // No new input for the top-left PE
-    a_in2 = 0;   // No new input for the bottom-left PE
+    // a_in1 = 0;   // No new input for the top-left PE
+    // a_in2 = 0;   // No new input for the bottom-left PE
     #10;
 ////////////// SHOWS THREE OUTPUT ELEMENTS HERE ^^^^
 

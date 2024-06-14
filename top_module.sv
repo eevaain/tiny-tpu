@@ -2,17 +2,18 @@ module top_level_module (
   input clk,
   input reset,
   input [15:0] instruction,  // Instruction input
-
-  input valid,               // Valid signal indicating new data is available
-  input [15:0] a_in1,        // Input A for PE(0,0)
-  input [15:0] a_in2,        // Input A for PE(1,0)
   
   output [31:0] unified_mem [0:63]  // Output for unified buffer memory
+
 );
+
+  wire [15:0] a_in1;
+  wire [15:0] a_in2;
 
   // Internal signals for control unit
   wire load_weight;
   wire load_input;
+  wire valid;
   wire [12:0] base_address;
 
   // Internal signals for accumulated values from the systolic array
@@ -40,7 +41,8 @@ module top_level_module (
     .instruction(instruction),
     .load_weight(load_weight),
     .base_address(base_address),
-    .load_input(load_input)
+    .load_input(load_input),
+    .valid(valid)
   );
 
   // Instantiate the weight memory
@@ -50,6 +52,20 @@ module top_level_module (
     .weight2(weight2),
     .weight3(weight3),
     .weight4(weight4)
+  );
+
+  input_setup is (
+    .clk(clk),
+    .reset(reset),
+    .valid(valid),
+    
+    .a11(32'd11),
+    .a12(32'd12),
+    .a21(32'd21),
+    .a22(32'd22),
+
+    .a_in1(a_in1),
+    .a_in2(a_in2)
   );
 
   // Instantiate the systolic array
@@ -103,16 +119,13 @@ module top_level_module (
     .unified_mem(unified_mem)
   );
 
-  // Track and display accumulator values per clock cycle
-  // OK SO I HAVE AN ISSUE THAT THE FULL FLAG IS BEING SET ONE CLOCK CYCLE TOO EARLY
-  // but why is this happen? 
-  always @(posedge clk or posedge reset) begin
-    if (reset) begin
-      // Do nothing on reset
-    end else begin
-      $display("Time: %0t, acc1_mem_0: %0d, acc1_mem_1: %0d, acc2_mem_0: %0d, acc2_mem_1: %0d, acc1_full: %0d, acc2_full: %0d", 
-               $time, acc1_mem_0_to_ub, acc1_mem_1_to_ub, acc2_mem_0_to_ub, acc2_mem_1_to_ub, acc1_full, acc2_full);
-    end
-  end
+  // Track and display a_in1 and a_in2 values per clock cycle
+  // always @(posedge clk or posedge reset) begin
+  //   if (reset) begin
+  //     // Do nothing on reset
+  //   end else begin
+  //     $display("Time: %0t, a_in1: %0d, a_in2: %0d", $time, a_in1, a_in2);
+  //   end
+  // end
 
 endmodule

@@ -81,4 +81,13 @@ module mmu(
     .acc_out(acc_out2)
   );
 
+  // Track and display a_in1 and a_in2 values per clock cycle
+  // always @(posedge clk or posedge reset) begin
+  //   if (reset) begin
+  //     // Do nothing on reset
+  //   end else begin
+  //     $display("Time: %0t, a_in1: %0d, a_in2: %0d", $time, a_in1, a_in2);
+  //   end
+  // end
+
 endmodule
