@@ -5,24 +5,16 @@ module tb_top_level_module;
   reg clk;
   reg reset;
   reg [15:0] instruction;
-  // reg valid;
-  // reg [15:0] a_in1;
-  // reg [15:0] a_in2;
-
   // Outputs
   wire [31:0] unified_mem [0:63];
-  // Internal wires to connect to the processing elements
 
   // Instantiate the top level module
-  top_level_module uut (
+  main uut (
     .clk(clk),
     .reset(reset),
     .instruction(instruction),
-    // .valid(valid),
     .unified_mem(unified_mem)
   );
-
-  reg [31:0] input_setup [0:63];
 
   // Clock generation
   always #5 clk = ~clk;
@@ -32,11 +24,7 @@ module tb_top_level_module;
     // Initialize inputs (registers outside the module)
     clk = 0;
     reset = 0;
-    // valid = 0;
-    // a_in1 = 0;
-    // a_in2 = 0;
     instruction = 0;
-    // perhaps create an assembly instruction that when on reset for each module that uses these bits, set them to zero within the module
 
     // Apply reset (these are also registers outside the module)
     reset = 1;
@@ -45,16 +33,22 @@ module tb_top_level_module;
     #10;
 
     // Load base address for weights
-    instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F
+    instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F (16th address)
     #10;
 
     // Load weights into systolic array
-    instruction = 16'b010_0000000000000;  // LOAD_WEIGHT
+    instruction = 16'b010_0000000000000;  // LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
     #10;
 
-    // TODO: need an instruction here to take inputs from unified buffer into another memory partition which sets up the systolic array data. instead of doing the zero padding thing, load a new row after each clock cycle? might be less "hacky"....
+    /// Load base address for activation inputs
+    instruction = 16'b001_0000000011110;  // LOAD_ADDR 0x001E (30th address)
+    #10;
 
-    instruction = 16'b100_0000000000000;  // VALID (compute)
+    /// TODO: LOAD_INPUT from unified buffer into input_setup memory partition
+    instruction = 16'b011_0000000000000;  // LOAD_INPUT (Activation inputs are transferred from unified buffer to input setup unit)
+    #10;
+
+    instruction = 16'b100_0000000000000;  // COMPUTE/VALID (Compute starts, systolic operations are automated by here)
 
     #10; // now how can i get rid of this extra clock cycle?
 

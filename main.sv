@@ -1,4 +1,4 @@
-module top_level_module (
+module main (
   input clk,
   input reset,
   input [15:0] instruction,  // Instruction input
@@ -29,10 +29,17 @@ module top_level_module (
   wire [15:0] weight3;
   wire [15:0] weight4;
 
+  // Internal signals for output matrix individual row vectors to unified buffer
   wire [31:0] acc1_mem_0_to_ub;
   wire [31:0] acc1_mem_1_to_ub;
   wire [31:0] acc2_mem_0_to_ub;
   wire [31:0] acc2_mem_1_to_ub;
+
+  // Internal signals for activation inputs from unified buffer
+  wire [31:0] out_ub_to_input_setup_00;
+  wire [31:0] out_ub_to_input_setup_01;
+  wire [31:0] out_ub_to_input_setup_10;
+  wire [31:0] out_ub_to_input_setup_11;
 
   // Instantiate the control unit
   control_unit cu (
@@ -54,15 +61,27 @@ module top_level_module (
     .weight4(weight4)
   );
 
+  /*
+    // TODO
+
+    .a11(out_ub_to_input_setup_00),
+    .a12(out_ub_to_input_setup_01),
+    .a21(out_ub_to_input_setup_10),
+    .a22(out_ub_to_input_setup_11)
+
+  */
+
+
   input_setup is (
     .clk(clk),
     .reset(reset),
     .valid(valid),
-    
-    .a11(32'd11),
-    .a12(32'd12),
-    .a21(32'd21),
-    .a22(32'd22),
+
+    .a11(out_ub_to_input_setup_00),
+    .a12(out_ub_to_input_setup_01),
+    .a21(out_ub_to_input_setup_10),
+    .a22(out_ub_to_input_setup_11),
+
 
     .a_in1(a_in1),
     .a_in2(a_in2)
@@ -108,24 +127,34 @@ module top_level_module (
 
   // Instantiate the unified buffer
   unified_buffer ub (
+    // inputs
+    // TODO: Create a flag on whether to take address of the unified buffer or of the weight memory within the ISA instruction 
     .clk(clk),
     .reset(reset),
+    .load_input(load_input),
     .store_acc1(acc1_full), // Only store when accumulator is full
     .store_acc2(acc2_full), // Only store when accumulator is full
     .acc1_mem_0(acc1_mem_0_to_ub),
     .acc1_mem_1(acc1_mem_1_to_ub),
     .acc2_mem_0(acc2_mem_0_to_ub),
     .acc2_mem_1(acc2_mem_1_to_ub),
-    .unified_mem(unified_mem)
+    .addr(base_address),
+    // outputs
+    .unified_mem(unified_mem),
+    .out_ub_00(out_ub_to_input_setup_00),
+    .out_ub_01(out_ub_to_input_setup_01),
+    .out_ub_10(out_ub_to_input_setup_10),
+    .out_ub_11(out_ub_to_input_setup_11)
+    // have a store or retrieve flag? 
   );
 
   // Track and display a_in1 and a_in2 values per clock cycle
-  always @(posedge clk or posedge reset) begin
-    if (reset) begin
-      // Do nothing on reset
-    end else begin
-      $display("Time: %0t, a_in1: %0d, a_in2: %0d", $time, a_in1, a_in2);
-    end
-  end
+  // always @(posedge clk or posedge reset) begin
+  //   if (reset) begin
+  //     // Do nothing on reset
+  //   end else begin
+  //     $display("Time: %0t, a_in1: %0d, a_in2: %0d", $time, a_in1, a_in2);
+  //   end
+  // end
 
 endmodule

@@ -4,48 +4,70 @@ module unified_buffer (
 
   input store_acc1, // full flag from accumulator 1
   input store_acc2, // full flag from accumulator 2
+  input load_input, // flag for loading input from own memory to input_setup buffer
 
+  input [12:0] addr, // address i want to input to
   // should have another parameter to accept an address for write_pointer
   input [31:0] acc1_mem_0,
   input [31:0] acc1_mem_1,
   input [31:0] acc2_mem_0,
   input [31:0] acc2_mem_1,
-  output reg [31:0] unified_mem [0:63] 
-  // make another output to output just the input activations to the input setup module
+
+  output reg [31:0] unified_mem [0:63],
+
+  // triggered on write operation 
+  output reg [31:0] out_ub_00,
+  output reg [31:0] out_ub_01,
+  output reg [31:0] out_ub_10,
+  output reg [31:0] out_ub_11
+  // make another output (4 outputs registers) to output just the input activations to the input setup module
 );
   // Internal counter to keep track of the next free memory location
   reg [5:0] write_pointer;
 
-  always @(*) begin
+  always @(posedge clk or posedge reset) begin
     if (reset) begin
       integer i;
       for (i = 0; i < 64; i = i + 1) begin
         unified_mem[i] <= 0;
       end
+      
       write_pointer <= 0;
+
+      out_ub_00 <= 0; 
+      out_ub_01 <= 0;
+      out_ub_10 <= 0;
+      out_ub_11 <= 0; 
 
       // Dummy activation values
       unified_mem[16'h001E] <= 11;
       unified_mem[16'h001F] <= 12;
       unified_mem[16'h0020] <= 21;
       unified_mem[16'h0021] <= 22;
-
-    end else if (store_acc1 && store_acc2 && write_pointer < 63) begin
-        // if (write_pointer < 63) begin // changed to non blocking! probably will make performance faster? 
-          unified_mem[write_pointer] <= acc1_mem_0;
-          unified_mem[write_pointer + 1] <= acc1_mem_1;
-          unified_mem[write_pointer + 2] <= acc2_mem_0;
-          unified_mem[write_pointer + 3] <= acc2_mem_1;
-        // end
+    end else begin
+      // Handle data coming from accumulators that is going into unified buffer
+      if (store_acc1 && store_acc2 && write_pointer < 63) begin
+        unified_mem[write_pointer] <= acc1_mem_0;
+        unified_mem[write_pointer + 1] <= acc1_mem_1;
+        unified_mem[write_pointer + 2] <= acc2_mem_0;
+        unified_mem[write_pointer + 3] <= acc2_mem_1;
+        write_pointer <= write_pointer + 4;
+      end
+      
+      if (load_input) begin // if load_input flag is on, then load data from unified buffer to input setup buffer
+        out_ub_00 <= unified_mem[addr]; 
+        out_ub_01 <= unified_mem[addr + 1]; 
+        out_ub_10 <= unified_mem[addr + 2]; 
+        out_ub_11 <= unified_mem[addr + 3]; 
+      end
     end
   end
 
-  // Print the accumulator inputs every clock cycle
-  // always @(posedge clk) begin
-  //   $display("At time %t:", $time);
-  //   $display("store_acc1 = %0d, store_acc2 = %0d", store_acc1, store_acc2);
-  //   $display("acc1_mem_0 = %0d, acc1_mem_1 = %0d", acc1_mem_0, acc1_mem_1);
-  //   $display("acc2_mem_0 = %0d, acc2_mem_1 = %0d", acc2_mem_0, acc2_mem_1);
-  // end
+  // Print the output buffer values every clock cycle
+  always @(posedge clk or posedge reset) begin
+    if (!reset) begin
+      $display("Time: %0t | out_ub_00: %0d, out_ub_01: %0d, out_ub_10: %0d, out_ub_11: %0d", $time, out_ub_00, out_ub_01, out_ub_10, out_ub_11);
+    end
+  end
 
 endmodule
