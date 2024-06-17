@@ -7,12 +7,7 @@ module unified_buffer (
 
   input [12:0] addr, // address i want to input to
   input load_input, // flag for loading input from own memory to input_setup buffer
-
-    // TODO: add input flag for STORE instruction
-    // do it on this line " if (store_acc1 && store_acc2 && write_pointer < 63) begin"
-    // replace current use of write_pointer as addr zero with addr
-
-  input store, 
+  input store, // flag for storing data from accumulators to unified buffer
 
   input [31:0] acc1_mem_0,
   input [31:0] acc1_mem_1,
