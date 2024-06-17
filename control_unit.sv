@@ -37,7 +37,7 @@ module control_unit (
         3'b100: begin // VALID (compute)
           valid <= 1; 
         end
-          3'b100: begin // STORE
+          3'b101: begin // STORE
           store <= 1; 
         end
         default: begin

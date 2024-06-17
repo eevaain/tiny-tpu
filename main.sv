@@ -134,8 +134,9 @@ module main (
     .out_ub_00(out_ub_to_input_setup_00),
     .out_ub_01(out_ub_to_input_setup_01),
     .out_ub_10(out_ub_to_input_setup_10),
-    .out_ub_11(out_ub_to_input_setup_11)
+    .out_ub_11(out_ub_to_input_setup_11),
     // have a store or retrieve flag? (r/w)
+    .store(store)
   );
 
   // Track and display a_in1 and a_in2 values per clock cycle

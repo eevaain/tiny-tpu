@@ -12,6 +12,8 @@ module unified_buffer (
     // do it on this line " if (store_acc1 && store_acc2 && write_pointer < 63) begin"
     // replace current use of write_pointer as addr zero with addr
 
+  input store, 
+
   input [31:0] acc1_mem_0,
   input [31:0] acc1_mem_1,
   input [31:0] acc2_mem_0,
@@ -53,12 +55,12 @@ module unified_buffer (
       /* WRITE TO MEMORY
           Handle data coming from accumulators that is going into unified buffer
       */
-      if (store_acc1 && store_acc2 && write_pointer < 63) begin
-        unified_mem[write_pointer] <= acc1_mem_0;
-        unified_mem[write_pointer + 1] <= acc1_mem_1;
-        unified_mem[write_pointer + 2] <= acc2_mem_0;
-        unified_mem[write_pointer + 3] <= acc2_mem_1;
-        write_pointer <= write_pointer + 4;
+      if (store && store_acc1 && store_acc2) begin
+        unified_mem[addr] <= acc1_mem_0;
+        unified_mem[addr + 1] <= acc1_mem_1;
+        unified_mem[addr + 2] <= acc2_mem_0;
+        unified_mem[addr + 3] <= acc2_mem_1;
+        write_pointer <= addr + 4;
       end
       
       /* READ FROM MEMORY

@@ -60,18 +60,12 @@ module tb_top_level_module;
     #10; // mandatory empty input to allow partial sums to go into accumulator (i'm sure this one is mandatory)
     #10; // mandatory empty input to allow partial sums to go into accumulator (wait too sure about this one...)
 
-    /* 
-
-    // TODO: LOAD_ADDR instruction here
-    instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x001E (16th address)
+    instruction = 16'b001_0000000000011;  // LOAD_ADDR 0x001E (16th address)
     #10;
 
-    // TODO: need an instruction here to transfer accumulator product matrix rows into the unified buffer 
-
-    instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x001E (16th address)
+    // transfer accumulator product matrix rows into the unified buffer 
+    instruction = 16'b101_0000000001111;  // STORE
     #10;
-
-    */
 
     // Monitor unified buffer
     $display("Unified Buffer at time %t:", $time);
