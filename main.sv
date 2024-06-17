@@ -11,10 +11,11 @@ module main (
   wire [15:0] a_in2;
 
   // Internal signals for control unit
+  wire [12:0] base_address;
   wire load_weight;
   wire load_input;
   wire valid;
-  wire [12:0] base_address;
+  wire store; 
 
   // Internal signals for accumulated values from the systolic array
   wire [31:0] systolic_acc_out1;
@@ -49,7 +50,8 @@ module main (
     .load_weight(load_weight),
     .base_address(base_address),
     .load_input(load_input),
-    .valid(valid)
+    .valid(valid),
+    .store(store)
   );
 
   // Instantiate the weight memory
@@ -60,17 +62,6 @@ module main (
     .weight3(weight3),
     .weight4(weight4)
   );
-
-  /*
-    // TODO
-
-    .a11(out_ub_to_input_setup_00),
-    .a12(out_ub_to_input_setup_01),
-    .a21(out_ub_to_input_setup_10),
-    .a22(out_ub_to_input_setup_11)
-
-  */
-
 
   input_setup is (
     .clk(clk),
@@ -127,8 +118,7 @@ module main (
 
   // Instantiate the unified buffer
   unified_buffer ub (
-    // inputs
-    // TODO: Create a flag on whether to take address of the unified buffer or of the weight memory within the ISA instruction 
+    // inputs 
     .clk(clk),
     .reset(reset),
     .load_input(load_input),
@@ -145,7 +135,7 @@ module main (
     .out_ub_01(out_ub_to_input_setup_01),
     .out_ub_10(out_ub_to_input_setup_10),
     .out_ub_11(out_ub_to_input_setup_11)
-    // have a store or retrieve flag? 
+    // have a store or retrieve flag? (r/w)
   );
 
   // Track and display a_in1 and a_in2 values per clock cycle

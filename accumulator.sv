@@ -1,5 +1,3 @@
-// TODO: FIX TIMING ISSUE WITH FULL FLAGS
-
 module accumulator (
   input clk,
   input reset,

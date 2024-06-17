@@ -4,10 +4,14 @@ module unified_buffer (
 
   input store_acc1, // full flag from accumulator 1
   input store_acc2, // full flag from accumulator 2
-  input load_input, // flag for loading input from own memory to input_setup buffer
 
   input [12:0] addr, // address i want to input to
-  // should have another parameter to accept an address for write_pointer
+  input load_input, // flag for loading input from own memory to input_setup buffer
+
+    // TODO: add input flag for STORE instruction
+    // do it on this line " if (store_acc1 && store_acc2 && write_pointer < 63) begin"
+    // replace current use of write_pointer as addr zero with addr
+
   input [31:0] acc1_mem_0,
   input [31:0] acc1_mem_1,
   input [31:0] acc2_mem_0,
@@ -45,7 +49,10 @@ module unified_buffer (
       unified_mem[16'h0020] <= 21;
       unified_mem[16'h0021] <= 22;
     end else begin
-      // Handle data coming from accumulators that is going into unified buffer
+
+      /* WRITE TO MEMORY
+          Handle data coming from accumulators that is going into unified buffer
+      */
       if (store_acc1 && store_acc2 && write_pointer < 63) begin
         unified_mem[write_pointer] <= acc1_mem_0;
         unified_mem[write_pointer + 1] <= acc1_mem_1;
@@ -54,6 +61,9 @@ module unified_buffer (
         write_pointer <= write_pointer + 4;
       end
       
+      /* READ FROM MEMORY
+
+      */  
       if (load_input) begin // if load_input flag is on, then load data from unified buffer to input setup buffer
         out_ub_00 <= unified_mem[addr]; 
         out_ub_01 <= unified_mem[addr + 1]; 

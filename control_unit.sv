@@ -5,7 +5,8 @@ module control_unit (
   output reg load_weight,
   output reg [12:0] base_address,
   output reg load_input,
-  output reg valid
+  output reg valid,
+  output reg store
 );
 
   always @(*) begin
@@ -14,12 +15,14 @@ module control_unit (
       load_weight <= 0;
       load_input <= 0;
       valid <= 0;
+      store <= 0; 
     end else begin
       // Default values for unused flags
       base_address <= base_address;
       load_weight <= 0;
       load_input <= 0;
       valid <= 0;
+      store <= 0; 
 
       case (instruction[15:13])
         3'b001: begin  // LOAD_ADDR
@@ -33,6 +36,9 @@ module control_unit (
         end
         3'b100: begin // VALID (compute)
           valid <= 1; 
+        end
+          3'b100: begin // STORE
+          store <= 1; 
         end
         default: begin
           // All flags are already zeroed by default

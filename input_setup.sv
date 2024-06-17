@@ -41,7 +41,6 @@ module input_setup(
                     augmented_activation_row2[1] = a21;
                     augmented_activation_row2[2] = a22;
                 end
-                // Output the values to a_in1 and a_in2
                 // If you want to assign values to a signal within an always block, that signal must be declared as reg
                 a_in1 <= augmented_activation_row1[counter];
                 a_in2 <= augmented_activation_row2[counter];

@@ -32,11 +32,11 @@ module tb_top_level_module;
     reset = 0;
     #10;
 
-    // Load base address for weights
+    /// Load base address for weights
     instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F (16th address)
     #10;
 
-    // Load weights into systolic array
+    /// Load weights into systolic array
     instruction = 16'b010_0000000000000;  // LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
     #10;
 
@@ -44,10 +44,11 @@ module tb_top_level_module;
     instruction = 16'b001_0000000011110;  // LOAD_ADDR 0x001E (30th address)
     #10;
 
-    /// TODO: LOAD_INPUT from unified buffer into input_setup memory partition
-    instruction = 16'b011_0000000000000;  // LOAD_INPUT (Activation inputs are transferred from unified buffer to input setup unit)
+    /// Activation inputs are transferred from unified buffer to input setup unit
+    instruction = 16'b011_0000000000000;  // LOAD_INPUT 
     #10;
 
+    /// Convolutions begin within array. 
     instruction = 16'b100_0000000000000;  // COMPUTE/VALID (Compute starts, systolic operations are automated by here)
 
     #10; // now how can i get rid of this extra clock cycle?
@@ -56,9 +57,21 @@ module tb_top_level_module;
     #10; // loads in a_in1 = 12; a_in2 = 21;
     #10; // loads in a_in1 = 0; a_in2 = 22;
 
-    #10; // mandatory empty input to allow partial sums to go into accumulator
-    #10; // mandatory empty input to allow partial sums to go into accumulator
+    #10; // mandatory empty input to allow partial sums to go into accumulator (i'm sure this one is mandatory)
+    #10; // mandatory empty input to allow partial sums to go into accumulator (wait too sure about this one...)
 
+    /* 
+
+    // TODO: LOAD_ADDR instruction here
+    instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x001E (16th address)
+    #10;
+
+    // TODO: need an instruction here to transfer accumulator product matrix rows into the unified buffer 
+
+    instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x001E (16th address)
+    #10;
+
+    */
 
     // Monitor unified buffer
     $display("Unified Buffer at time %t:", $time);
