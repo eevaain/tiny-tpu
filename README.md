@@ -20,6 +20,14 @@ Loads weights from a weight buffer into the systolic array.
 instruction = 16'b010_0000000000000;  // LOAD_WEIGHT
 ```
 
+### LOAD_INPUT
+Loads inputs from the unified buffer into the input setup unit.
+
+**Example Usage:**
+```verilog
+instruction = 16'b011_0000000000000;  // LOAD_INPUT
+```
+
 ### COMPUTE
 Performs systolic computation on the loaded weights and inputs.
 
@@ -28,12 +36,18 @@ Performs systolic computation on the loaded weights and inputs.
 instruction = 16'b100_0000000000000;  // COMPUTE
 ```
 
+### STORE_RESULTS
+Stores the results from the accumulators back to the unified buffer.
+
+**Example Usage:**
+```verilog
+instruction = 16'b101_0000000000000;  // STORE_RESULTS
+```
+
 ## Future Extensions (TBD)
 
-- **LOAD_INPUTS:** Load inputs from a global on-chip memory.
 - **START:** Initial startup instruction.
 - **JMP START:** Jump to the START instruction.
-- **STORE_RESULTS:** Store results back to global on-chip memory.
 - **NEXT_LAYER:** Prepare for the next layer of inputs.
 
 ## Example Instruction Sequence
@@ -42,17 +56,35 @@ instruction = 16'b100_0000000000000;  // COMPUTE
 ```verilog
 // Load base address for weights
 instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F
+#10;
 
 // Load weights into systolic array
 instruction = 16'b010_0000000000000;  // LOAD_WEIGHT
+#10;
 
-// Perform systolic computation
+// Load base address for activation inputs
+instruction = 16'b001_0000000011110;  // LOAD_ADDR 0x001E
+#10;
+
+// Activation inputs are transferred from unified buffer to input setup unit
+instruction = 16'b011_0000000000000;  // LOAD_INPUT 
+#10;
+
+// Convolutions begin within array
 instruction = 16'b100_0000000000000;  // COMPUTE
+#10;
+
+// Mandatory empty input to allow partial sums to go into accumulator
+#10; 
+#10; 
+#10;
+#10;
+#10;
+
+instruction = 16'b001_0000000000111;  // LOAD_ADDR 0x0001 
+#10;
+
+// Transfer accumulator product matrix rows into the unified buffer 
+instruction = 16'b101_0000000000000;  // STORE_RESULTS
+#10;
 ```
-
-## Notes
-
-- Ensure that the sequence of instructions is followed correctly to achieve the desired computation.
-- Each instruction has a specific format and purpose within the TPU's operation.
-
-This instruction set provides a structured way to control and utilize the minimal TPU for various computational tasks, ensuring efficient and effective operations.
