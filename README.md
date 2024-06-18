@@ -97,4 +97,4 @@ instruction = 16'b101_0000000000000;  // STORE_RESULTS
 #10;
 ```
 
-I hope this guide helps you get started with hardware design and understand the basics of TPU instruction sets. Remember, if I can learn this in just a few weeks, so can you!
+I hope this guide kickstarts your journey into hardware design and demystifies TPU instruction sets! Let me tell you a secret - when I began this project, I was a complete novice in digital logic. I only started learning Verilog three weeks ago! But here's the thing: if I can do it, you absolutely can too.
