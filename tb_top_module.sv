@@ -1,5 +1,10 @@
 `timescale 1ns / 1ns
 
+/*  TODO: Figure out how to facilitate stream of data from computer to TPU 
+^^ how can i move data from some memory partition from outside of my TPU, into my TPU. 
+... Because at the moment I'm harcoding the weights and inputs.
+*/
+
 module tb_top_level_module;
   // Inputs
   reg clk;
@@ -32,7 +37,7 @@ module tb_top_level_module;
     reset = 0;
     #10;
 
-    /// Load base address for weights
+    /// Load base address for weights (weights are in address 16 of WM)
     instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F (16th address)
     #10;
 
@@ -40,7 +45,7 @@ module tb_top_level_module;
     instruction = 16'b010_0000000000000;  // LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
     #10;
 
-    /// Load base address for activation inputs
+    /// Load base address for activation inputs (inputs start at address 30 of UB)
     instruction = 16'b001_0000000011110;  // LOAD_ADDR 0x001E (30th address)
     #10;
 
@@ -49,7 +54,7 @@ module tb_top_level_module;
     #10;
 
     /// Convolutions begin within array. 
-    instruction = 16'b100_0000000000000;  // COMPUTE/VALID (Compute starts, systolic operations are automated by here)
+    instruction = 16'b100_0000000000000;  // COMPUTE (Compute starts, systolic operations are automated by here)
 
     #10; // now how can i get rid of this extra clock cycle?
 
@@ -60,7 +65,7 @@ module tb_top_level_module;
     #10; // mandatory empty input to allow partial sums to go into accumulator (i'm sure this one is mandatory)
     #10; // mandatory empty input to allow partial sums to go into accumulator (wait too sure about this one...)
 
-    instruction = 16'b001_0000000000111;  // LOAD_ADDR 0x001E (16th address)
+    instruction = 16'b001_0000000000111;  // LOAD_ADDR 0x0007 (7th address)
     #10;
 
     // transfer accumulator product matrix rows into the unified buffer 

@@ -6,7 +6,7 @@ module weight_memory (
   output reg [15:0] weight4
 );
 
-  reg [15:0] memory [0:255]; // Simple memory to store weights
+  reg [15:0] memory [0:31]; // Simple memory to store weights
 
   initial begin
     // Initialize memory with weights (ROW-WISE)

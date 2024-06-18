@@ -1,4 +1,12 @@
-# Instruction Set Architecture (ISA) for Minimal TPU
+# Tiny-TPU
+
+I recently took on an interesting challenge – reverse-engineering Google's Tensor Processing Unit (TPU) design. Since the real TPU architecture is closed-source, I had to work from the original paper to build a minimal version with a weight-stationary systolic array.
+
+This project was motivated by my belief that it's important for newcomers to explore different AI acceleration approaches beyond just GPUs. Many people want to understand how parallel processing actually works at the hardware level, not just in software.
+
+What's cool is that I started this with basically no digital logic experience – I only began learning Verilog three weeks ago! But I was able to create a working TPU from scratch in that time. I think it demonstrates that hardware design doesn't have to be as intimidating as it might seem.
+
+My hope is that this can serve as an approachable guide for others looking to get into hardware design, especially for AI acceleration. While GPUs are the go-to for ML training right now, I think there's value in understanding alternative architectures too.
 
 This ISA defines the operations for a minimal TPU with a weight-stationary systolic array architecture. Below are the instructions, their purposes, and example usages.
 
@@ -88,3 +96,5 @@ instruction = 16'b001_0000000000111;  // LOAD_ADDR 0x0001
 instruction = 16'b101_0000000000000;  // STORE_RESULTS
 #10;
 ```
+
+I hope this guide helps you get started with hardware design and understand the basics of TPU instruction sets. Remember, if I can learn this in just a few weeks, so can you!

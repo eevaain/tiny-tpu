@@ -73,7 +73,6 @@ module main (
     .a21(out_ub_to_input_setup_10),
     .a22(out_ub_to_input_setup_11),
 
-
     .a_in1(a_in1),
     .a_in2(a_in2)
   );
