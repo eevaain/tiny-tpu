@@ -2,6 +2,10 @@
 
 A minimal Tensor Processing Unit (TPU) inspired by Google's TPUv1.
 
+<p align="center">
+  <img src="img/logo.jpg" alt="Logo">
+</p>
+
 ## Motivation:
 
 I recently took on an interesting challenge – reverse-engineering Google's Tensor Processing Unit (TPU) design. Since the real TPU architecture is closed-source, I had to work from the original paper to build a minimal version with a weight-stationary systolic array.
