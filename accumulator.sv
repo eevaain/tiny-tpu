@@ -55,11 +55,11 @@ module accumulator (
   // endtask
 
   // // Print the accumulator state every clock cycle
-  // always @(posedge clk) begin
-  //   $display("At time %t:", $time);
-  //   $display("Accumulator inputs: acc_in = %0d, valid = %0d", acc_in, valid);
-  //   $display("Accumulator memory contents: [%0d, %0d]", acc_mem[0], acc_mem[1]);
-  //   $display("Accumulator index: %0d, full flag: %0d", index, full);
-  // end
+  always @(posedge clk) begin
+    $display("At time %t:", $time);
+    $display("Accumulator inputs: acc_in = %0d, valid = %0d", acc_in, valid);
+    $display("Accumulator memory contents: [%0d, %0d]", acc_mem[0], acc_mem[1]);
+    $display("Accumulator index: %0d, full flag: %0d", index, full);
+  end
 
 endmodule

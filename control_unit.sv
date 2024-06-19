@@ -9,6 +9,7 @@ module control_unit (
   output reg store
 );
 
+  // ISA Control
   always @(*) begin
     if (reset) begin
       base_address <= 0;
@@ -46,5 +47,7 @@ module control_unit (
       endcase
     end
   end
+
+  // Program Counter Control
 
 endmodule

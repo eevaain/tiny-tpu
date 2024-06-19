@@ -23,6 +23,7 @@ module unified_buffer (
   output reg [31:0] out_ub_11
   // make another output (4 outputs registers) to output just the input activations to the input setup module
 );
+
   // Internal counter to keep track of the next free memory location
   reg [5:0] write_pointer;
 
@@ -59,7 +60,6 @@ module unified_buffer (
       end
       
       /* READ FROM MEMORY
-
       */  
       if (load_input) begin // if load_input flag is on, then load data from unified buffer to input setup buffer
         out_ub_00 <= unified_mem[addr]; 
@@ -70,11 +70,9 @@ module unified_buffer (
     end
   end
 
-  // Print the output buffer values every clock cycle
-  always @(posedge clk or posedge reset) begin
-    if (!reset) begin
-      $display("Time: %0t | out_ub_00: %0d, out_ub_01: %0d, out_ub_10: %0d, out_ub_11: %0d", $time, out_ub_00, out_ub_01, out_ub_10, out_ub_11);
-    end
+  // Print the accumulator values every clock cycle
+  always @(posedge clk) begin
+    $display("Time: %0t | acc1_mem_0: %0d, acc1_mem_1: %0d, acc2_mem_0: %0d, acc2_mem_1: %0d", $time, acc1_mem_0, acc1_mem_1, acc2_mem_0, acc2_mem_1);
   end
 
 endmodule
