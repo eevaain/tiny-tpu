@@ -121,7 +121,7 @@ The systolic array is a hardware design used to perform matrix multiplications e
 In the systolic array, multiplication is tied to the multiply-accumulate (MAC) operations performed by each PE. Each PE takes an input and a weight, multiplies them, and adds the result to an accumulator. The accumulators hold the intermediate sums, which are eventually used to produce the final output matrix.
 
 <p align="center">
-  <img src="img/mmugif.jpg" alt="mmugif">
+  <img src="img/systolic.gif" alt="systolicarray">
 </p>
 
 By visualizing the systolic array, you can see how data flows and interacts within the array, leading to efficient matrix multiplications.
