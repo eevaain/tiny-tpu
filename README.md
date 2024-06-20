@@ -124,4 +124,10 @@ In the systolic array, multiplication is tied to the multiply-accumulate (MAC) o
   <img src="img/systolic.gif" alt="systolicarray">
 </p>
 
+By nature of how the systolic array is set up, each row of the product matrix is stored in each accumulator. In the gif above, each row output of a matrix is "stored" in local memory during "OUT" 
+
+<p align="center">
+  <img src="img/output.jpg" alt="outputmatrix">
+</p>
+
 By visualizing the systolic array, you can see how data flows and interacts within the array, leading to efficient matrix multiplications.
