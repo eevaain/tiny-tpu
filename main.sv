@@ -1,17 +1,16 @@
 module main (
   input clk,
   input reset,
-  // input [15:0] instruction,  // TODO: Remove this and "lower the state" into main as a register
-  
   output [31:0] unified_mem [0:63]  // Output for unified buffer memory
-
 );
-  reg [15:0] instruction; // lowered state of instruction
+  reg [15:0] instruction; // Instruction register
+  reg [15:0] instruction_mem [0:7]; // Instruction memory. Adjust the size as needed.   
+                                    // TODO: Turn instruction_mem into its own memory partition? 
 
-  reg [15:0] instruction_mem [0:7]; // Adjust the size as needed. This is where all the instructions are stored
   integer instruction_pointer;
   integer compute_cycle_counter; // Counter for compute cycles
 
+  // TESTBENCH CODE (These hard-coded values won't be taped out)
   initial begin
     instruction = 0;
     instruction_pointer = 0;
@@ -31,6 +30,8 @@ module main (
   typedef enum reg [1:0] {IDLE, FETCH, EXECUTE, FINISH} state_t;
   state_t state = IDLE;
 
+  // TODO: Move this state machine into the control unit
+  // Instruction state transition block 
   always @(posedge clk or posedge reset) begin
     if (reset) begin
       state <= IDLE;
@@ -61,14 +62,15 @@ module main (
     end
   end
 
-
+   // TODO: Move this state machine into the control unit
+  // Combinational block (assigns actions to each state)
   always @(*) begin
-    case (state) // updates based on change in state
+    case (state) // Updates based on change in state
       IDLE: instruction = 16'b000_0000000000000;
       FETCH: instruction = instruction_mem[instruction_pointer];
       EXECUTE: begin
         if (instruction_mem[instruction_pointer] == 16'b100_0000000000000 && compute_cycle_counter < 5) begin
-          instruction = 16'b100_0000000000000; // maintain COMPUTE instruction
+          instruction = 16'b100_0000000000000; // Maintain COMPUTE instruction while on COMPUTE. "5" clock cycle delay on this instruction. 
         end else begin
           instruction_pointer = instruction_pointer + 1;
           instruction = instruction_mem[instruction_pointer];
@@ -78,8 +80,8 @@ module main (
     endcase
   end
 
-
-    always @(posedge clk) begin
+  // TODO: Move this state machine into the control unit
+  always @(posedge clk) begin
     if (state == FINISH) begin
       $display("Unified Buffer at time %t:", $time);
       for (integer i = 0; i < 64; i = i + 1) begin
@@ -88,9 +90,6 @@ module main (
       $finish;
     end
   end
-
-
-
 
   wire [15:0] a_in1;
   wire [15:0] a_in2;
