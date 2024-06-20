@@ -25,7 +25,7 @@ Loads the address of a memory partition into a single register.
 
 **Example Usage:**
 ```verilog
-instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F
+16'b001_0000000001111;  // LOAD_ADDR 0x000F (16th address)
 ```
 
 ### LOAD_WEIGHTS
@@ -33,7 +33,7 @@ Loads weights from a weight buffer into the systolic array.
 
 **Example Usage:**
 ```verilog
-instruction = 16'b010_0000000000000;  // LOAD_WEIGHT
+16'b010_0000000000000;  // LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
 ```
 
 ### LOAD_INPUT
@@ -41,7 +41,7 @@ Loads inputs from the unified buffer into the input setup unit.
 
 **Example Usage:**
 ```verilog
-instruction = 16'b011_0000000000000;  // LOAD_INPUT
+16'b011_0000000000000;  // LOAD_INPUT
 ```
 
 ### COMPUTE
@@ -49,7 +49,7 @@ Performs systolic computation on the loaded weights and inputs.
 
 **Example Usage:**
 ```verilog
-instruction = 16'b100_0000000000000;  // COMPUTE
+16'b100_0000000000000;  // COMPUTE (Compute starts, systolic operations are automated by here)
 ```
 
 ### STORE_RESULTS
@@ -57,7 +57,15 @@ Stores the results from the accumulators back to the unified buffer.
 
 **Example Usage:**
 ```verilog
-instruction = 16'b101_0000000000000;  // STORE_RESULTS
+16'b101_0000000000000;  // STORE_RESULTS
+```
+
+### NOP
+End of instructions
+
+**Example Usage:**
+```verilog
+16'b000_0000000000000;  // NOP or END (indicate end of instructions)
 ```
 
 ## Future Extensions (TBD)
@@ -67,43 +75,20 @@ instruction = 16'b101_0000000000000;  // STORE_RESULTS
 - **NEXT_LAYER:** Prepare for the next layer of inputs.
 
 ## Example Instruction Sequence
-
 ### Initializing and Running the Systolic Array
+
+The following sequence of instructions is loaded directly into the instruction memory. This setup allows for the automatic execution of these instructions by the control unit:
+
 ```verilog
-// Load base address for weights
-instruction = 16'b001_0000000001111;  // LOAD_ADDR 0x000F
-#10;
+instruction_mem[0] = 16'b001_0000000001111;  // LOAD_ADDR 0x000F (16th address)
+instruction_mem[1] = 16'b010_0000000000000;  // LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
+instruction_mem[2] = 16'b001_0000000011110;  // LOAD_ADDR 0x001E (30th address)
+instruction_mem[3] = 16'b011_0000000000000;  // LOAD_INPUT 
+instruction_mem[4] = 16'b100_0000000000000;  // COMPUTE (Compute starts, systolic operations are automated by here)
+instruction_mem[5] = 16'b001_0000000000111;  // LOAD_ADDR 0x0007 (7th address)
+instruction_mem[6] = 16'b101_0000000000000;  // STORE_RESULTS
+instruction_mem[7] = 16'b000_0000000000000;  // NOP or END (indicate end of instructions)
 
-// Load weights into systolic array
-instruction = 16'b010_0000000000000;  // LOAD_WEIGHT
-#10;
-
-// Load base address for activation inputs
-instruction = 16'b001_0000000011110;  // LOAD_ADDR 0x001E
-#10;
-
-// Activation inputs are transferred from unified buffer to input setup unit
-instruction = 16'b011_0000000000000;  // LOAD_INPUT 
-#10;
-
-// Convolutions begin within array
-instruction = 16'b100_0000000000000;  // COMPUTE
-#10;
-
-// Mandatory empty input to allow partial sums to go into accumulator
-#10; 
-#10; 
-#10;
-#10;
-#10;
-
-instruction = 16'b001_0000000000111;  // LOAD_ADDR 0x0001 
-#10;
-
-// Transfer accumulator product matrix rows into the unified buffer 
-instruction = 16'b101_0000000000000;  // STORE_RESULTS
-#10;
-```
 
 I hope this guide kickstarts your journey into hardware design and demystifies TPU instruction sets! Let me tell you a secret - when I began this project, I was a complete novice in digital logic. I only started learning Verilog three weeks ago! But here's the thing: if I can do it, you absolutely can too.
 
