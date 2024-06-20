@@ -41,8 +41,6 @@ module accumulator (
         acc_mem_1 <= acc_mem[1];
       end
     end
-
-    
   end
 
   // Task to print the contents of the accumulator
@@ -54,7 +52,7 @@ module accumulator (
   //   end
   // endtask
 
-  // // Print the accumulator state every clock cycle
+  // Print the accumulator state every clock cycle
   always @(posedge clk) begin
     $display("At time %t:", $time);
     $display("Accumulator inputs: acc_in = %0d, valid = %0d", acc_in, valid);

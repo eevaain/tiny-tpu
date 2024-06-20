@@ -24,6 +24,7 @@ module tb_top_level_module;
   // Clock generation
   always #5 clk = ~clk;
 
+  // Simulation starts HERE
   initial begin
     // Initialize inputs. 
     clk = 0;

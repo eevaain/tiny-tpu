@@ -62,7 +62,7 @@ module main (
     end
   end
 
-   // TODO: Move this state machine into the control unit
+  // TODO: Move this state machine into the control unit
   // Combinational block (assigns actions to each state)
   always @(*) begin
     case (state) // Updates based on change in state

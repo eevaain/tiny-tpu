@@ -20,7 +20,6 @@ My hope is that this can serve as an approachable guide for others looking to ge
 
 This ISA defines the operations for a minimal TPU with a weight-stationary systolic array architecture. Below are the instructions, their purposes, and example usages.
 
-
 ### LOAD_ADDR
 Loads the address of a memory partition into a single register.
 
@@ -107,3 +106,24 @@ instruction = 16'b101_0000000000000;  // STORE_RESULTS
 ```
 
 I hope this guide kickstarts your journey into hardware design and demystifies TPU instruction sets! Let me tell you a secret - when I began this project, I was a complete novice in digital logic. I only started learning Verilog three weeks ago! But here's the thing: if I can do it, you absolutely can too.
+
+## Understanding the Systolic Array
+
+The systolic array is a hardware design used to perform matrix multiplications efficiently. It consists of a grid of processing elements (PEs) that compute and pass data through the array in a synchronized manner. This allows for high parallelism and throughput, making it ideal for deep learning tasks.
+
+### How It Works:
+
+1. **Data Flow**: Data flows through the array in a pipelined manner. Weights are pre-loaded into the PEs and inputs are fed from the left.
+2. **Processing Elements**: Each PE performs multiply-accumulate operations. It multiplies the incoming data (inputs) with the provided weights and adds the result to an accumulator.
+3. **Synchronization**: All PEs operate in lock-step, synchronized by a global clock, ensuring that data moves uniformly across the array.
+4. **Output**: The results are accumulated in the final PEs and can be read out after the computation is complete.
+
+### Multiplication in the Systolic Array:
+
+In the systolic array, multiplication is tied to the multiply-accumulate (MAC) operations performed by each PE. Each PE takes an input and a weight, multiplies them, and adds the result to an accumulator. The accumulators hold the intermediate sums, which are eventually used to produce the final output matrix.
+
+<p align="center">
+  <img src="img/mmugif.jpg" alt="mmugif">
+</p>
+
+By visualizing the systolic array, you can see how data flows and interacts within the array, leading to efficient matrix multiplications.
