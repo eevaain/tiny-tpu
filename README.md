@@ -39,6 +39,10 @@ The high-level architecture of our minimal TPU consists of several key component
 
 - **Interface (TBD)**: A component for input/output operations, allowing the TPU to communicate with external systems or memory.
 
+<p align="center">
+  <img src="img/architecture.jpg" alt="architecture">
+</p>
+
 The data flow in this architecture typically follows this pattern:
 
 1. Input data is loaded into the Unified Buffer.
