@@ -6,6 +6,24 @@ A minimal Tensor Processing Unit (TPU) inspired by Google's TPUv1.
   <img src="img/logo.jpg" alt="Logo">
 </p>
 
+## Table of Contents
+1. [Motivation](#motivation)
+2. [Instructions](#instructions)
+   - [LOAD_ADDR](#load_addr)
+   - [LOAD_WEIGHTS](#load_weights)
+   - [LOAD_INPUT](#load_input)
+   - [COMPUTE](#compute)
+   - [STORE_RESULTS](#store_results)
+   - [NOP](#nop)
+3. [Future Extensions (TBD)](#future-extensions-tbd)
+4. [Example Instruction Sequence](#example-instruction-sequence)
+   - [Initializing and Running the Systolic Array](#initializing-and-running-the-systolic-array)
+5. [Understanding the Systolic Array](#understanding-the-systolic-array)
+   - [How It Works](#how-it-works)
+   - [Multiplication in the Systolic Array](#multiplication-in-the-systolic-array)
+6. [Understanding the Processing Element](#understanding-the-processing-element)
+   - [How a Processing Element Works](#how-a-processing-element-works)
+
 ## Motivation
 
 I recently took on an interesting challenge – reverse-engineering Google's Tensor Processing Unit (TPU) design. Since the real TPU architecture is closed-source, I had to work from the original paper to build a minimal version with a weight-stationary systolic array.
