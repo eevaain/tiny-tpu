@@ -7,22 +7,46 @@ A minimal Tensor Processing Unit (TPU) inspired by Google's TPUv1.
 </p>
 
 ## Table of Contents
-1. [Motivation](#motivation)
-2. [Instructions](#instructions)
+1. [Architecture](#architecture)
+2. [Motivation](#motivation)
+3. [Instructions](#instructions)
    - [LOAD_ADDR](#load_addr)
    - [LOAD_WEIGHTS](#load_weights)
    - [LOAD_INPUT](#load_input)
    - [COMPUTE](#compute)
    - [STORE_RESULTS](#store_results)
    - [NOP](#nop)
-3. [Future Extensions (TBD)](#future-extensions-tbd)
-4. [Example Instruction Sequence](#example-instruction-sequence)
+4. [Future Extensions (TBD)](#future-extensions-tbd)
+5. [Example Instruction Sequence](#example-instruction-sequence)
    - [Initializing and Running the Systolic Array](#initializing-and-running-the-systolic-array)
-5. [Understanding the Systolic Array](#understanding-the-systolic-array)
+6. [Understanding the Systolic Array](#understanding-the-systolic-array)
    - [How It Works](#how-it-works)
    - [Multiplication in the Systolic Array](#multiplication-in-the-systolic-array)
-6. [Understanding the Processing Element](#understanding-the-processing-element)
+7. [Understanding the Processing Element](#understanding-the-processing-element)
    - [How a Processing Element Works](#how-a-processing-element-works)
+
+## Architecture
+
+The high-level architecture of our minimal TPU consists of several key components working together to perform efficient matrix multiplications. Here's an overview of the main components and their roles:
+
+- **Control Unit**: This component orchestrates the overall operation of the TPU. It interprets and executes instructions, managing the flow of data between different components.
+- **Unified Buffer**: A large memory unit that stores input data and results. It serves as the primary data storage for the TPU, holding input matrices and storing the output of computations.
+- **Weight Memory**: A dedicated memory unit for storing weight matrices. This allows for quick access to weights during computations.
+- **Input Activation Setup**: This unit prepares input data from the Unified Buffer for processing in the Matrix Multiply Unit. It may involve formatting or reorganizing the data for efficient computation.
+- **Matrix Multiply Unit**: The core computational engine of the TPU, consisting of:
+  - **Processing Elements (PEs)**: Arranged in a 2x2 grid, these are the basic computational units that perform multiply-accumulate operations.
+  - **Accumulators**: Located at the bottom of the PE array, these units accumulate the results of computations from each column of PEs.
+
+- **Interface (TBD)**: A component for input/output operations, allowing the TPU to communicate with external systems or memory.
+
+The data flow in this architecture typically follows this pattern:
+
+1. Input data is loaded into the Unified Buffer.
+2. Weights are loaded into the Weight Memory.
+3. The Input Activation Setup prepares data from the Unified Buffer.
+4. The Matrix Multiply Unit processes the data, with PEs performing computations and Accumulators collecting results.
+5. Results are stored back in the Unified Buffer.
+6. The Control Unit manages this entire process based on the instructions it receives.
 
 ## Motivation
 
