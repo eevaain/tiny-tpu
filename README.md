@@ -27,11 +27,12 @@ A minimal Tensor Processing Unit (TPU) inspired by Google's TPUv1.
 
 ## Architecture
 
+The high-level architecture of our minimal TPU consists of several key components working together to perform efficient matrix multiplications. 
 <p align="center">
   <img src="img/architecture.jpg" alt="architecture">
 </p>
 
-The high-level architecture of our minimal TPU consists of several key components working together to perform efficient matrix multiplications. Here's an overview of the main components and their roles:
+Here's an overview of the main components and their roles:
 
 - **Control Unit**: This component orchestrates the overall operation of the TPU. It interprets and executes instructions, managing the flow of data between different components.
 - **Unified Buffer**: A large memory unit that stores input data and results. It serves as the primary data storage for the TPU, holding input matrices and storing the output of computations.
