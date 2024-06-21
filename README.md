@@ -124,10 +124,27 @@ In the systolic array, multiplication is tied to the multiply-accumulate (MAC) o
   <img src="img/systolic.gif" alt="systolicarray">
 </p>
 
-By nature of how the systolic array is set up, each row of the product matrix is stored in each accumulator. In the gif above, each row output of a matrix is "stored" in local memory during "OUT" 
+By nature of how the systolic array is set up, each row of the product matrix is stored in its respective accumulator. In the gif above, the output of each row output of a matrix is transferred to a local memory during "OUT" 
 
 <p align="center">
   <img src="img/output.jpg" alt="outputmatrix">
 </p>
 
 By visualizing the systolic array, you can see how data flows and interacts within the array, leading to efficient matrix multiplications.
+
+## Understanding the Processing Element
+
+The processing element (PE) is a fundamental building block of the systolic array. Each PE is responsible for performing multiply-accumulate (MAC) operations, which are critical for matrix multiplication.
+
+### How a Processing Element Works:
+
+<p align="center">
+  <img src="img/pe.jpg" alt="processingelement">
+</p>
+
+1. **Inputs**: Each PE receives an input value (`a_11`) and a weight (`w_11`).
+2. **Multiplication**: The input value and weight are multiplied together.
+3. **Accumulation**: The result of the multiplication is added to the current value in the accumulator (`acc_in`).
+4. **Outputs**: The PE outputs the accumulated result (`acc_in + a_11 * w_11`) and passes the input value to the next PE in the row.
+
+The diagram above illustrates the internal structure of a PE, showing the flow of data through the multiplication and addition units.
