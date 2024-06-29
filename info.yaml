@@ -19,7 +19,6 @@ project:
   source_files:
     - "accumulator.sv"
     - "control_unit.sv"
-    - "define.sv"
     - "input_setup.sv"
     - "main.sv"
     - "mmu.sv"
