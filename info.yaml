@@ -2,10 +2,10 @@
 
 # Tiny Tapeout project information
 project:
-  title:        ""      # Project title
-  author:       ""      # Your name
-  discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""      # One line description of what your project does
+  title:        "tiny-tpu"      # Project title
+  author:       "Evan Lin"      # Your name
+  discord:      "evanlin"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
+  description:  "A minimal Tensor Processing Unit (TPU) inspired by Google's TPUv1."      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
 
@@ -19,7 +19,7 @@ project:
   # Source files must be in ./src and you must list each source file separately, one per line.
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
-    - "project.v"
+    - "main.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
