@@ -5,6 +5,8 @@
 ... Because at the moment I'm harcoding the weights and inputs.
 */
 
+// TODO: Since tiny tapeout has 8 input and 8 ouput pins, perhaps create a mechanism to load in data, 8 bits at a time here...
+
 module tb_top_level_module;
   // Inputs
   reg clk;
