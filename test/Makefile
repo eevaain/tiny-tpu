@@ -5,7 +5,7 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = accumulator.sv control_unit.sv input_setup.sv main.sv mmu.sv processing_element.sv unified_buffer.sv weight_memory.sv tt_um_tpu.sv
+PROJECT_SOURCES = tt_um_tpu.sv accumulator.sv control_unit.sv input_setup.sv main.sv mmu.sv processing_element.sv unified_buffer.sv weight_memory.sv
 
 ifneq ($(GATES),yes)
 
@@ -32,7 +32,7 @@ VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 endif
 
 # Include the testbench sources:
-VERILOG_SOURCES += $(PWD)/../src/tb_top_module.sv
+VERILOG_SOURCES += $(PWD)/../test/tb_top_module.sv
 TOPLEVEL = tb_top_level_module
 
 # MODULE is the basename of the Python test file
