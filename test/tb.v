@@ -1,5 +1,3 @@
-// TODO: modify for my tiny-tpu
-
 `default_nettype none
 `timescale 1ns / 1ps
 
@@ -25,9 +23,14 @@ module tb ();
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
 
-  // Replace tt_um_example with your module name:
-  tt_um_example user_project (
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk; // 100 MHz clock
+  end
 
+  // Instantiate your module
+  tt_um_tpu user_project (
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST
       .VPWR(1'b1),
