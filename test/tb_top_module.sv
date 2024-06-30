@@ -11,16 +11,33 @@ module tb_top_level_module;
   // Inputs
   reg clk;
   reg reset;
+  reg ena;
+  reg [7:0] ui_in;
+  reg [7:0] uio_in;
+
   // Outputs
-  wire [31:0] unified_mem [0:63];
+  wire [7:0] uo_out;
+  wire [7:0] uio_out;
+  wire [7:0] uio_oe;
 
   // Instantiate the top level module
-  main uut (
+  tt_um_tpu uut (
+
+`ifdef GL_TEST
+    .VPWR(1'b1),
+    .VGND(1'b0),
+`endif
+
     // Inputs
     .clk(clk),
-    .reset(reset),
+    .rst_n(reset),
+    .ena(ena),
+    .ui_in(ui_in),
+    .uio_in(uio_in),
     // Outputs
-    .unified_mem(unified_mem)
+    .uo_out(uo_out),
+    .uio_out(uio_out),
+    .uio_oe(uio_oe)
   );
 
   // Clock generation
@@ -28,12 +45,21 @@ module tb_top_level_module;
 
   // Simulation starts HERE
   initial begin
-    // Initialize inputs. 
+    // Initialize inputs
     clk = 0;
     reset = 0;
+    ena = 0;
+    ui_in = 0;
+    uio_in = 0;
+
+    // Apply reset
+    #10;
     reset = 1;
-    // "Let go" of reset (chip starts running)
+    ena = 1;
     #10;
     reset = 0;
+
+    // Apply test stimulus here
+    // ...
   end
 endmodule
