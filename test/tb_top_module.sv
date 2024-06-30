@@ -23,10 +23,10 @@ module tb_top_level_module;
   // Instantiate the top level module
   tt_um_tpu uut (
 
-`ifdef GL_TEST
-    .VPWR(1'b1),
-    .VGND(1'b0),
-`endif
+// `ifdef GL_TEST
+//     .VPWR(1'b1),
+//     .VGND(1'b0),
+// `endif
 
     // Inputs
     .clk(clk),

@@ -1,17 +1,17 @@
 # Tiny Tapeout project information
 project:
-  title:        "tiny-tpu"      # Project title
-  author:       "Evan Lin"      # Your name
-  discord:      "evanlin"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "A minimal Tensor Processing Unit (TPU) inspired by Google's TPUv1."      # One line description of what your project does
-  language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     10000000       # Clock frequency in Hz (or 0 if not applicable)
+  title: "tiny-tpu" # Project title
+  author: "Evan Lin" # Your name
+  discord: "evanlin" # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
+  description: "A minimal Tensor Processing Unit (TPU) inspired by Google's TPUv1." # One line description of what your project does
+  language: "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
+  clock_hz: 10000000 # Clock frequency in Hz (or 0 if not applicable)
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
-  tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
+  tiles: "1x1" # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
-  top_module:  "tt_um_tpu.sv"
+  top_module: "tt_um_tpu.sv"
 
   # List your project's source files here.
   # Source files must be in ./src and you must list each source file separately, one per line.
@@ -25,6 +25,7 @@ project:
     - "processing_element.sv"
     - "unified_buffer.sv"
     - "weight_memory.sv"
+    - "tt_um_tpu.sv"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
