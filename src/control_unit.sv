@@ -12,34 +12,34 @@ module control_unit (
   // ISA Control
   always @(*) begin
     if (reset) begin
-      base_address <= 0;
-      load_weight <= 0;
-      load_input <= 0;
-      valid <= 0;
-      store <= 0; 
+      base_address = 0;
+      load_weight = 0;
+      load_input = 0;
+      valid = 0;
+      store = 0; 
     end else begin
       // Default values for unused flags
-      base_address <= base_address;
-      load_weight <= 0;
-      load_input <= 0;
-      valid <= 0;
-      store <= 0; 
+      base_address = base_address;
+      load_weight = 0;
+      load_input = 0;
+      valid = 0;
+      store = 0; 
 
       case (instruction[15:13])
         3'b001: begin  // LOAD_ADDR
-          base_address <= instruction[12:0];
+          base_address = instruction[12:0];
         end
         3'b010: begin  // LOAD_WEIGHT
-          load_weight <= 1;
+          load_weight = 1;
         end
         3'b011: begin // LOAD_INPUTS
-          load_input <= 1; 
+          load_input = 1; 
         end
         3'b100: begin // VALID (compute)
-          valid <= 1; 
+          valid = 1; 
         end
           3'b101: begin // STORE
-          store <= 1; 
+          store = 1; 
         end
         default: begin
           // All flags are already zeroed by default

@@ -26,11 +26,6 @@ module accumulator (
       acc_mem_1 <= 0; 
     end
 
-    if (full) begin 
-        acc_mem_0 <= acc_mem[0]; 
-        acc_mem_1 <= acc_mem[1];
-    end
-
     $display("At time %t:", $time);
     $display("Accumulator inputs: acc_in = %0d, valid = %0d", acc_in, valid);
     $display("Accumulator memory contents: [%0d, %0d]", acc_mem[0], acc_mem[1]);
@@ -39,6 +34,13 @@ module accumulator (
 
 
   always @(*) begin
+
+    // immediately output accumulators stored row if full is true
+    if (full) begin 
+        acc_mem_0 = acc_mem[0]; 
+        acc_mem_1 = acc_mem[1];
+    end
+
      if (valid && acc_in != 0) begin // This might be a cheap fix...
       // Store input value at the current index
       acc_mem[index] = acc_in;

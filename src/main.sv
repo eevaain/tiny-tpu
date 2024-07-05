@@ -59,6 +59,14 @@ module main (
         end
         FINISH: state <= FINISH;
       endcase
+
+      if (state == FINISH) begin
+          $display("Unified Buffer at time %t:", $time);
+        for (integer i = 0; i < 64; i = i + 1) begin
+          $display("unified_mem[%0d] = %0d", i, unified_mem[i]);
+        end
+      $finish;
+    end
     end
   end
 
@@ -80,16 +88,6 @@ module main (
     endcase
   end
 
-  // TODO: Move this state machine into the control unit
-  always @(posedge clk) begin
-    if (state == FINISH) begin
-      $display("Unified Buffer at time %t:", $time);
-      for (integer i = 0; i < 64; i = i + 1) begin
-        $display("unified_mem[%0d] = %0d", i, unified_mem[i]);
-      end
-      $finish;
-    end
-  end
 
   wire [15:0] a_in1;
   wire [15:0] a_in2;

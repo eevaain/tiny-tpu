@@ -5,7 +5,7 @@
 ... Because at the moment I'm harcoding the weights and inputs.
 */
 
-module tb_top_level_module;
+module tb;
   // Inputs
   reg clk;
   reg reset;
@@ -25,13 +25,13 @@ module tb_top_level_module;
   always #5 clk = ~clk;
 
   // Simulation starts HERE
-  initial begin
-    // Initialize inputs. 
-    clk = 0;
-    reset = 0;
-    reset = 1;
-    // "Let go" of reset (chip starts running)
-    #10;
-    reset = 0;
-  end
+  // initial begin
+  //   // Initialize inputs. 
+  //   clk = 0;
+  //   reset = 0;
+  //   reset = 1;
+  //   // "Let go" of reset (chip starts running)
+  //   #10;
+  //   reset = 0;
+  // end
 endmodule

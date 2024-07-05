@@ -19,10 +19,11 @@ module weight_memory (
     memory[16'h0012] <= 6;
   end
 
+  // keep this the same --> combinational logic typically used for reading data to ensure immediate output when read is enabled. 
   always @(*) begin
-    weight1 <= memory[addr];
-    weight2 <= memory[addr + 1];
-    weight3 <= memory[addr + 2];
-    weight4 <= memory[addr + 3];
+    weight1 = memory[addr];
+    weight2 = memory[addr + 1];
+    weight3 = memory[addr + 2];
+    weight4 = memory[addr + 3];
   end
 endmodule
