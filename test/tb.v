@@ -10,28 +10,16 @@ module tb;
   reg clk;
   reg reset;
   // Outputs
-  wire [31:0] unified_mem [0:63];
 
   // Instantiate the top level module
   main uut (
     // Inputs
     .clk(clk),
-    .reset(reset),
+    .reset(reset)
     // Outputs
-    .unified_mem(unified_mem)
   );
 
   // Clock generation
   always #5 clk = ~clk;
 
-  // Simulation starts HERE
-  // initial begin
-  //   // Initialize inputs. 
-  //   clk = 0;
-  //   reset = 0;
-  //   reset = 1;
-  //   // "Let go" of reset (chip starts running)
-  //   #10;
-  //   reset = 0;
-  // end
 endmodule

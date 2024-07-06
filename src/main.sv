@@ -1,7 +1,6 @@
 module main (
   input clk,
-  input reset,
-  output [31:0] unified_mem [0:63]  // Output for unified buffer memory
+  input reset
 );
   reg [15:0] instruction; // Instruction register
   reg [15:0] instruction_mem [0:7]; // Instruction memory. Adjust the size as needed.   
@@ -61,12 +60,7 @@ module main (
       endcase
 
       if (state == FINISH) begin
-          $display("Unified Buffer at time %t:", $time);
-        for (integer i = 0; i < 64; i = i + 1) begin
-          $display("unified_mem[%0d] = %0d", i, unified_mem[i]);
-        end
-      $finish;
-    end
+      end
     end
   end
 
@@ -88,12 +82,12 @@ module main (
     endcase
   end
 
-
   wire [15:0] a_in1;
   wire [15:0] a_in2;
 
   // Internal signals for control unit
   wire [12:0] base_address;
+  
   wire load_weight;
   wire load_input;
   wire valid;
@@ -211,7 +205,6 @@ module main (
     .acc2_mem_1(acc2_mem_1_to_ub),
     .addr(base_address),
     // outputs
-    .unified_mem(unified_mem),
     .out_ub_00(out_ub_to_input_setup_00),
     .out_ub_01(out_ub_to_input_setup_01),
     .out_ub_10(out_ub_to_input_setup_10),
@@ -220,13 +213,5 @@ module main (
     .store(store)
   );
 
-  // Track and display a_in1 and a_in2 values per clock cycle
-  // always @(posedge clk or posedge reset) begin
-  //   if (reset) begin
-  //     // Do nothing on reset
-  //   end else begin
-  //     $display("Time: %0t, a_in1: %0d, a_in2: %0d", $time, a_in1, a_in2);
-  //   end
-  // end
 
 endmodule

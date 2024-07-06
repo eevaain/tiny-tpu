@@ -1,7 +1,7 @@
 module control_unit (
   input clk,
   input reset,
-  input [15:0] instruction,
+  input wire [15:0] instruction,
   output reg load_weight,
   output reg [12:0] base_address,
   output reg load_input,

@@ -1,8 +1,8 @@
 module accumulator (
-  input clk,
-  input reset,
-  input valid,
-  input [31:0] acc_in,
+  input wire clk,
+  input wire reset,
+  input wire valid,
+  input wire [31:0] acc_in,
 
   output reg [31:0] acc_mem_0, // Output for the first memory location
   output reg [31:0] acc_mem_1, // Output for the second memory location
@@ -25,22 +25,9 @@ module accumulator (
       acc_mem_0 <= 0;
       acc_mem_1 <= 0; 
     end
-
-    $display("At time %t:", $time);
-    $display("Accumulator inputs: acc_in = %0d, valid = %0d", acc_in, valid);
-    $display("Accumulator memory contents: [%0d, %0d]", acc_mem[0], acc_mem[1]);
-    $display("Accumulator index: %0d, full flag: %0d", index, full);
   end
 
-
   always @(*) begin
-
-    // immediately output accumulators stored row if full is true
-    if (full) begin 
-        acc_mem_0 = acc_mem[0]; 
-        acc_mem_1 = acc_mem[1];
-    end
-
      if (valid && acc_in != 0) begin // This might be a cheap fix...
       // Store input value at the current index
       acc_mem[index] = acc_in;
@@ -51,6 +38,12 @@ module accumulator (
       end else begin 
         full = 1; // Set full flag when all memory locations are filled
       end
+    end
+
+    // so itll print the full product row within the testbench cus of this
+    if (full) begin 
+        acc_mem_0 = acc_mem[0]; 
+        acc_mem_1 = acc_mem[1];
     end
   end
 
