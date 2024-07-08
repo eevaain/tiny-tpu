@@ -10,19 +10,19 @@ module unified_buffer (
 
   input wire store, // flag for storing data from accumulators to unified buffer
 
-  input wire [31:0] acc1_mem_0,
-  input wire [31:0] acc1_mem_1,
-  input wire [31:0] acc2_mem_0,
-  input wire [31:0] acc2_mem_1,
+  input wire [7:0] acc1_mem_0,
+  input wire [7:0] acc1_mem_1,
+  input wire [7:0] acc2_mem_0,
+  input wire [7:0] acc2_mem_1,
 
   // triggered on write operation 
-  output reg [31:0] out_ub_00,
-  output reg [31:0] out_ub_01,
-  output reg [31:0] out_ub_10,
-  output reg [31:0] out_ub_11
+  output reg [7:0] out_ub_00,
+  output reg [7:0] out_ub_01,
+  output reg [7:0] out_ub_10,
+  output reg [7:0] out_ub_11
   // make another output (4 outputs registers) to output just the input activations to the input setup module
 );
-  reg [31:0] unified_mem [0:63];
+  reg [7:0] unified_mem [0:63];
 
   // Internal counter to keep track of the next free memory location
   reg [5:0] write_pointer;
@@ -56,10 +56,10 @@ module unified_buffer (
       out_ub_11 <= 0; 
 
       // Dummy activation values
-      unified_mem[16'h001E] <= 11;
-      unified_mem[16'h001F] <= 12;
-      unified_mem[16'h0020] <= 21;
-      unified_mem[16'h0021] <= 22;
+      unified_mem[8'h001E] <= 11;
+      unified_mem[8'h001F] <= 12;
+      unified_mem[8'h0020] <= 21;
+      unified_mem[8'h0021] <= 22;
     end else begin
       
       /* READ FROM MEMORY */  

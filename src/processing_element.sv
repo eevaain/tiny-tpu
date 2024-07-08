@@ -1,12 +1,12 @@
 module processing_element (
   input clk,
-  input reset,
-  input load_weight,       // Signal to load weight
-  input valid,             // Valid signal indicating new data is available
+  input wire reset,
+  input wire load_weight,       // Signal to load weight
+  input wire valid,             // Valid signal indicating new data is available
 
-  input [7:0] a_in,       // Input A from left neighbor
-  input [7:0] weight,     // Weight input
-  input [7:0] acc_in,     // Accumulated value from the PE above
+  input wire [7:0] a_in,       // Input A from left neighbor
+  input wire [7:0] weight,     // Weight input
+  input wire [7:0] acc_in,     // Accumulated value from the PE above
 
   output reg [7:0] a_out,    // Output A to right neighbor
   output reg [7:0] w_out,    // Weight output (i think this can be removed ngl)

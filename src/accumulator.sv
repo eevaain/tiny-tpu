@@ -2,15 +2,15 @@ module accumulator (
   input wire clk,
   input wire reset,
   input wire valid,
-  input wire [31:0] acc_in,
+  input wire [7:0] acc_in,
 
-  output reg [31:0] acc_mem_0, // Output for the first memory location
-  output reg [31:0] acc_mem_1, // Output for the second memory location
+  output reg [7:0] acc_mem_0, // Output for the first memory location
+  output reg [7:0] acc_mem_1, // Output for the second memory location
   output reg full // Flag to indicate when the accumulator is full
 );
 
   // Define a register array to store multiple accumulated values
-  reg [31:0] acc_mem [0:1]; // Changed to 2 entries
+  reg [7:0] acc_mem [0:1]; // Changed to 2 entries
   reg [1:0] index; // Index to manage storage locations
   integer i; // Declare integer outside of the always block
 
