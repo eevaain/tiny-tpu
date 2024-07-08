@@ -23,9 +23,9 @@ module input_setup(
         if (valid && counter == 0) begin 
             augmented_activation_row1[0] = a11;
             augmented_activation_row1[1] = a12;
-            augmented_activation_row1[2] = 0;
+            augmented_activation_row1[2] = 8'b0;
 
-            augmented_activation_row2[0] = 0; // Initialize first element to zero for padding
+            augmented_activation_row2[0] = 8'b0;
             augmented_activation_row2[1] = a21;
             augmented_activation_row2[2] = a22;
         end
@@ -34,12 +34,12 @@ module input_setup(
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             for (i = 0; i < 3; i = i + 1) begin
-                augmented_activation_row1[i] <= 0;
-                augmented_activation_row2[i] <= 0;
+                augmented_activation_row1[i] <= 8'b0;
+                augmented_activation_row2[i] <= 8'b0;
             end
             counter <= 0; 
-            a_in1 <= 0;
-            a_in2 <= 0; 
+            a_in1 <= 8'b0;
+            a_in2 <= 8'b0;
 
         end else if (valid && counter < 3) begin
             a_in1 <= augmented_activation_row1[counter];
@@ -47,8 +47,8 @@ module input_setup(
             counter <= counter + 1; // IMPORTANT takes prev value (like js prev) 
         end else begin
             // Output zeros when counter exceeds valid range
-            a_in1 <= 0;
-            a_in2 <= 0;
+            a_in1 <= 8'b0;
+            a_in2 <= 8'b0;
         end
     end
 endmodule

@@ -1,22 +1,21 @@
 module weight_memory (
-  input [12:0] addr,
+  input clk,
+  input reset,
+  input wire [12:0] addr,
   output reg [7:0] weight1,
   output reg [7:0] weight2,
   output reg [7:0] weight3,
   output reg [7:0] weight4
 );
-
   reg [7:0] memory [0:31]; // Simple memory to store weights
 
-  initial begin
-    // Initialize memory with weights (ROW-WISE)
-    // TODO: Weight matrix is currently implemented COL-WISE. The numbers are in the correct position, but we
-    // ... need to input the weights ROW-WISE and then transpose them to be as such here. (as displayed in the hardcoded mem vals)
-    // WEIGHT MATRIX IS ALREADY TRANSPOSED hardcoded HERE. 
-    memory[6'h0F] <= 3;
-    memory[6'h10] <= 5;
-    memory[6'h11] <= 4;
-    memory[6'h12] <= 6;
+  always @(posedge clk) begin
+    if (reset) begin
+      weight1 <= 0;
+      weight2 <= 0;
+      weight3 <= 0;
+      weight4 <= 0;
+    end
   end
 
   // keep this the same --> combinational logic typically used for reading data to ensure immediate output when read is enabled. 

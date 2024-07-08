@@ -23,7 +23,8 @@ module mmu(
   // Internal signals for connections between PEs
   wire [7:0] a_inter_01, a_inter_11;
   wire [7:0] acc_inter_00, acc_inter_01;
-  wire [7:0] w_inter_00, w_inter_01;
+
+  // TODO: Change order of weight1, weight2, weight3, weight4 wires so weight matrix can be loaded in row-wise in its weight memory before going to the matrix
 
   // Instantiate PE(0,0)
   processing_element PE00 (
@@ -35,7 +36,6 @@ module mmu(
     .weight(weight1),
     .acc_in(8'b0),   // Top-left corner has no accumulated input
     .a_out(a_inter_01),
-    .w_out(w_inter_00),
     .acc_out(acc_inter_00)
   );
 
@@ -46,10 +46,9 @@ module mmu(
     .load_weight(load_weight),
     .valid(valid),
     .a_in(a_inter_01),
-    .weight(weight2),
+    .weight(weight3),
     .acc_in(8'b0),   // Top-right corner has no accumulated input
     .a_out(a_out1),
-    .w_out(w_inter_01),
     .acc_out(acc_inter_01)
   );
 
@@ -60,10 +59,9 @@ module mmu(
     .load_weight(load_weight),
     .valid(valid),
     .a_in(a_in2),
-    .weight(weight3),
+    .weight(weight2),
     .acc_in(acc_inter_00), // Bottom-left corner gets accumulated input from PE(0,0)
     .a_out(a_inter_11),
-    .w_out(),
     .acc_out(acc_out1)
   );
 
@@ -77,7 +75,6 @@ module mmu(
     .weight(weight4),
     .acc_in(acc_inter_01), // Bottom-right corner gets accumulated input from PE(0,1)
     .a_out(a_out2),
-    .w_out(),
     .acc_out(acc_out2)
   );
 

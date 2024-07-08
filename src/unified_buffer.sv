@@ -54,12 +54,6 @@ module unified_buffer (
       out_ub_01 <= 0;
       out_ub_10 <= 0;
       out_ub_11 <= 0; 
-
-      // Dummy activation values
-      unified_mem[6'h1E] <= 11;  // 0x1E = 30 in decimal
-      unified_mem[6'h1F] <= 12;  // 0x1F = 31 in decimal
-      unified_mem[6'h20] <= 21;  // 0x20 = 32 in decimal
-      unified_mem[6'h21] <= 22;  // 0x21 = 33 in decimal
     end else begin
       
       /* READ FROM MEMORY */  
@@ -71,10 +65,4 @@ module unified_buffer (
       end
     end
   end
-
-  // Print the accumulator values every clock cycle
-  // always @(posedge clk) begin
-  //   $display("Time: %0t | acc1_mem_0: %0d, acc1_mem_1: %0d, acc2_mem_0: %0d, acc2_mem_1: %0d", $time, acc1_mem_0, acc1_mem_1, acc2_mem_0, acc2_mem_1);
-  // end
-
 endmodule

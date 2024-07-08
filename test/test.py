@@ -21,6 +21,34 @@ async def initialize_instruction_mem(dut):
         dut.uut.cu.instruction_mem[i].value = instruction
         await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
 
+async def initialize_unified_mem(dut):
+    # Define the dummy values row-wise
+    dummy_values = {
+        0x001E: 11,
+        0x001F: 12,
+        0x0020: 21,
+        0x0021: 22,
+    }
+
+    # Load the dummy inputs into unified_mem
+    for addr, value in dummy_values.items():
+        dut.uut.ub.unified_mem[addr].value = value
+        await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
+
+async def initialize_weight_memory(dut):
+    # Define the weights row-wise
+    weights = {
+        0x0F: 3,
+        0x10: 4,
+        0x11: 5,
+        0x12: 6,
+    }
+
+    # Load the weights into weight memory
+    for addr, value in weights.items():
+        dut.uut.wm.memory[addr].value = value
+        await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
+
 @cocotb.test()
 async def test_tpu(dut):
     # Start the clock
@@ -35,9 +63,10 @@ async def test_tpu(dut):
 
     # Initialize the instruction memory
     await initialize_instruction_mem(dut)
-
-    # Apply test stimulus if any (none in this case)
-    dut._log.info("No test stimulus to apply as there are no inputs")
+    # Initialize the unified memory with dummy inputs
+    await initialize_unified_mem(dut)
+    # Initialize the weights
+    await initialize_weight_memory(dut)
 
     # Assert the start signal to begin execution
     dut.start.value = 1

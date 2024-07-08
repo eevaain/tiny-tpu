@@ -1,7 +1,7 @@
 module main (
   input clk,
   input reset,
-  input start  // New input to start the program
+  input wire start  // New input to start the program
 );
   wire [7:0] a_in1;
   wire [7:0] a_in2;
@@ -53,6 +53,8 @@ module main (
 
   // Instantiate the weight memory
   weight_memory wm (
+    .clk(clk),
+    .reset(reset),
     .addr(base_address),
     .weight1(weight1),
     .weight2(weight2),
