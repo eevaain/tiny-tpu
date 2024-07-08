@@ -1,6 +1,7 @@
 module main (
   input clk,
-  input reset
+  input reset,
+  input start  // New input to start the program
 );
   wire [7:0] a_in1;
   wire [7:0] a_in2;
@@ -11,12 +12,12 @@ module main (
   wire load_weight;
   wire load_input;
   wire valid;
-  wire store; 
+  wire store;
 
   // Internal signals for accumulated values from the systolic array
   wire [7:0] systolic_acc_out1;
   wire [7:0] systolic_acc_out2;
-  
+
   wire acc1_full;
   wire acc2_full;
 
@@ -40,9 +41,9 @@ module main (
 
   // Instantiate the control unit
   control_unit cu (
+    .start(start),
     .clk(clk),
     .reset(reset),
-    // .instruction(instruction),
     .load_weight(load_weight),
     .base_address(base_address),
     .load_input(load_input),
@@ -132,6 +133,4 @@ module main (
     // have a store or retrieve flag? (r/w)
     .store(store)
   );
-
-
 endmodule

@@ -15,7 +15,8 @@ module tb;
   main uut (
     // Inputs
     .clk(clk),
-    .reset(reset)
+    .reset(reset),
+    .start(start)
     // Outputs
   );
 

@@ -56,10 +56,10 @@ module unified_buffer (
       out_ub_11 <= 0; 
 
       // Dummy activation values
-      unified_mem[8'h001E] <= 11;
-      unified_mem[8'h001F] <= 12;
-      unified_mem[8'h0020] <= 21;
-      unified_mem[8'h0021] <= 22;
+      unified_mem[6'h1E] <= 11;  // 0x1E = 30 in decimal
+      unified_mem[6'h1F] <= 12;  // 0x1F = 31 in decimal
+      unified_mem[6'h20] <= 21;  // 0x20 = 32 in decimal
+      unified_mem[6'h21] <= 22;  // 0x21 = 33 in decimal
     end else begin
       
       /* READ FROM MEMORY */  
