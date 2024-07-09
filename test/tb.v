@@ -5,33 +5,23 @@
 ... Because at the moment I'm harcoding the weights and inputs.
 */
 
-module tb_top_level_module;
+module tb;
   // Inputs
   reg clk;
   reg reset;
+  reg start; 
   // Outputs
-  wire [31:0] unified_mem [0:63];
 
   // Instantiate the top level module
-  main uut (
+  tpu uut (
     // Inputs
     .clk(clk),
     .reset(reset),
+    .start(start)
     // Outputs
-    .unified_mem(unified_mem)
   );
 
   // Clock generation
   always #5 clk = ~clk;
 
-  // Simulation starts HERE
-  initial begin
-    // Initialize inputs. 
-    clk = 0;
-    reset = 0;
-    reset = 1;
-    // "Let go" of reset (chip starts running)
-    #10;
-    reset = 0;
-  end
 endmodule
