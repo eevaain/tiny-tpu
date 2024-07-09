@@ -68,10 +68,7 @@ module control_unit (
       end
       FINISH: instruction = 16'b000_0000000000000;
     endcase
-  end
-
-  // ISA Control
-  always @(*) begin
+    
     if (reset) begin
       base_address = 0;
       load_weight = 0;
