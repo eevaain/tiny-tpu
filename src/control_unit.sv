@@ -1,6 +1,6 @@
 module control_unit (
-  input clk,
-  input reset,
+  input wire clk,
+  input wire reset,
   input wire start,                 // New input to start the program
   output reg load_weight,
   output reg [12:0] base_address,

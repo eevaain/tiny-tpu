@@ -1,6 +1,6 @@
 module weight_memory (
-  input clk,
-  input reset,
+  input wire clk,
+  input wire reset,
   input wire [12:0] addr,
   output reg [7:0] weight1,
   output reg [7:0] weight2,

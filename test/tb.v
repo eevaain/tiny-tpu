@@ -9,10 +9,11 @@ module tb;
   // Inputs
   reg clk;
   reg reset;
+  reg start; 
   // Outputs
 
   // Instantiate the top level module
-  main uut (
+  tpu uut (
     // Inputs
     .clk(clk),
     .reset(reset),

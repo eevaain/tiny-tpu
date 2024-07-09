@@ -1,6 +1,6 @@
 module mmu(
-  input clk,
-  input reset,
+  input wire clk,
+  input wire reset,
   input wire load_weight,    // Signal to load weight
   input wire valid,          // Valid signal indicating new data is available
 

@@ -5,7 +5,7 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = accumulator.sv control_unit.sv input_setup.sv mmu.sv processing_element.sv main.sv unified_buffer.sv weight_memory.sv
+PROJECT_SOURCES = accumulator.sv control_unit.sv input_setup.sv mmu.sv processing_element.sv tpu.sv unified_buffer.sv weight_memory.sv
 
 ifneq ($(GATES),yes)
 

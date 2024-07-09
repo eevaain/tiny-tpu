@@ -1,6 +1,6 @@
 module unified_buffer (
-  input clk,
-  input reset,
+  input wire clk,
+  input wire reset,
 
   input wire store_acc1, // full flag from accumulator 1
   input wire store_acc2, // full flag from accumulator 2
@@ -20,7 +20,7 @@ module unified_buffer (
   output reg [7:0] out_ub_01,
   output reg [7:0] out_ub_10,
   output reg [7:0] out_ub_11
-  // make another output (4 outputs registers) to output just the input activations to the input setup module
+
 );
   reg [7:0] unified_mem [0:63];
 
@@ -31,13 +31,14 @@ module unified_buffer (
       /* WRITE TO MEMORY
           Handle data coming from accumulators that is going into unified buffer
       */
-      // TODO remove store WILL FIX THE PROBLEM but i want to keep store here.
        if (store && store_acc1 && store_acc2) begin
           unified_mem[addr] = acc1_mem_0;
           unified_mem[addr + 1] = acc1_mem_1;
           unified_mem[addr + 2] = acc2_mem_0;
           unified_mem[addr + 3] = acc2_mem_1;
           write_pointer = addr + 4;
+
+          // create 4 wires for output matrix
       end
   end
 
@@ -49,7 +50,6 @@ module unified_buffer (
       end
       
       write_pointer <= 0;
-
       out_ub_00 <= 0; 
       out_ub_01 <= 0;
       out_ub_10 <= 0;

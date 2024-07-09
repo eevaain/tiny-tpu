@@ -1,6 +1,6 @@
-module main (
-  input clk,
-  input reset,
+module tpu (
+  input wire clk,
+  input wire reset,
   input wire start  // New input to start the program
 );
   wire [7:0] a_in1;

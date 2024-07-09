@@ -1,6 +1,6 @@
 module input_setup(
-    input clk,
-    input reset,
+    input wire clk,
+    input wire reset,
     input wire valid, 
 
     input wire [7:0] a11,
@@ -14,7 +14,6 @@ module input_setup(
     // n + 1 cells for each row (to accommodate zero-padding)
     reg [7:0] augmented_activation_row1 [0:2]; 
     reg [7:0] augmented_activation_row2 [0:2];
-
     reg [2:0] counter;
 
     integer i; 
