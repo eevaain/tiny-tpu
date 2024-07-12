@@ -1,13 +1,10 @@
+`timescale 1ns/1ps
+
 module tpu (
   input wire clk,
   input wire reset,
   input wire start  // New input to start the program
 );
-
-initial begin
-    $dumpfile("dump.vcd");
-    $dumpvars(0, tpu);
-end
 
   wire [7:0] a_in1;
   wire [7:0] a_in2;

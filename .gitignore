@@ -1,9 +1,6 @@
-FSM_assembly_inspo.v
-remember.txt
-tb_systolic_array.v
-tb_processing_element.v
-testbench
-define.v
-
-.DS_Store
-.gitignore
+*vcd
+*log
+*bin
+__pycache__
+sim_build
+results.xml
