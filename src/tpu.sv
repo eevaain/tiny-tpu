@@ -3,6 +3,12 @@ module tpu (
   input wire reset,
   input wire start  // New input to start the program
 );
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tpu);
+end
+
   wire [7:0] a_in1;
   wire [7:0] a_in2;
 
@@ -135,4 +141,5 @@ module tpu (
     // have a store or retrieve flag? (r/w)
     .store(store)
   );
+
 endmodule

@@ -8,17 +8,17 @@ async def initialize_instruction_mem(dut):
     instructions = [
         0b001_0000000001111,  # LOAD_ADDR 0x000F (16th address)
         0b010_0000000000000,  # LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
-        0b001_0000000011110,  # LOAD_ADDR 0x001E (30th address)
+        0b001_0000000011110,  # LOAD_ADDR 0x001E (31st address)
         0b011_0000000000000,  # LOAD_INPUT
         0b100_0000000000000,  # COMPUTE (Compute starts, systolic operations are automated by here)
-        0b001_0000000000111,  # LOAD_ADDR 0x0007 (7th address)
+        0b001_0000000000111,  # LOAD_ADDR 0x0007 (8th address)
         0b101_0000000000000,  # STORE
         0b000_0000000000000,  # NOP or END (indicate end of instructions)
     ]
 
     # Load the instructions into instruction_mem
     for i, instruction in enumerate(instructions):
-        dut.uut.cu.instruction_mem[i].value = instruction
+        dut.cu.instruction_mem[i].value = instruction
         await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
 
 async def initialize_unified_mem(dut):
@@ -32,7 +32,7 @@ async def initialize_unified_mem(dut):
 
     # Load the dummy inputs into unified_mem
     for addr, value in dummy_values.items():
-        dut.uut.ub.unified_mem[addr].value = value
+        dut.ub.unified_mem[addr].value = value
         await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
 
 async def initialize_weight_memory(dut):
@@ -46,13 +46,13 @@ async def initialize_weight_memory(dut):
 
     # Load the weights into weight memory
     for addr, value in weights.items():
-        dut.uut.wm.memory[addr].value = value
+        dut.wm.memory[addr].value = value
         await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
 
 @cocotb.test()
 async def test_tpu(dut):
     # Start the clock
-    cocotb.start_soon(Clock(dut.clk, 10, units="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 1, units="ns").start())
 
     # Reset the DUT
     dut.reset.value = 1
@@ -85,10 +85,10 @@ async def test_tpu(dut):
         dut._log.info(f"Cycle {cycle + 1}:")
 
         # Print values of the accumulators for every clock cycle in decimal
-        acc1_mem_0_val = int(dut.uut.acc1.acc_mem_0.value)
-        acc1_mem_1_val = int(dut.uut.acc1.acc_mem_1.value)
-        acc2_mem_0_val = int(dut.uut.acc2.acc_mem_0.value)
-        acc2_mem_1_val = int(dut.uut.acc2.acc_mem_1.value)
+        acc1_mem_0_val = int(dut.acc1.acc_mem_0.value)
+        acc1_mem_1_val = int(dut.acc1.acc_mem_1.value)
+        acc2_mem_0_val = int(dut.acc2.acc_mem_0.value)
+        acc2_mem_1_val = int(dut.acc2.acc_mem_1.value)
 
         dut._log.info(f"acc1_mem_0 = {acc1_mem_0_val}")
         dut._log.info(f"acc1_mem_1 = {acc1_mem_1_val}")
@@ -98,5 +98,5 @@ async def test_tpu(dut):
 
     # Print all 64 values of the unified memory from unified_buffer after the loop
     for i in range(64):
-        unified_mem_val = int(dut.uut.ub.unified_mem[i].value)
+        unified_mem_val = int(dut.ub.unified_mem[i].value)
         dut._log.info(f"unified_mem[{i}] = {unified_mem_val}")

@@ -11,6 +11,12 @@ module processing_element (
   output reg [7:0] a_out,    // Output A to right neighbor
   output reg [7:0] acc_out   // Accumulated value to the PE below
 );
+
+// initial begin
+//     $dumpfile("dump.vcd");
+//     $dumpvars(0, processing_element);
+// end
+
   reg [15:0] weight_reg; // Register to hold the stationary weight
 
   always @(posedge clk or posedge reset) begin

@@ -27,7 +27,7 @@ module control_unit (
     end else begin
       case (state)
         IDLE: begin
-          if (start) begin
+          if (start) begin // start program only once this flag is toggled!
             state <= FETCH;
           end
         end
@@ -53,6 +53,7 @@ module control_unit (
     end
   end
 
+  // this is happening in parallel to the always block above!
   // Combinational block (assigns actions to each state)
   always @(*) begin
     case (state) // Updates based on change in state
