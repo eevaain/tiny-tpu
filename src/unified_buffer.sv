@@ -8,7 +8,7 @@ module unified_buffer (
   input wire store_acc1, // full flag from accumulator 1
   input wire store_acc2, // full flag from accumulator 2
 
-  input wire [12:0] addr, // address i want to input to
+  input wire [12:0] addr, // address to input to
   input wire load_input, // flag for loading input from own memory to input_setup buffer
 
   input wire store, // flag for storing data from accumulators to unified buffer
@@ -23,47 +23,42 @@ module unified_buffer (
   output reg [7:0] out_ub_01,
   output reg [7:0] out_ub_10,
   output reg [7:0] out_ub_11
-
 );
-  reg [7:0] unified_mem [0:63];
-  reg [5:0] write_pointer; // next free memory location
+
+  parameter MEM_SIZE = 64;
+  parameter ADDR_WIDTH = 6;
+
+  reg [7:0] unified_mem [0:MEM_SIZE-1];
+  reg [ADDR_WIDTH-1:0] write_pointer; // next free memory location
   integer i;
 
   always @(posedge clk or posedge reset) begin
     if (reset) begin
-      for (i = 0; i < 64; i = i + 1) begin
+      for (i = 0; i < MEM_SIZE; i = i + 1) begin
         unified_mem[i] <= 8'b0;
       end
-      
-      write_pointer <= 6'b0;
+      write_pointer <= 0;
       out_ub_00 <= 8'b0;
       out_ub_01 <= 8'b0;
       out_ub_10 <= 8'b0;
       out_ub_11 <= 8'b0;
     end else begin
-      
       /* READ FROM MEMORY */  
-      if (load_input) begin // if load_input flag is on, then load data from unified buffer to input setup buffer
+      if (load_input) begin
         out_ub_00 <= unified_mem[addr]; 
         out_ub_01 <= unified_mem[addr + 1]; 
         out_ub_10 <= unified_mem[addr + 2]; 
         out_ub_11 <= unified_mem[addr + 3]; 
       end
-    end
-  end
 
-  always @(*) begin
-      /* WRITE TO MEMORY
-          Handle data coming from accumulators that is going into unified buffer
-      */
-       if (store && store_acc1 && store_acc2) begin
-          unified_mem[addr] = acc1_mem_0;
-          unified_mem[addr + 1] = acc1_mem_1;
-          unified_mem[addr + 2] = acc2_mem_0;
-          unified_mem[addr + 3] = acc2_mem_1;
-          write_pointer = addr + 4;
-
-          // create 4 wires for output matrix
+      /* STORE TO MEMORY */
+      if (store && store_acc1 && store_acc2) begin
+        unified_mem[addr] <= acc1_mem_0;
+        unified_mem[addr + 1] <= acc1_mem_1;
+        unified_mem[addr + 2] <= acc2_mem_0;
+        unified_mem[addr + 3] <= acc2_mem_1;
+        write_pointer <= addr + 4;
       end
+    end
   end
 endmodule
