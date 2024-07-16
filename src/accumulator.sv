@@ -1,3 +1,6 @@
+`default_nettype none
+`timescale 1ns/1ns
+
 module accumulator (
   input wire clk,
   input wire reset,
@@ -14,7 +17,7 @@ module accumulator (
   reg [1:0] index; // Index to manage storage locations
   integer i; // Declare integer outside of the always block
 
-  always @(posedge clk) begin
+  always @(posedge clk or posedge reset) begin
     if (reset) begin
       for (i = 0; i < 2; i = i + 1) begin
           acc_mem[i] <= 0;

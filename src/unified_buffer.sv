@@ -1,3 +1,6 @@
+`default_nettype none
+`timescale 1ns/1ns
+
 module unified_buffer (
   input wire clk,
   input wire reset,
@@ -23,9 +26,31 @@ module unified_buffer (
 
 );
   reg [7:0] unified_mem [0:63];
+  reg [5:0] write_pointer; // next free memory location
+  integer i;
 
-  // Internal counter to keep track of the next free memory location
-  reg [5:0] write_pointer;
+  always @(posedge clk or posedge reset) begin
+    if (reset) begin
+      for (i = 0; i < 64; i = i + 1) begin
+        unified_mem[i] <= 8'b0;
+      end
+      
+      write_pointer <= 6'b0;
+      out_ub_00 <= 8'b0;
+      out_ub_01 <= 8'b0;
+      out_ub_10 <= 8'b0;
+      out_ub_11 <= 8'b0;
+    end else begin
+      
+      /* READ FROM MEMORY */  
+      if (load_input) begin // if load_input flag is on, then load data from unified buffer to input setup buffer
+        out_ub_00 <= unified_mem[addr]; 
+        out_ub_01 <= unified_mem[addr + 1]; 
+        out_ub_10 <= unified_mem[addr + 2]; 
+        out_ub_11 <= unified_mem[addr + 3]; 
+      end
+    end
+  end
 
   always @(*) begin
       /* WRITE TO MEMORY
@@ -40,29 +65,5 @@ module unified_buffer (
 
           // create 4 wires for output matrix
       end
-  end
-
-  always @(posedge clk or posedge reset) begin
-    if (reset) begin
-      integer i;
-      for (i = 0; i < 64; i = i + 1) begin
-        unified_mem[i] <= 0;
-      end
-      
-      write_pointer <= 0;
-      out_ub_00 <= 0; 
-      out_ub_01 <= 0;
-      out_ub_10 <= 0;
-      out_ub_11 <= 0; 
-    end else begin
-      
-      /* READ FROM MEMORY */  
-      if (load_input) begin // if load_input flag is on, then load data from unified buffer to input setup buffer
-        out_ub_00 <= unified_mem[addr]; 
-        out_ub_01 <= unified_mem[addr + 1]; 
-        out_ub_10 <= unified_mem[addr + 2]; 
-        out_ub_11 <= unified_mem[addr + 3]; 
-      end
-    end
   end
 endmodule

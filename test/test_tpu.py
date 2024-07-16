@@ -52,7 +52,7 @@ async def initialize_weight_memory(dut):
 @cocotb.test()
 async def test_tpu(dut):
     # Start the clock
-    cocotb.start_soon(Clock(dut.clk, 1, units="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 10, units="us").start())
 
     # Reset the DUT
     dut.reset.value = 1

@@ -1,3 +1,6 @@
+`default_nettype none
+`timescale 1ns/1ns
+
 module input_setup(
     input wire clk,
     input wire reset,
@@ -15,28 +18,16 @@ module input_setup(
     reg [7:0] augmented_activation_row1 [0:2]; 
     reg [7:0] augmented_activation_row2 [0:2];
     reg [2:0] counter;
-
     integer i; 
 
-    always @(*) begin
-        if (valid && counter == 0) begin 
-            augmented_activation_row1[0] = a11;
-            augmented_activation_row1[1] = a12;
-            augmented_activation_row1[2] = 8'b0;
-
-            augmented_activation_row2[0] = 8'b0;
-            augmented_activation_row2[1] = a21;
-            augmented_activation_row2[2] = a22;
-        end
-    end
-
-    always @(posedge clk or posedge reset) begin
+       always @(posedge clk or posedge reset) begin
         if (reset) begin
             for (i = 0; i < 3; i = i + 1) begin
                 augmented_activation_row1[i] <= 8'b0;
                 augmented_activation_row2[i] <= 8'b0;
             end
-            counter <= 0; 
+
+            counter <= 3'b0; 
             a_in1 <= 8'b0;
             a_in2 <= 8'b0;
 
@@ -48,6 +39,18 @@ module input_setup(
             // Output zeros when counter exceeds valid range
             a_in1 <= 8'b0;
             a_in2 <= 8'b0;
+        end
+    end
+
+    always @(*) begin
+        if (valid && counter == 0) begin 
+            augmented_activation_row1[0] = a11;
+            augmented_activation_row1[1] = a12;
+            augmented_activation_row1[2] = 8'b0;
+
+            augmented_activation_row2[0] = 8'b0;
+            augmented_activation_row2[1] = a21;
+            augmented_activation_row2[2] = a22;
         end
     end
 endmodule

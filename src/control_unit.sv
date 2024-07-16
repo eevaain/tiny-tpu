@@ -1,3 +1,6 @@
+`default_nettype none
+`timescale 1ns/1ns
+
 module control_unit (
   input wire clk,
   input wire reset,
@@ -49,6 +52,9 @@ module control_unit (
           end
         end
         FINISH: state <= FINISH;
+        default: begin
+            state <= IDLE;
+        end
       endcase
     end
   end
@@ -68,6 +74,9 @@ module control_unit (
         end
       end
       FINISH: instruction = 16'b000_0000000000000;
+      default: begin
+          state <= IDLE;
+      end
     endcase
     
     if (reset) begin
