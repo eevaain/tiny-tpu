@@ -1,0 +1,31 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Wed Jul 17 20:37:51 2024
+[*]
+[dumpfile] "/Users/evanlin/Desktop/tiny-tpu/acc.vcd"
+[dumpfile_mtime] "Wed Jul 17 20:05:23 2024"
+[dumpfile_size] 835
+[savefile] "/Users/evanlin/Desktop/tiny-tpu/acc.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-15.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 193
+[signals_width] 193
+[sst_expanded] 1
+[sst_vpaned_height] 168
+@28
+accumulator.clk
+accumulator.reset
+accumulator.valid
+@24
+accumulator.acc_in[7:0]
+@28
+accumulator.full
+accumulator.index[1:0]
+@24
+accumulator.acc_mem_0[7:0]
+@25
+accumulator.acc_mem_1[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

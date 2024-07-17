@@ -18,18 +18,25 @@ module processing_element (
   reg [7:0] weight_reg; // Register to hold the stationary weight
 
   always @(posedge clk or posedge reset) begin
+      // perhaps create a state machine for load weight and valid (aka compute).... 
+      // could help avoid race conditioning? 
     if (reset) begin
+      
       a_out <= 8'b0;
       acc_out <= 8'b0;
       weight_reg <= 8'b0;
+
     end else begin
+
       if (load_weight) begin
         weight_reg <= weight;
-      end
+      end 
+
       if (valid) begin // means compute!
         acc_out <= acc_in + (a_in * weight_reg);
         a_out <= a_in;
       end
+
     end
   end
 endmodule

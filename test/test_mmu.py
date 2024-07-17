@@ -2,6 +2,8 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, ClockCycles
 
+#VERIFIED FUNCIONALITY ✅
+
 @cocotb.test()
 async def test_mmu(dut):
     cocotb.start_soon(Clock(dut.clk, 10, units="us").start())

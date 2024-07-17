@@ -21,18 +21,18 @@ test_tpu:
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_tpu vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 
-test_insdec:
-	rm -rf sim_build/
-	mkdir sim_build/
-	iverilog -o sim_build/sim.vvp -s insdec -s dump -g2012 src/insdec.sv test/dump_insdec.sv 
-	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_insdec vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
-	! grep failure results.xml
-
 test_mmu:
 	rm -rf sim_build/
 	mkdir sim_build/
 	iverilog -o sim_build/sim.vvp -s mmu -s dump -g2012 src/mmu.sv test/dump_mmu.sv src/processing_element.sv
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_mmu vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
+	! grep failure results.xml
+
+test_acc:
+	rm -rf sim_build/
+	mkdir sim_build/
+	iverilog -o sim_build/sim.vvp -s accumulator -s dump -g2012 src/accumulator.sv test/dump_acc.sv
+	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_acc vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 	
 
