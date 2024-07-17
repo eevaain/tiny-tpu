@@ -1,6 +1,6 @@
 # FPGA variables
 PROJECT = fpga/tpu_project
-SOURCES = src/tpu.sv src/accumulator.sv src/control_unit.sv src/input_setup.sv src/mmu.sv src/processing_element.sv src/unified_buffer.sv src/weight_memory.sv
+SOURCES = src/tpu.sv src/accumulator.sv src/control_unit.sv src/input_setup.sv src/mmu.sv src/processing_element.sv src/unified_buffer.sv src/weight_memory.sv 
 ICEBREAKER_DEVICE = up5k
 ICEBREAKER_PIN_DEF = fpga/icebreaker.pcf
 ICEBREAKER_PACKAGE = sg48
@@ -19,6 +19,13 @@ test_tpu:
 	mkdir sim_build/
 	iverilog -o sim_build/sim.vvp -s tpu -s dump -g2012 src/tpu.sv test/dump_tpu.sv src/accumulator.sv src/control_unit.sv src/input_setup.sv src/mmu.sv src/processing_element.sv src/unified_buffer.sv src/weight_memory.sv
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_tpu vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
+	! grep failure results.xml
+
+test_insdec:
+	rm -rf sim_build/
+	mkdir sim_build/
+	iverilog -o sim_build/sim.vvp -s insdec -s dump -g2012 src/insdec.sv test/dump_insdec.sv 
+	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_insdec vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 	
 

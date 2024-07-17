@@ -25,7 +25,7 @@ module unified_buffer (
   output reg [7:0] out_ub_11
 );
 
-  parameter MEM_SIZE = 64;
+  parameter MEM_SIZE = 32;
   parameter ADDR_WIDTH = 6;
 
   reg [7:0] unified_mem [0:MEM_SIZE-1];

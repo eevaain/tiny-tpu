@@ -17,20 +17,33 @@ module accumulator (
   reg [1:0] index; // Index to manage storage locations
   integer i; // Declare integer outside of the always block
 
-  always @(posedge clk or posedge reset) begin
-    if (reset) begin
-      for (i = 0; i < 2; i = i + 1) begin
-          acc_mem[i] <= 0;
-        end
+  // always @(posedge clk or posedge reset) begin
+  //   if (reset) begin
+  //     for (i = 0; i < 2; i = i + 1) begin
+  //         acc_mem[i] <= 0;
+  //       end
 
-      index <= 0; // Reset index
-      full <= 0; // Reset full flag
-      acc_mem_0 <= 0;
-      acc_mem_1 <= 0; 
-    end
-  end
+  //     index <= 0; // Reset index
+  //     full <= 0; // Reset full flag
+  //     acc_mem_0 <= 0;
+  //     acc_mem_1 <= 0; 
+  //   end
+  // end
+
+  // Thinking of implementing a mechanism where each accumulator has a mem size of #elements in row + 1, and then last total memsize - 1 stored,
 
   always @(*) begin
+    if (reset) begin
+      for (i = 0; i < 2; i = i + 1) begin
+          acc_mem[i] = 0;
+        end
+
+      index = 0; // Reset index
+      full = 0; // Reset full flag
+      acc_mem_0 = 0;
+      acc_mem_1 = 0; 
+    end
+
      if (valid && acc_in != 0) begin // This might be a cheap fix...
       // Store input value at the current index
       acc_mem[index] = acc_in;

@@ -23,10 +23,6 @@ module mmu(
   wire [7:0] a_inter_01, a_inter_11;
   wire [7:0] acc_inter_00, acc_inter_01;
 
-  wire [7:0] a_out1 = 8'b0;
-  wire [7:0] a_out2 = 8'b0;
-
-
   // Instantiate PE(0,0)
   processing_element PE00 (
     .clk(clk),
@@ -49,7 +45,7 @@ module mmu(
     .a_in(a_inter_01),
     .weight(weight3),
     .acc_in(8'b0),   // Top-right corner has no accumulated input
-    .a_out(a_out1),
+    .a_out(), // no output
     .acc_out(acc_inter_01)
   );
 
@@ -75,7 +71,7 @@ module mmu(
     .a_in(a_inter_11),
     .weight(weight4),
     .acc_in(acc_inter_01), // Bottom-right corner gets accumulated input from PE(0,1)
-    .a_out(a_out2),
+    .a_out(), // no output
     .acc_out(acc_out2)
   );
 

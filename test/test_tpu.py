@@ -6,12 +6,12 @@ from cocotb.triggers import RisingEdge, ClockCycles
 async def initialize_instruction_mem(dut):
     # Define the instructions
     instructions = [
-        0b001_0000000001111,  # LOAD_ADDR 0x000F (16th address)
+        0b001_0000000000011,  # LOAD_ADDR 
         0b010_0000000000000,  # LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
-        0b001_0000000011110,  # LOAD_ADDR 0x001E (31st address)
+        0b001_0000000010000,  # LOAD_ADDR 
         0b011_0000000000000,  # LOAD_INPUT
         0b100_0000000000000,  # COMPUTE (Compute starts, systolic operations are automated by here)
-        0b001_0000000000111,  # LOAD_ADDR 0x0007 (8th address)
+        0b001_0000000000011,  # LOAD_ADDR
         0b101_0000000000000,  # STORE
         0b000_0000000000000,  # NOP or END (indicate end of instructions)
     ]
@@ -21,33 +21,25 @@ async def initialize_instruction_mem(dut):
         dut.cu.instruction_mem[i].value = instruction
         await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
 
-async def initialize_unified_mem(dut):
-    # Define the dummy values row-wise
-    dummy_values = {
-        0x001E: 11,
-        0x001F: 12,
-        0x0020: 21,
-        0x0021: 22,
-    }
-
-    # Load the dummy inputs into unified_mem
-    for addr, value in dummy_values.items():
-        dut.ub.unified_mem[addr].value = value
-        await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
-
 async def initialize_weight_memory(dut):
-    # Define the weights row-wise
-    weights = {
-        0x0F: 3,
-        0x10: 4,
-        0x11: 5,
-        0x12: 6,
-    }
+    # Hardcoded weights row-wise starting at binary address 0b0011 (3 in decimal)
+    address = 0b0011
 
-    # Load the weights into weight memory
-    for addr, value in weights.items():
-        dut.wm.memory[addr].value = value
-        await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
+    dut.wm.memory[address].value = 3
+    dut.wm.memory[address + 1].value = 4
+    dut.wm.memory[address + 2].value = 5
+    dut.wm.memory[address + 3].value = 6
+    await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
+
+async def initialize_unified_mem(dut):
+    # Hardcoded dummy values row-wise starting at binary address 0b10000 (16 in decimal)
+    address = 0b10000
+
+    dut.ub.unified_mem[address].value = 11
+    dut.ub.unified_mem[address + 1].value = 12
+    dut.ub.unified_mem[address + 2].value = 21
+    dut.ub.unified_mem[address + 3].value = 22
+    await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
 
 @cocotb.test()
 async def test_tpu(dut):
@@ -73,10 +65,10 @@ async def test_tpu(dut):
     await ClockCycles(dut.clk, 1)  # Wait one cycle for the start signal to be registered
     dut.start.value = 0  # De-assert start signal
 
-    #IMPORTANT BELOW:
+    # IMPORTANT BELOW:
     # 11 clock cycles pass by here (2 from reset, 8 from loading instructions, 1 from asserting start flag)
 
-    # IMPORTANT BELOW: 
+    # IMPORTANT BELOW:
     # 12 clock cycles for accumulators to finish 2*2 matmul
     # 14 clock cycles (+2) because I have TWO instructions AFTER my compute instruction
 
@@ -97,6 +89,8 @@ async def test_tpu(dut):
         dut._log.info(f"-----------------------------")
 
     # Print all 64 values of the unified memory from unified_buffer after the loop
-    for i in range(64):
+    for i in range(32):
         unified_mem_val = int(dut.ub.unified_mem[i].value)
         dut._log.info(f"unified_mem[{i}] = {unified_mem_val}")
+    
+
