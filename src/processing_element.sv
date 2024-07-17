@@ -26,7 +26,7 @@ module processing_element (
       if (load_weight) begin
         weight_reg <= weight;
       end
-      if (valid) begin
+      if (valid) begin // means compute!
         acc_out <= acc_in + (a_in * weight_reg);
         a_out <= a_in;
       end

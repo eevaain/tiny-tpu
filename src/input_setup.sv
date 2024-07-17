@@ -44,10 +44,7 @@ module input_setup(
                 a_in1 <= augmented_activation_row1[counter];
                 a_in2 <= augmented_activation_row2[counter];
                 counter <= counter + 1;
-            end else begin
-                a_in1 <= 8'b0;
-                a_in2 <= 8'b0;
-            end
+            end 
         end else begin
             a_in1 <= 8'b0;
             a_in2 <= 8'b0;

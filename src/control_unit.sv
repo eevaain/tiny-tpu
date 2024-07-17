@@ -40,12 +40,6 @@ module control_unit (
         valid = 0;
         store = 0;
       end else begin
-        // These overwrite the dispatched signals on next clock cycle 
-        load_weight = 0;
-        load_input = 0;
-        valid = 0;
-        store = 0;
-
         // Dispatch
         case (instruction[15:13])
           3'b001: base_address = instruction[12:0]; // LOAD_ADDR

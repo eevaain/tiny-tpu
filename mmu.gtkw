@@ -1,0 +1,40 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Wed Jul 17 04:39:43 2024
+[*]
+[dumpfile] "/Users/evanlin/Desktop/tiny-tpu/mmu.vcd"
+[dumpfile_mtime] "Wed Jul 17 04:27:58 2024"
+[dumpfile_size] 3094
+[savefile] "/Users/evanlin/Desktop/tiny-tpu/mmu.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-15.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mmu.
+[sst_width] 193
+[signals_width] 141
+[sst_expanded] 1
+[sst_vpaned_height] 168
+@28
+mmu.clk
+@22
+mmu.weight1[7:0]
+mmu.weight2[7:0]
+mmu.weight3[7:0]
+mmu.weight4[7:0]
+@24
+mmu.a_in1[7:0]
+mmu.a_in2[7:0]
+@28
+mmu.load_weight
+mmu.valid
+@24
+mmu.acc_out1[7:0]
+mmu.acc_out2[7:0]
+@22
+mmu.PE00.weight[7:0]
+mmu.PE01.weight[7:0]
+mmu.PE10.weight[7:0]
+mmu.PE11.weight[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

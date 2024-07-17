@@ -23,10 +23,10 @@ module weight_memory (
       weight3 <= 8'b0;
       weight4 <= 8'b0;
     end else begin
-      weight1 = memory[addr];
-      weight2 = memory[addr + 1];
-      weight3 = memory[addr + 2];
-      weight4 = memory[addr + 3];
+      weight1 <= memory[addr];
+      weight2 <= memory[addr + 1];
+      weight3 <= memory[addr + 2];
+      weight4 <= memory[addr + 3];
     end
   end
 endmodule

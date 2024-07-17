@@ -1,7 +1,7 @@
 `default_nettype none
 `timescale 1ns/1ns
 
-module mmu(
+module mmu (
   input wire clk,
   input wire reset,
   input wire load_weight,    // Signal to load weight

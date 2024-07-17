@@ -27,9 +27,16 @@ test_insdec:
 	iverilog -o sim_build/sim.vvp -s insdec -s dump -g2012 src/insdec.sv test/dump_insdec.sv 
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_insdec vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
+
+test_mmu:
+	rm -rf sim_build/
+	mkdir sim_build/
+	iverilog -o sim_build/sim.vvp -s mmu -s dump -g2012 src/mmu.sv test/dump_mmu.sv src/processing_element.sv
+	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_mmu vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
+	! grep failure results.xml
 	
 
-# show_%: %.vcd %.gtkw (%.gtkw file allows me to config my waveform)
+# show_%: %.vcd %.gtkw (%.gtkw file allows me to config my waveform) but MUST have the gtkw file to work
 show_%: %.vcd %.gtkw
 	gtkwave $^
 
