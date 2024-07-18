@@ -5,8 +5,8 @@ module unified_buffer (
   input wire clk,
   input wire reset,
 
-  input wire store_acc1, // full flag from accumulator 1
-  input wire store_acc2, // full flag from accumulator 2
+  input wire full_acc1, // full flag from accumulator 1
+  input wire full_acc2, // full flag from accumulator 2
 
   input wire [12:0] addr, // address to input to
   input wire load_input, // flag for loading input from own memory to input_setup buffer
@@ -50,7 +50,7 @@ module unified_buffer (
       end
 
       /* STORE TO MEMORY */
-      if (store && store_acc1 && store_acc2) begin
+      if (store && full_acc1 && full_acc2) begin
         unified_mem[addr] <= acc1_mem_0;
         unified_mem[addr + 1] <= acc1_mem_1;
         unified_mem[addr + 2] <= acc2_mem_0;

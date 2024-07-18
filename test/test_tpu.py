@@ -6,10 +6,10 @@ from cocotb.triggers import RisingEdge, ClockCycles
 async def initialize_instruction_mem(dut):
     # Define the instructions
     instructions = [
-        0b001_0000000000011,  # LOAD_ADDR 
-        0b010_0000000000000,  # LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
         0b001_0000000010000,  # LOAD_ADDR 
         0b011_0000000000000,  # LOAD_INPUT
+        0b001_0000000000011,  # LOAD_ADDR 
+        0b010_0000000000000,  # LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
         0b100_0000000000000,  # COMPUTE (Compute starts, systolic operations are automated by here)
         0b001_0000000000011,  # LOAD_ADDR
         0b101_0000000000000,  # STORE
@@ -65,22 +65,15 @@ async def test_tpu(dut):
     await ClockCycles(dut.clk, 1)  # Wait one cycle for the start signal to be registered
     dut.start.value = 0  # De-assert start signal
 
-    # IMPORTANT BELOW:
-    # 11 clock cycles pass by here (2 from reset, 8 from loading instructions, 1 from asserting start flag)
-
-    # IMPORTANT BELOW:
-    # 12 clock cycles for accumulators to finish 2*2 matmul
-    # 14 clock cycles (+2) because I have TWO instructions AFTER my compute instruction
-
-    for cycle in range(22):
+    for cycle in range(20):
         await RisingEdge(dut.clk)
         dut._log.info(f"Cycle {cycle + 1}:")
 
         # Print values of the accumulators for every clock cycle in decimal
-        acc1_mem_0_val = int(dut.acc1.acc_mem_0.value)
-        acc1_mem_1_val = int(dut.acc1.acc_mem_1.value)
-        acc2_mem_0_val = int(dut.acc2.acc_mem_0.value)
-        acc2_mem_1_val = int(dut.acc2.acc_mem_1.value)
+        acc1_mem_0_val = int(dut.acc1.acc_mem[0].value)
+        acc1_mem_1_val = int(dut.acc1.acc_mem[1].value)
+        acc2_mem_0_val = int(dut.acc2.acc_mem[0].value)
+        acc2_mem_1_val = int(dut.acc2.acc_mem[1].value)
 
         dut._log.info(f"acc1_mem_0 = {acc1_mem_0_val}")
         dut._log.info(f"acc1_mem_1 = {acc1_mem_1_val}")

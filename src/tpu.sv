@@ -43,6 +43,8 @@ module tpu (
   wire [7:0] out_ub_to_input_setup_10;
   wire [7:0] out_ub_to_input_setup_11;
 
+  // Make a memory controller right here for memory input (routes the data to different memories: instruction mem, weightmem, unified buf)
+
   // Instantiate the control unit
   control_unit cu (
     .start(start),
@@ -125,8 +127,8 @@ module tpu (
     .clk(clk),
     .reset(reset),
     .load_input(load_input),
-    .store_acc1(acc1_full), // Only store when accumulator is full
-    .store_acc2(acc2_full), // Only store when accumulator is full
+    .full_acc1(acc1_full), // Only store when accumulator is full
+    .full_acc2(acc2_full), // Only store when accumulator is full
     .acc1_mem_0(acc1_mem_0_to_ub),
     .acc1_mem_1(acc1_mem_1_to_ub),
     .acc2_mem_0(acc2_mem_0_to_ub),

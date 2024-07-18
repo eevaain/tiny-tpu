@@ -43,6 +43,7 @@ module control_unit (
       end else begin
           load_weight = 0; // clears register for this flag so its only on for two cycles
           load_input = 0;
+          // store = 0;
         // Dispatch
         case (instruction[15:13])
           3'b001: base_address = instruction[12:0]; // LOAD_ADDR

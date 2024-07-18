@@ -17,9 +17,6 @@ module processing_element (
 
   reg [7:0] weight_reg; // Register to hold the stationary weight
 
-  typedef enum reg [1:0] {IDLE, LOAD_WEIGHT, COMPUTE} state_t;
-  state_t state = IDLE;
-
   always @(posedge clk or posedge reset) begin
       // perhaps create a state machine for load weight and valid (aka compute).... 
       // could help avoid race conditioning? 

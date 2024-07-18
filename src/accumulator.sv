@@ -17,6 +17,7 @@ module accumulator (
   reg [1:0] index; // Index to manage storage locations
   integer i; // Declare integer outside of the always block
 
+
   // Implement a state machine for this maybe??
   always @(posedge clk or posedge reset) begin
     if (reset) begin
@@ -28,24 +29,24 @@ module accumulator (
       full <= 0;
       acc_mem_0 <= 0;
       acc_mem_1 <= 0; 
+
     end else begin
 
       // Nothing starts until valid (compute) flag is set! 
       // Valid flag must be held high for compute to finish!
-      if (valid && acc_in != 0 && !full) begin
-        acc_mem[index] <= acc_in;
-        if (index < 1) begin 
-          index <= index + 1;
-        end else begin 
-          full <= 1; // Set full flag when all memory locations are filled
-        end
-      end
+      if (valid && acc_in != 0) begin
 
-      // Output the accumulated values when the accumulator is full
-      if (full) begin 
-        acc_mem_0 <= acc_mem[0]; 
-        acc_mem_1 <= acc_mem[1];
-      end
+        if (index < 2) begin
+          acc_mem[index] <= acc_in;
+          index <= index + 1;
+        end else begin
+          acc_mem_0 <= acc_mem[0]; 
+          acc_mem_1 <= acc_mem[1];
+          full <= 1; 
+        end
+      end 
+
+    
     end
   end
 
