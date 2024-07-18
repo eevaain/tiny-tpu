@@ -25,6 +25,7 @@ module unified_buffer (
   output reg [7:0] out_ub_11
 );
 
+  // turn this all into an FSM for reading from memory, acc_to_ub, and ub to output pins
   parameter MEM_SIZE = 32;
 
   reg [7:0] unified_mem [0:MEM_SIZE-1];

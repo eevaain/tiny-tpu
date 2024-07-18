@@ -59,6 +59,7 @@ module tpu (
   weight_memory wm (
     .clk(clk),
     .reset(reset),
+    .load_weight(load_weight),
     .addr(base_address),
     .weight1(weight1),
     .weight2(weight2),

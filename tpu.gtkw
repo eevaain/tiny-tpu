@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
-[*] Thu Jul 18 00:52:22 2024
+[*] Thu Jul 18 01:58:17 2024
 [*]
 [dumpfile] "/Users/evanlin/Desktop/tiny-tpu/tpu.vcd"
-[dumpfile_mtime] "Thu Jul 18 00:46:29 2024"
-[dumpfile_size] 8736
+[dumpfile_mtime] "Thu Jul 18 01:45:09 2024"
+[dumpfile_size] 8579
 [savefile] "/Users/evanlin/Desktop/tiny-tpu/tpu.gtkw"
-[timestart] 75800
+[timestart] 115800
 [size] 1135 671
 [pos] -1 -1
-*-16.000000 278900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-16.000000 228800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tpu.
 [sst_width] 193
 [signals_width] 210
@@ -43,6 +43,12 @@ tpu.systolic_array_inst.weight3[7:0]
 -group_end
 @24
 tpu.systolic_array_inst.weight4[7:0]
+tpu.is.a11[7:0]
+tpu.is.a12[7:0]
+tpu.is.a21[7:0]
+@25
+tpu.is.a22[7:0]
+@24
 tpu.systolic_array_inst.a_in1[7:0]
 @c00024
 tpu.systolic_array_inst.a_in2[7:0]
@@ -63,14 +69,14 @@ tpu.systolic_array_inst.acc_out1[7:0]
 -group_end
 @24
 tpu.systolic_array_inst.acc_out2[7:0]
+tpu.acc1.acc_mem_1[7:0]
+tpu.acc1.acc_mem_0[7:0]
+tpu.acc2.acc_mem_1[7:0]
+tpu.acc2.acc_mem_0[7:0]
 @28
 tpu.is.counter[2:0]
-@24
-tpu.is.a11[7:0]
-tpu.is.a12[7:0]
-tpu.is.a21[7:0]
-tpu.is.a22[7:0]
-tpu.acc1.acc_mem_0[7:0]
-tpu.acc1.acc_mem_1[7:0]
+tpu.ub.store
+tpu.ub.store_acc1
+tpu.ub.store_acc2
 [pattern_trace] 1
 [pattern_trace] 0

@@ -4,6 +4,7 @@
 module weight_memory (
   input wire clk,
   input wire reset,
+  input wire load_weight, 
   input wire [12:0] addr,
   output reg [7:0] weight1,
   output reg [7:0] weight2,
@@ -22,7 +23,7 @@ module weight_memory (
       weight2 <= 8'b0;
       weight3 <= 8'b0;
       weight4 <= 8'b0;
-    end else begin
+    end else if (load_weight) begin
       weight1 <= memory[addr];
       weight2 <= memory[addr + 1];
       weight3 <= memory[addr + 2];

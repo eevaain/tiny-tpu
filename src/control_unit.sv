@@ -4,7 +4,7 @@
 module control_unit (
   input wire clk,
   input wire reset,
-  input wire start,                 // New input to start the program
+  input wire start,          
   output reg load_weight,
   output reg [12:0] base_address,
   output reg load_input,
@@ -39,8 +39,10 @@ module control_unit (
         load_input = 0;
         valid = 0;
         store = 0;
+        instruction = 0;
       end else begin
           load_weight = 0; // clears register for this flag so its only on for two cycles
+          load_input = 0;
         // Dispatch
         case (instruction[15:13])
           3'b001: base_address = instruction[12:0]; // LOAD_ADDR
@@ -86,7 +88,10 @@ module control_unit (
             end
           endcase
         end
-        FINISH: state <= FINISH;
+        FINISH: begin
+            valid <= 0;
+          state <= FINISH;
+        end
         default: state <= IDLE;
       endcase
     end
