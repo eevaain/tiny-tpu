@@ -20,6 +20,9 @@ module input_setup(
     reg [2:0] counter;
     integer i;
 
+    typedef enum reg [1:0] {IDLE, READ, WRITE, FINISH} state_t;
+    state_t state = IDLE;
+
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             for (i = 0; i < 3; i = i + 1) begin
@@ -29,26 +32,41 @@ module input_setup(
             counter <= 3'b0;
             a_in1 <= 8'b0;
             a_in2 <= 8'b0;
-        end else if (valid) begin
-            if (counter == 0) begin
-                augmented_activation_row1[0] <= a11;
-                augmented_activation_row1[1] <= a12;
-                augmented_activation_row1[2] <= 8'b0;
-
-                augmented_activation_row2[0] <= 8'b0;
-                augmented_activation_row2[1] <= a21;
-                augmented_activation_row2[2] <= a22;
-            end
-
-            if (counter < 3) begin
-                a_in1 <= augmented_activation_row1[counter];
-                a_in2 <= augmented_activation_row2[counter];
-                counter <= counter + 1;
-            end 
-        end else begin
-            a_in1 <= 8'b0;
-            a_in2 <= 8'b0;
+            state <= IDLE; 
         end
-    end
+            // make a state machine for read and write? 
+            // valid makes state machine set in read mode for one cycle
+            // but then on the next cycle then its in write mode
 
+        case (state)
+            IDLE: begin
+                if (valid) state <= READ;
+            end
+            READ: begin
+                if (counter == 0) begin
+                    augmented_activation_row1[0] <= a11;
+                    augmented_activation_row1[1] <= a12;
+                    augmented_activation_row1[2] <= 8'b0;
+
+                    augmented_activation_row2[0] <= 8'b0;
+                    augmented_activation_row2[1] <= a21;
+                    augmented_activation_row2[2] <= a22;
+                    state <= WRITE;
+                end
+            end
+            WRITE: begin
+                if (counter < 3) begin
+                    a_in1 <= augmented_activation_row1[counter];
+                    a_in2 <= augmented_activation_row2[counter];
+                    counter <= counter + 1;
+                end else begin
+                    state <= FINISH; 
+                end
+            end
+            FINISH: begin 
+                a_in1 <= 8'b0;
+                a_in2 <= 8'b0; 
+            end
+        endcase
+        end
 endmodule

@@ -72,7 +72,7 @@ async def test_tpu(dut):
     # 12 clock cycles for accumulators to finish 2*2 matmul
     # 14 clock cycles (+2) because I have TWO instructions AFTER my compute instruction
 
-    for cycle in range(18):
+    for cycle in range(20):
         await RisingEdge(dut.clk)
         dut._log.info(f"Cycle {cycle + 1}:")
 

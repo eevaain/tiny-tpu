@@ -34,6 +34,13 @@ test_acc:
 	iverilog -o sim_build/sim.vvp -s accumulator -s dump -g2012 src/accumulator.sv test/dump_acc.sv
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_acc vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
+
+test_is:
+	rm -rf sim_build/
+	mkdir sim_build/
+	iverilog -o sim_build/sim.vvp -s input_setup -s dump -g2012 src/input_setup.sv test/dump_is.sv
+	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_is vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
+	! grep failure results.xml
 	
 
 # show_%: %.vcd %.gtkw (%.gtkw file allows me to config my waveform) but MUST have the gtkw file to work

@@ -32,10 +32,10 @@ async def test_acc(dut):
     dut.acc_in.value = 124
     await ClockCycles(dut.clk, 1)
 
-    dut.acc_in.value = 69
+    dut.acc_in.value = 69 # Doesnt load (intended)
     await ClockCycles(dut.clk, 1)
 
-    dut.acc_in.value = 96
+    dut.acc_in.value = 96 # Doesnt load (intended) 
     await ClockCycles(dut.clk, 1)
     await ClockCycles(dut.clk, 1)
     await ClockCycles(dut.clk, 1)

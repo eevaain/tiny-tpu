@@ -1,24 +1,76 @@
 [*]
 [*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
-[*] Fri Jul 12 21:34:05 2024
+[*] Thu Jul 18 00:52:22 2024
 [*]
 [dumpfile] "/Users/evanlin/Desktop/tiny-tpu/tpu.vcd"
-[dumpfile_mtime] "Fri Jul 12 21:33:14 2024"
-[dumpfile_size] 8298
+[dumpfile_mtime] "Thu Jul 18 00:46:29 2024"
+[dumpfile_size] 8736
 [savefile] "/Users/evanlin/Desktop/tiny-tpu/tpu.gtkw"
-[timestart] 0
-[size] 1135 600
+[timestart] 75800
+[size] 1135 671
 [pos] -1 -1
-*-13.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-16.000000 278900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tpu.
 [sst_width] 193
 [signals_width] 210
 [sst_expanded] 1
-[sst_vpaned_height] 168
+[sst_vpaned_height] 195
 @28
 tpu.clk
-tpu.start
-tpu.acc2_full
-@23
-tpu.acc2_mem_1_to_ub[7:0]
+tpu.cu.reset
+tpu.cu.load_weight
+tpu.cu.load_input
+tpu.cu.valid
+tpu.cu.store
+tpu.cu.base_address[12:0]
+tpu.cu.instruction[15:0]
+tpu.cu.state[1:0]
+@24
+tpu.systolic_array_inst.weight1[7:0]
+tpu.systolic_array_inst.weight2[7:0]
+@c00024
+tpu.systolic_array_inst.weight3[7:0]
+@28
+(0)tpu.systolic_array_inst.weight3[7:0]
+(1)tpu.systolic_array_inst.weight3[7:0]
+(2)tpu.systolic_array_inst.weight3[7:0]
+(3)tpu.systolic_array_inst.weight3[7:0]
+(4)tpu.systolic_array_inst.weight3[7:0]
+(5)tpu.systolic_array_inst.weight3[7:0]
+(6)tpu.systolic_array_inst.weight3[7:0]
+(7)tpu.systolic_array_inst.weight3[7:0]
+@1401200
+-group_end
+@24
+tpu.systolic_array_inst.weight4[7:0]
+tpu.systolic_array_inst.a_in1[7:0]
+@c00024
+tpu.systolic_array_inst.a_in2[7:0]
+@28
+(0)tpu.systolic_array_inst.a_in2[7:0]
+(1)tpu.systolic_array_inst.a_in2[7:0]
+(2)tpu.systolic_array_inst.a_in2[7:0]
+(3)tpu.systolic_array_inst.a_in2[7:0]
+(4)tpu.systolic_array_inst.a_in2[7:0]
+(5)tpu.systolic_array_inst.a_in2[7:0]
+(6)tpu.systolic_array_inst.a_in2[7:0]
+(7)tpu.systolic_array_inst.a_in2[7:0]
+@1401200
+-group_end
+@800024
+tpu.systolic_array_inst.acc_out1[7:0]
+@1001200
+-group_end
+@24
+tpu.systolic_array_inst.acc_out2[7:0]
+@28
+tpu.is.counter[2:0]
+@24
+tpu.is.a11[7:0]
+tpu.is.a12[7:0]
+tpu.is.a21[7:0]
+tpu.is.a22[7:0]
+tpu.acc1.acc_mem_0[7:0]
+tpu.acc1.acc_mem_1[7:0]
 [pattern_trace] 1
 [pattern_trace] 0

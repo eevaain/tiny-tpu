@@ -24,16 +24,16 @@ module accumulator (
           acc_mem[i] <= 0;
       end
 
-      index <= 0; // Reset index
-      full <= 0; // Reset full flag
+      index <= 0;
+      full <= 0;
       acc_mem_0 <= 0;
       acc_mem_1 <= 0; 
     end else begin
+
+      // Nothing starts until valid (compute) flag is set! 
+      // Valid flag must be held high for compute to finish!
       if (valid && acc_in != 0 && !full) begin
-        // Store input value at the current index
         acc_mem[index] <= acc_in;
-        
-        // Increment index to store the next value
         if (index < 1) begin 
           index <= index + 1;
         end else begin 
