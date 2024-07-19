@@ -17,7 +17,6 @@ module accumulator (
   reg [1:0] index; // Index to manage storage locations
   integer i; // Declare integer outside of the always block
 
-
   // Implement a state machine for this maybe??
   always @(posedge clk or posedge reset) begin
     if (reset) begin
@@ -31,7 +30,6 @@ module accumulator (
       acc_mem_1 <= 0; 
 
     end else begin
-
       // Nothing starts until valid (compute) flag is set! 
       // Valid flag must be held high for compute to finish!
       if (valid && acc_in != 0) begin
@@ -44,9 +42,8 @@ module accumulator (
           acc_mem_1 <= acc_mem[1];
           full <= 1; 
         end
-      end 
 
-    
+      end 
     end
   end
 

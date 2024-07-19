@@ -4,7 +4,8 @@
 module tpu (
   input wire clk,
   input wire reset,
-  input wire start  // New input to start the program
+  input wire start,  // New input to start the program
+  output wire final_out
 );
 
   wire [7:0] a_in1;
@@ -17,6 +18,7 @@ module tpu (
   wire load_input;
   wire valid;
   wire store;
+  wire ext;
 
   // Internal signals for accumulated values from the systolic array
   wire [7:0] systolic_acc_out1;
@@ -54,7 +56,8 @@ module tpu (
     .base_address(base_address),
     .load_input(load_input),
     .valid(valid),
-    .store(store)
+    .store(store),
+    .ext(ext)
   );
 
   // Instantiate the weight memory
@@ -140,7 +143,9 @@ module tpu (
     .out_ub_10(out_ub_to_input_setup_10),
     .out_ub_11(out_ub_to_input_setup_11),
     // have a store or retrieve flag? (r/w)
-    .store(store)
+    .store(store),
+    .ext(ext),
+    .final_out(final_out)
   );
 
 endmodule

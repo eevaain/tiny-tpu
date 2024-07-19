@@ -5,11 +5,12 @@ module control_unit (
   input wire clk,
   input wire reset,
   input wire start,          
-  output reg load_weight,
   output reg [12:0] base_address,
   output reg load_input,
+  output reg load_weight,
   output reg valid,
-  output reg store
+  output reg store,
+  output reg ext
 );
 
   // Instruction definitions
@@ -19,13 +20,14 @@ module control_unit (
   localparam [15:0] LOAD_INPUTS = 16'b011_0000000000000;
   localparam [15:0] COMPUTE = 16'b100_0000000000000;
   localparam [15:0] STORE = 16'b101_0000000000000;
+  localparam [15:0] EXT = 16'b111_0000000000000;
 
   // FSM states
   typedef enum reg [1:0] {IDLE, FETCH, EXECUTE, FINISH} state_t;
   state_t state = IDLE;
 
   // Instruction memory
-  reg [15:0] instruction_mem [0:7]; // Adjust the size as needed.
+  reg [15:0] instruction_mem [0:9]; // Adjust the size as needed.
   reg [15:0] instruction;           // Instruction register
 
   integer instruction_pointer;
@@ -39,10 +41,12 @@ module control_unit (
         load_input = 0;
         valid = 0;
         store = 0;
-        instruction = 0;
+        ext = 0;
+        // instruction = 0;
       end else begin
           load_weight = 0; // clears register for this flag so its only on for two cycles
           load_input = 0;
+          ext = 0;
           // store = 0;
         // Dispatch
         case (instruction[15:13])
@@ -51,6 +55,7 @@ module control_unit (
           3'b011: load_input = 1;                    // LOAD_INPUTS
           3'b100: valid = 1;                         // VALID (COMPUTE)
           3'b101: store = 1;                         // STORE
+          3'b111: ext = 1;                         // STORE (off chip)
           default: ; // NO_OP or unrecognized instruction
         endcase
       end
@@ -62,6 +67,7 @@ module control_unit (
       state <= IDLE;
       instruction_pointer <= 0;
       compute_cycle_counter <= 0;
+      instruction <= 0;
     end else begin
       case (state)
         IDLE: begin
@@ -71,7 +77,7 @@ module control_unit (
           instruction <= instruction_mem[instruction_pointer];
           state <= EXECUTE;
         end
-        EXECUTE: begin
+        EXECUTE: begin // Program is running here!
           case (instruction)
             COMPUTE: begin
               if (compute_cycle_counter < 3) begin
@@ -87,10 +93,13 @@ module control_unit (
               instruction_pointer <= instruction_pointer + 1;
               state <= FETCH;
             end
+            // EXT: begin // this instruction will send 
+                // adsdadsadasdsa
+            // end
           endcase
         end
-        FINISH: begin
-            valid <= 0;
+        FINISH: begin // triggered on NOP instruction
+          // valid <= 0; // i want to add this but gotta keep blocking and non blocking mutually excl.
           state <= FINISH;
         end
         default: state <= IDLE;

@@ -1,16 +1,18 @@
 [*]
 [*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
-[*] Thu Jul 18 18:14:21 2024
+[*] Thu Jul 18 21:59:15 2024
 [*]
 [dumpfile] "/Users/evanlin/Desktop/tiny-tpu/tpu.vcd"
-[dumpfile_mtime] "Thu Jul 18 18:12:24 2024"
-[dumpfile_size] 8510
+[dumpfile_mtime] "Thu Jul 18 21:58:31 2024"
+[dumpfile_size] 9087
 [savefile] "/Users/evanlin/Desktop/tiny-tpu/tpu.gtkw"
-[timestart] 95800
+[timestart] 155800
 [size] 1135 779
 [pos] -1 -1
-*-16.000000 228800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-16.000000 349400 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tpu.
+[treeopen] tpu.systolic_array_inst.
+[treeopen] tpu.ub.
 [sst_width] 193
 [signals_width] 210
 [sst_expanded] 1
@@ -74,9 +76,12 @@ tpu.acc2.acc_mem_0[7:0]
 @28
 tpu.is.counter[2:0]
 tpu.ub.store
-@29
 tpu.ub.full_acc1
-@28
 tpu.ub.full_acc2
+tpu.ub.state[1:0]
+@25
+tpu.ub.final_out[7:0]
+@28
+tpu.ub.incrementor[2:0]
 [pattern_trace] 1
 [pattern_trace] 0

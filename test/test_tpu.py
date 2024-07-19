@@ -13,6 +13,8 @@ async def initialize_instruction_mem(dut):
         0b100_0000000000000,  # COMPUTE (Compute starts, systolic operations are automated by here)
         0b001_0000000000011,  # LOAD_ADDR
         0b101_0000000000000,  # STORE
+        0b001_0000000000011,  # LOAD_ADDR again from memory
+        0b111_0000000000000,  # transfer to ext
         0b000_0000000000000,  # NOP or END (indicate end of instructions)
     ]
 
@@ -65,7 +67,7 @@ async def test_tpu(dut):
     await ClockCycles(dut.clk, 1)  # Wait one cycle for the start signal to be registered
     dut.start.value = 0  # De-assert start signal
 
-    for cycle in range(20):
+    for cycle in range(29):
         await RisingEdge(dut.clk)
         dut._log.info(f"Cycle {cycle + 1}:")
 
