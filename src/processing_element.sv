@@ -1,3 +1,6 @@
+`default_nettype none
+`timescale 1ns/1ns
+
 module processing_element (
   input wire clk,
   input wire reset,
@@ -11,24 +14,29 @@ module processing_element (
   output reg [7:0] a_out,    // Output A to right neighbor
   output reg [7:0] acc_out   // Accumulated value to the PE below
 );
-  reg [15:0] weight_reg; // Register to hold the stationary weight
+
+  reg [7:0] weight_reg; // Register to hold the stationary weight
 
   always @(posedge clk or posedge reset) begin
+      // perhaps create a state machine for load weight and valid (aka compute).... 
+      // could help avoid race conditioning? 
     if (reset) begin
+      
       a_out <= 8'b0;
       acc_out <= 8'b0;
       weight_reg <= 8'b0;
+
     end else begin
+
       if (load_weight) begin
-        // Load the weight when the load_weight signal is high
         weight_reg <= weight;
-      end
-      if (valid) begin
-        // Calculate the new accumulated value
+      end 
+
+      if (valid) begin // means compute!
         acc_out <= acc_in + (a_in * weight_reg);
-        // Propagate input A to output A
         a_out <= a_in;
       end
+
     end
   end
 endmodule

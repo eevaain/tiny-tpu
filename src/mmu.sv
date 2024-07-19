@@ -1,4 +1,7 @@
-module mmu(
+`default_nettype none
+`timescale 1ns/1ns
+
+module mmu (
   input wire clk,
   input wire reset,
   input wire load_weight,    // Signal to load weight
@@ -12,10 +15,6 @@ module mmu(
   input wire [7:0] weight3, // Weight for PE(1,0)
   input wire [7:0] weight4, // Weight for PE(1,1)
 
-  // i do not need these two but keep these wires exposed. they are not defined in the top level module so dont touch that. 
-  output wire [7:0] a_out1, // Output A from PE(0,1)
-  output wire [7:0] a_out2, // Output A from PE(1,1)
-
   // these values need to be stored in a register in matrix format
   output wire [7:0] acc_out1, // Accumulated value from PE(1,0)
   output wire [7:0] acc_out2  // Accumulated value from PE(1,1)
@@ -23,8 +22,6 @@ module mmu(
   // Internal signals for connections between PEs
   wire [7:0] a_inter_01, a_inter_11;
   wire [7:0] acc_inter_00, acc_inter_01;
-
-  // TODO: Change order of weight1, weight2, weight3, weight4 wires so weight matrix can be loaded in row-wise in its weight memory before going to the matrix
 
   // Instantiate PE(0,0)
   processing_element PE00 (
@@ -48,7 +45,7 @@ module mmu(
     .a_in(a_inter_01),
     .weight(weight3),
     .acc_in(8'b0),   // Top-right corner has no accumulated input
-    .a_out(a_out1),
+    .a_out(), // no output
     .acc_out(acc_inter_01)
   );
 
@@ -74,7 +71,7 @@ module mmu(
     .a_in(a_inter_11),
     .weight(weight4),
     .acc_in(acc_inter_01), // Bottom-right corner gets accumulated input from PE(0,1)
-    .a_out(a_out2),
+    .a_out(), // no output
     .acc_out(acc_out2)
   );
 

@@ -1,34 +1,27 @@
+`default_nettype none
+`timescale 1ns/1ns
+
 module input_setup(
     input wire clk,
     input wire reset,
-    input wire valid, 
+    input wire valid,
 
     input wire [7:0] a11,
-    input wire [7:0] a12, 
+    input wire [7:0] a12,
     input wire [7:0] a21,
     input wire [7:0] a22,
 
     output reg [7:0] a_in1,
     output reg [7:0] a_in2
-); 
+);
     // n + 1 cells for each row (to accommodate zero-padding)
-    reg [7:0] augmented_activation_row1 [0:2]; 
+    reg [7:0] augmented_activation_row1 [0:2];
     reg [7:0] augmented_activation_row2 [0:2];
     reg [2:0] counter;
+    integer i;
 
-    integer i; 
-
-    always @(*) begin
-        if (valid && counter == 0) begin 
-            augmented_activation_row1[0] = a11;
-            augmented_activation_row1[1] = a12;
-            augmented_activation_row1[2] = 8'b0;
-
-            augmented_activation_row2[0] = 8'b0;
-            augmented_activation_row2[1] = a21;
-            augmented_activation_row2[2] = a22;
-        end
-    end
+    typedef enum reg [1:0] {IDLE, READ, WRITE, FINISH} state_t;
+    state_t state = IDLE;
 
     always @(posedge clk or posedge reset) begin
         if (reset) begin
@@ -36,18 +29,44 @@ module input_setup(
                 augmented_activation_row1[i] <= 8'b0;
                 augmented_activation_row2[i] <= 8'b0;
             end
-            counter <= 0; 
+            counter <= 3'b0;
             a_in1 <= 8'b0;
             a_in2 <= 8'b0;
-
-        end else if (valid && counter < 3) begin
-            a_in1 <= augmented_activation_row1[counter];
-            a_in2 <= augmented_activation_row2[counter];
-            counter <= counter + 1; // IMPORTANT takes prev value (like js prev) 
-        end else begin
-            // Output zeros when counter exceeds valid range
-            a_in1 <= 8'b0;
-            a_in2 <= 8'b0;
+            state <= IDLE; 
         end
-    end
+            // make a state machine for read and write? 
+            // valid makes state machine set in read mode for one cycle
+            // but then on the next cycle then its in write mode
+
+        case (state)
+            IDLE: begin
+                if (valid) state <= READ;
+            end
+            READ: begin
+                if (counter == 0) begin
+                    augmented_activation_row1[0] <= a11;
+                    augmented_activation_row1[1] <= a12;
+                    augmented_activation_row1[2] <= 8'b0;
+
+                    augmented_activation_row2[0] <= 8'b0;
+                    augmented_activation_row2[1] <= a21;
+                    augmented_activation_row2[2] <= a22;
+                    state <= WRITE;
+                end
+            end
+            WRITE: begin
+                if (counter < 3) begin
+                    a_in1 <= augmented_activation_row1[counter];
+                    a_in2 <= augmented_activation_row2[counter];
+                    counter <= counter + 1;
+                end else begin
+                    state <= FINISH; 
+                end
+            end
+            FINISH: begin 
+                a_in1 <= 8'b0;
+                a_in2 <= 8'b0; 
+            end
+        endcase
+        end
 endmodule

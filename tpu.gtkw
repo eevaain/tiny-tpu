@@ -1,0 +1,87 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Thu Jul 18 21:59:15 2024
+[*]
+[dumpfile] "/Users/evanlin/Desktop/tiny-tpu/tpu.vcd"
+[dumpfile_mtime] "Thu Jul 18 21:58:31 2024"
+[dumpfile_size] 9087
+[savefile] "/Users/evanlin/Desktop/tiny-tpu/tpu.gtkw"
+[timestart] 155800
+[size] 1135 779
+[pos] -1 -1
+*-16.000000 349400 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tpu.
+[treeopen] tpu.systolic_array_inst.
+[treeopen] tpu.ub.
+[sst_width] 193
+[signals_width] 210
+[sst_expanded] 1
+[sst_vpaned_height] 233
+@28
+tpu.clk
+tpu.cu.reset
+tpu.cu.load_weight
+tpu.cu.load_input
+tpu.cu.valid
+tpu.cu.store
+tpu.cu.base_address[12:0]
+tpu.cu.instruction[15:0]
+tpu.cu.state[1:0]
+@24
+tpu.systolic_array_inst.weight1[7:0]
+tpu.systolic_array_inst.weight2[7:0]
+@c00024
+tpu.systolic_array_inst.weight3[7:0]
+@28
+(0)tpu.systolic_array_inst.weight3[7:0]
+(1)tpu.systolic_array_inst.weight3[7:0]
+(2)tpu.systolic_array_inst.weight3[7:0]
+(3)tpu.systolic_array_inst.weight3[7:0]
+(4)tpu.systolic_array_inst.weight3[7:0]
+(5)tpu.systolic_array_inst.weight3[7:0]
+(6)tpu.systolic_array_inst.weight3[7:0]
+(7)tpu.systolic_array_inst.weight3[7:0]
+@1401200
+-group_end
+@24
+tpu.systolic_array_inst.weight4[7:0]
+tpu.is.a11[7:0]
+tpu.is.a12[7:0]
+tpu.is.a21[7:0]
+tpu.is.a22[7:0]
+tpu.systolic_array_inst.a_in1[7:0]
+@c00024
+tpu.systolic_array_inst.a_in2[7:0]
+@28
+(0)tpu.systolic_array_inst.a_in2[7:0]
+(1)tpu.systolic_array_inst.a_in2[7:0]
+(2)tpu.systolic_array_inst.a_in2[7:0]
+(3)tpu.systolic_array_inst.a_in2[7:0]
+(4)tpu.systolic_array_inst.a_in2[7:0]
+(5)tpu.systolic_array_inst.a_in2[7:0]
+(6)tpu.systolic_array_inst.a_in2[7:0]
+(7)tpu.systolic_array_inst.a_in2[7:0]
+@1401200
+-group_end
+@800024
+tpu.systolic_array_inst.acc_out1[7:0]
+@1001200
+-group_end
+@24
+tpu.systolic_array_inst.acc_out2[7:0]
+tpu.acc1.acc_mem_1[7:0]
+tpu.acc1.acc_mem_0[7:0]
+tpu.acc2.acc_mem_1[7:0]
+tpu.acc2.acc_mem_0[7:0]
+@28
+tpu.is.counter[2:0]
+tpu.ub.store
+tpu.ub.full_acc1
+tpu.ub.full_acc2
+tpu.ub.state[1:0]
+@25
+tpu.ub.final_out[7:0]
+@28
+tpu.ub.incrementor[2:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,8 +1,13 @@
+`default_nettype none
+`timescale 1ns/1ns
+
 module tpu (
   input wire clk,
   input wire reset,
-  input wire start  // New input to start the program
+  input wire start,  // New input to start the program
+  output wire final_out
 );
+
   wire [7:0] a_in1;
   wire [7:0] a_in2;
 
@@ -13,6 +18,7 @@ module tpu (
   wire load_input;
   wire valid;
   wire store;
+  wire ext;
 
   // Internal signals for accumulated values from the systolic array
   wire [7:0] systolic_acc_out1;
@@ -39,6 +45,8 @@ module tpu (
   wire [7:0] out_ub_to_input_setup_10;
   wire [7:0] out_ub_to_input_setup_11;
 
+  // Make a memory controller right here for memory input (routes the data to different memories: instruction mem, weightmem, unified buf)
+
   // Instantiate the control unit
   control_unit cu (
     .start(start),
@@ -48,13 +56,15 @@ module tpu (
     .base_address(base_address),
     .load_input(load_input),
     .valid(valid),
-    .store(store)
+    .store(store),
+    .ext(ext)
   );
 
   // Instantiate the weight memory
   weight_memory wm (
     .clk(clk),
     .reset(reset),
+    .load_weight(load_weight),
     .addr(base_address),
     .weight1(weight1),
     .weight2(weight2),
@@ -120,8 +130,8 @@ module tpu (
     .clk(clk),
     .reset(reset),
     .load_input(load_input),
-    .store_acc1(acc1_full), // Only store when accumulator is full
-    .store_acc2(acc2_full), // Only store when accumulator is full
+    .full_acc1(acc1_full), // Only store when accumulator is full
+    .full_acc2(acc2_full), // Only store when accumulator is full
     .acc1_mem_0(acc1_mem_0_to_ub),
     .acc1_mem_1(acc1_mem_1_to_ub),
     .acc2_mem_0(acc2_mem_0_to_ub),
@@ -133,6 +143,9 @@ module tpu (
     .out_ub_10(out_ub_to_input_setup_10),
     .out_ub_11(out_ub_to_input_setup_11),
     // have a store or retrieve flag? (r/w)
-    .store(store)
+    .store(store),
+    .ext(ext),
+    .final_out(final_out)
   );
+
 endmodule
