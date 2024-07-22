@@ -14,7 +14,7 @@ async def initialize_instruction_mem(dut):
         0b001_0000000000011,  # LOAD_ADDR
         0b101_0000000000000,  # STORE
         0b001_0000000000011,  # LOAD_ADDR again from memory
-        0b111_0000000000000,  # transfer to ext
+        0b111_0000000000000,  # EXT transfer to ext
         0b000_0000000000000,  # NOP or END (indicate end of instructions)
     ]
 
