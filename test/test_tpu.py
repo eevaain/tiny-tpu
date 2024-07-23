@@ -18,8 +18,8 @@ async def initialize_instruction_mem(dut):
         # TODO: debug timing of these two instructions!
 
 
-        # 0b001_0000000000011,  # LOAD_ADDR (4th address)
-        # 0b111_0000000000000,  # EXT (output data starting from the address specified above)
+        0b001_0000000000111,  # LOAD_ADDR (6th address)
+        0b111_0000000000000,  # EXT (output data starting from the address specified above)
 
 
         0b000_0000000000000,  # NOP or END (indicate end of instructions)

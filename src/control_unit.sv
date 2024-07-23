@@ -51,7 +51,7 @@ module control_unit (
           load_weight = 0; // clears register for this flag so its only on for two cycles
           load_input = 0;
           ext = 0;
-          // store = 0; // TODO: uncomment this? 
+          store = 0; // TODO: uncomment this? 
         // Dispatch
         case (instruction[15:13])
           3'b001: base_address = instruction[12:0]; // LOAD_ADDR
@@ -87,7 +87,7 @@ module control_unit (
         EXECUTE: begin // Program is running here!
           case (instruction)
             COMPUTE: begin
-              if (compute_cycle_counter < 3) begin
+              if (compute_cycle_counter < 4) begin
                 compute_cycle_counter <= compute_cycle_counter + 1;
               end else begin
                 compute_cycle_counter <= 0;

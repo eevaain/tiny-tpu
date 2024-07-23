@@ -70,7 +70,7 @@ module unified_buffer (
       end
 
       /* STORE TO MEMORY */
-      if (store && full_acc1 && full_acc2) begin
+      if (store && full_acc1 && full_acc2) begin // TODO: feel like this logic needs to be fixed... 
         unified_mem[addr] <= acc1_mem_0;
         unified_mem[addr + 1] <= acc1_mem_1;
         unified_mem[addr + 2] <= acc2_mem_0;
