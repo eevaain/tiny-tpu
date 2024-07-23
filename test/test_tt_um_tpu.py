@@ -10,11 +10,20 @@ async def test_tt_um_tpu(dut):
     
     dut.reset.value = 1
     await ClockCycles(dut.clk, 1)
+
     dut.reset.value = 0
     await ClockCycles(dut.clk, 1)
+
+    dut.reset.value = 0
     await ClockCycles(dut.clk, 1)
 
     dut.uio_in.value = 0b00100000 # fetch weight
+    await ClockCycles(dut.clk, 1)
+
+    dut.uio_in.value = 0b00100000 # fetch weight "i am holding this down!"
+    await ClockCycles(dut.clk, 1)
+
+    dut.uio_in.value = 0b00100000 # fetch weight "i am holding this down!"
     await ClockCycles(dut.clk, 1)
 
     dut.uio_in.value = 0b01000000 # fetch inputs
@@ -23,7 +32,11 @@ async def test_tt_um_tpu(dut):
     dut.uio_in.value = 0b01100000 # fetch instructions
     await ClockCycles(dut.clk, 1)
 
-    dut.uio_in.value = 0b10000000 # start
+    dut.uio_in.value = 0b10000000 # start (only needs to be high once and then tpu should just run on its own )
     await ClockCycles(dut.clk, 1)
+
+    dut.uio_in.value = 0b00000000 # "let go of start really quickly"
     await ClockCycles(dut.clk, 1)
+
+    dut.uio_in.value = 0b00000000 # "let go of start really quickly"
     await ClockCycles(dut.clk, 1)

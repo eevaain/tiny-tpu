@@ -22,103 +22,52 @@ module tt_um_tpu (
     reg fetch_ins; 
     reg start; 
 
-    // make FSM for the fetches.
-
-
-typedef enum reg [2:0] {
-    IDLE = 3'b000, 
-    FETCH_W = 3'b001, 
-    FETCH_INP = 3'b010, 
-    FETCH_INS = 3'b011,
-    START = 3'b100
-    } state_t; 
-
-  state_t state = IDLE;
-
-    always @(*) begin
+    always @(posedge clk or posedge reset) begin // might be smarter to change this block to be combinational. 
         if (reset) begin
-            fetch_w = 0; 
-            fetch_inp = 0;
-            fetch_ins = 0;
-            start = 0;
-            uio_oe_reg = 8'b0000_0000; // All pins as inputs initially
-        end 
-
-        // case (state)
-        //     IDLE: begin 
-        //         if (uio_in[7:5] == 3'b001) begin
-        //             state = FETCH_W; 
-        //         end else if (uio_in[7:5] == 3'b010) begin
-        //             state = FETCH_INP; 
-        //         end else if (uio_in[7:5] == 3'b011) begin
-        //             state = FETCH_INS; 
-        //         end else if (uio_in[7:5] == 3'b100) begin
-        //             state = START; 
-        //         end else begin
-        //             state = IDLE; 
-        //         end
-        //     end
-        //     FETCH_W: begin
-        //         fetch_inp = 1; 
-        //         fetch_inp = 0; 
-        //         fetch_ins = 0;
-        //         start = 0; 
-        //         state = IDLE; 
-        //     end
-        //     FETCH_INP: begin
-        //         fetch_inp = 0; 
-        //         fetch_inp = 1; 
-        //         fetch_ins = 0;
-        //         start = 0; 
-        //         state = IDLE; 
-        //     end
-        //     FETCH_INS: begin
-        //         fetch_inp = 0; 
-        //         fetch_inp = 0; 
-        //         fetch_ins = 1;
-        //         start = 0; 
-        //         state = IDLE; 
-        //     end   
-        //     START: begin
-        //         fetch_inp = 0; 
-        //         fetch_inp = 0; 
-        //         fetch_ins = 0;
-        //         start = 1; 
-        //         state = IDLE; 
-        //     end 
-        // endcase
-
-       
-
-
-        
-        
-        else begin
-            fetch_w = 0; 
-            fetch_inp = 0;
-            fetch_ins = 0;
-            start = 0;
+            fetch_w <= 0; 
+            fetch_inp <= 0;
+            fetch_ins <= 0;
+            start <= 0;
+            uio_oe_reg <= 8'b0000_0000; // All pins as inputs initially
+        end else begin
+            fetch_w <= 0; 
+            fetch_inp <= 0;
+            fetch_ins <= 0;
+            start <= 0;
 
             case (uio_in[7:5]) 
                 3'b000: begin 
-                    fetch_w = 0; 
-                    fetch_inp = 0;
-                    fetch_ins = 0;
-                    start = 0;
+                    fetch_w <= 0; 
+                    fetch_inp <= 0;
+                    fetch_ins <= 0;
+                    start <= 0;
                 end
-                3'b001: fetch_w = 1; 
-                3'b010: fetch_inp = 1;
-                3'b011: fetch_ins = 1; 
-                3'b101: start = 1; 
+                3'b001: fetch_w <= 1; 
+                3'b010: fetch_inp <= 1;
+                3'b011: fetch_ins <= 1; 
+                3'b100: start <= 1; 
                 default: begin 
-                    fetch_w = 0; 
-                    fetch_inp = 0;
-                    fetch_ins = 0;
-                    start = 0;
+                    fetch_w <= 0; 
+                    fetch_inp <= 0;
+                    fetch_ins <= 0;
+                    start <= 0;
                 end
             endcase
-
         end
     end
+
+    // tpu tpu (
+    // // INPUTS
+    // .clk(clk),
+    // .reset(reset),
+    // .ui_in(ui_in), 
+    //  // Data select flags
+    // .start(start),  // flag to start the program
+    // .fetch_w(fetch_w), // flag to fetch weights from host
+    // .fetch_inp(fetch_inp), // flag to fetch inputs from host
+    // .fetch_ins(fetch_ins), // flag to fetch instructions from host
+    //  // OUTPUTS
+    // .wire_out(uo_out) 
+    // ); 
 
 endmodule

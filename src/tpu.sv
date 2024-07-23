@@ -2,10 +2,17 @@
 `timescale 1ns/1ns
 
 module tpu (
+  // INPUTS
   input wire clk,
   input wire reset,
-  input wire start,  // New input to start the program
-  output wire final_out
+  input wire [7:0] ui_in, 
+  // Data select flags
+  input wire start,  
+  input wire fetch_w, 
+  input wire fetch_inp, 
+  input wire fetch_ins, 
+   // OUTPUTS 
+  output wire [7:0] wire_out
 );
 
   wire [7:0] a_in1;
@@ -49,7 +56,10 @@ module tpu (
 
   // Instantiate the control unit
   control_unit cu (
-    .start(start),
+      // TODO: add fetch_ins flag.
+      // TODO: add ui_in bus.
+
+    .start(start), // manually controlled by pins outside of chip
     .clk(clk),
     .reset(reset),
     .load_weight(load_weight),
@@ -62,6 +72,8 @@ module tpu (
 
   // Instantiate the weight memory
   weight_memory wm (
+      // TODO: add fetch_w flag.
+      // TODO: add ui_in bus.
     .clk(clk),
     .reset(reset),
     .load_weight(load_weight),
@@ -126,6 +138,10 @@ module tpu (
 
   // Instantiate the unified buffer
   unified_buffer ub (
+      // TODO: add fetch_w flag.
+      // TODO: add ui_in bus.
+
+
     // inputs 
     .clk(clk),
     .reset(reset),
@@ -144,8 +160,8 @@ module tpu (
     .out_ub_11(out_ub_to_input_setup_11),
     // have a store or retrieve flag? (r/w)
     .store(store),
-    .ext(ext),
-    .final_out(final_out)
+    .ext(ext), // flag for dispatching data out of chip
+    .final_out(wire_out) // bus of output data wires
   );
 
 endmodule

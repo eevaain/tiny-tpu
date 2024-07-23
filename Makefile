@@ -49,6 +49,7 @@ test_tt_um_tpu:
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_tt_um_tpu vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 	
+# will need to make another make command for testing my entire chip (command should be just like the tpu command but add the tt_um_tpu src files)
 
 # show_%: %.vcd %.gtkw (%.gtkw file allows me to config my waveform) but MUST have the gtkw file to work
 show_%: %.vcd %.gtkw
