@@ -2,6 +2,11 @@
 `timescale 1ns/1ns
 
 module weight_memory (
+  input wire fetch_w,
+  input wire [7:0] ui_in, 
+  // TODO: Implement logic to load data into "memory" using these two inputs above. 
+  // im getting yosys compilation errors BECAUSE i need to drive values INTO my memory!!!1
+
   input wire clk,
   input wire reset,
   input wire load_weight, 
@@ -11,12 +16,12 @@ module weight_memory (
   output reg [7:0] weight3,
   output reg [7:0] weight4
 );
-  reg [7:0] memory [0:31]; // Simple memory to store weights
+  reg [7:0] memory [0:15]; // Simple memory to store weights
   integer i;
 
   always @(posedge clk or posedge reset) begin
     if (reset) begin
-      for (i = 0; i < 32; i++) begin
+      for (i = 0; i < 16; i++) begin
         memory[i] <= 8'b0;
       end
       weight1 <= 8'b0;

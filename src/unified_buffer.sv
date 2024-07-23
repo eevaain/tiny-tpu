@@ -2,6 +2,11 @@
 `timescale 1ns/1ns
 
 module unified_buffer (
+  input wire fetch_inp,
+  input wire [7:0] ui_in, 
+    // TODO: Implement logic to load data into unified_mem using these two inputs above. 
+
+
   input wire clk,
   input wire reset,
 

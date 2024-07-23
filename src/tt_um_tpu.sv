@@ -12,10 +12,12 @@ module tt_um_tpu (
     output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     input  wire       clk,      // clock
-    input  wire       reset     // reset_n - low to reset
+    input  wire       reset     // rst_n - low to reset --> // TODO: rename back to rst_n!
 );
     reg [7:0] uio_oe_reg; 
     assign uio_oe = uio_oe_reg;
+
+    // wire reset = ~rst_n
 
     reg fetch_w;
     reg fetch_inp; 

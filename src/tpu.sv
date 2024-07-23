@@ -56,8 +56,8 @@ module tpu (
 
   // Instantiate the control unit
   control_unit cu (
-      // TODO: add fetch_ins flag.
-      // TODO: add ui_in bus.
+    .fetch_ins(fetch_ins),
+    .ui_in(ui_in),
 
     .start(start), // manually controlled by pins outside of chip
     .clk(clk),
@@ -72,8 +72,10 @@ module tpu (
 
   // Instantiate the weight memory
   weight_memory wm (
-      // TODO: add fetch_w flag.
-      // TODO: add ui_in bus.
+    .fetch_w(fetch_w),
+    .ui_in(ui_in),
+
+
     .clk(clk),
     .reset(reset),
     .load_weight(load_weight),
@@ -138,8 +140,8 @@ module tpu (
 
   // Instantiate the unified buffer
   unified_buffer ub (
-      // TODO: add fetch_w flag.
-      // TODO: add ui_in bus.
+      .fetch_inp(fetch_inp),
+      .ui_in(ui_in), 
 
 
     // inputs 

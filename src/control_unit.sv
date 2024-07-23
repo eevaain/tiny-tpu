@@ -2,6 +2,10 @@
 `timescale 1ns/1ns
 
 module control_unit (
+  input wire fetch_ins,
+  input wire [7:0] ui_in, 
+  // TODO: Implement logic to load data into instruction_mem using these two inputs above. 
+
   input wire clk,
   input wire reset,
   input wire start,          
