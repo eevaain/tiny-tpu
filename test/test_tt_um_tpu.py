@@ -32,7 +32,7 @@ async def test_tt_um_tpu(dut):
     dut.uio_in.value = 0b01100000 # fetch instructions
     await ClockCycles(dut.clk, 1)
 
-    dut.uio_in.value = 0b10000000 # start (only needs to be high once and then tpu should just run on its own )
+    dut.uio_in.value = 0b10000000 # start (only needs to be high once and then tpu should just run on its own)
     await ClockCycles(dut.clk, 1)
 
     dut.uio_in.value = 0b00000000 # "let go of start really quickly"

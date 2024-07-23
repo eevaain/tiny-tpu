@@ -2,10 +2,8 @@
 `timescale 1ns/1ns
 
 module weight_memory (
-  input wire fetch_w,
+  input wire fetch_w, 
   input wire [7:0] ui_in, 
-  // TODO: Implement logic to load data into "memory" using these two inputs above. 
-  // im getting yosys compilation errors BECAUSE i need to drive values INTO my memory!!!1
 
   input wire clk,
   input wire reset,
@@ -19,6 +17,11 @@ module weight_memory (
   reg [7:0] memory [0:15]; // Simple memory to store weights
   integer i;
 
+  reg [3:0] memory_pointer; 
+
+  typedef enum reg [1:0] {IDLE, READ_FROM_HOST} state_t; 
+  state_t state = IDLE;
+ 
   always @(posedge clk or posedge reset) begin
     if (reset) begin
       for (i = 0; i < 16; i++) begin
@@ -28,11 +31,37 @@ module weight_memory (
       weight2 <= 8'b0;
       weight3 <= 8'b0;
       weight4 <= 8'b0;
-    end else if (load_weight) begin
+
+      memory_pointer <= 0; 
+      state <= IDLE; 
+
+    end else if (load_weight) begin // WRITE DATA
       weight1 <= memory[addr];
       weight2 <= memory[addr + 1];
       weight3 <= memory[addr + 2];
       weight4 <= memory[addr + 3];
+    end else begin
+
+      // TODO: Verify functionality of the FSM below. hopefully it works but havent tested yet
+
+        case (state)
+          IDLE: begin
+              state <= IDLE;
+              if (fetch_w) begin // if fetch_w flag is enabled. 
+                state <= READ_FROM_HOST; 
+              end
+          end
+          READ_FROM_HOST: begin
+            if (memory_pointer < 4) begin // could be delay issues from jumping immediateely to this state. may need to manually add another delay to fix the timing? 
+              memory[memory_pointer] <= ui_in; // memory pointer will always start from the first address
+              memory_pointer <= memory_pointer + 1; 
+            end else begin
+              state <= IDLE; 
+            end
+          end
+        endcase
+
+
     end
   end
 endmodule
