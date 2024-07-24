@@ -42,8 +42,6 @@ module weight_memory (
       weight4 <= memory[addr + 3];
     end else begin
 
-      // TODO: Verify functionality of the FSM below. hopefully it works but havent tested yet
-
         case (state)
           IDLE: begin
               state <= IDLE;

@@ -51,7 +51,7 @@ module control_unit (
           load_weight = 0; // clears register for this flag so its only on for two cycles
           load_input = 0;
           ext = 0;
-          store = 0; // TODO: uncomment this? 
+          store = 0; 
         // Dispatch
         case (instruction[15:13])
           3'b001: base_address = instruction[12:0]; // LOAD_ADDR
@@ -59,10 +59,7 @@ module control_unit (
           3'b011: load_input = 1;                    // LOAD_INPUTS
           3'b100: valid = 1;                         // VALID (COMPUTE)
           3'b101: store = 1;                         // STORE
-          3'b111: begin
-            ext = 1;    
-            // base_address = 0;           
-          end          // STORE (off chip) // TODO: I THINK MY TIMING IS FUCKED CUS IM STORING THIS USING COMBINATIONAL LOGIC. NEED TO WAIT 1 MORE CLOCK CYLE FOR IT TO WORK??
+          3'b111: ext = 1;                      
           default: ; // NO_OP or unrecognized instruction
         endcase
       end

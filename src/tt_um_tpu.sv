@@ -15,7 +15,7 @@ module tt_um_tpu (
     input  wire       reset     // rst_n - low to reset --> // TODO: rename back to rst_n!
 );
     reg [7:0] uio_oe_reg; 
-    assign uio_oe = uio_oe_reg;
+    assign uio_oe_reg = uio_oe_reg; // TODO: fix this. 
 
     // wire reset = ~rst_n
 
@@ -37,7 +37,7 @@ module tt_um_tpu (
             fetch_ins <= 0;
             start <= 0;
 
-            case (uio_in[7:5]) // TODO: Decode an address so that data can do go specific address of memory 
+            case (uio_in[7:5]) // TODO: Decode an address so that data can do go specific address of memory
                 3'b000: begin 
                     fetch_w <= 0; 
                     fetch_inp <= 0;
