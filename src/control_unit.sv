@@ -4,7 +4,6 @@
 module control_unit (
   input wire fetch_ins,
   input wire [7:0] ui_in, 
-  // TODO: Implement logic to load data into instruction_mem using these two inputs above. 
 
   input wire clk,
   input wire reset,
@@ -26,10 +25,15 @@ module control_unit (
   localparam [15:0] STORE = 16'b101_0000000000000;
   localparam [15:0] EXT = 16'b111_0000000000000;
 
-  // FSM states
+  // FSM states for interal instruction dispatch
   typedef enum reg [1:0] {IDLE, FETCH, EXECUTE, FINISH} state_t;
   state_t state = IDLE;
-
+  
+  // FSM states for fetching data from an external computer
+  typedef enum reg [1:0] {RFM_IDLE, READ_FROM_HOST} state_j; 
+  state_j state_rfm = RFM_IDLE;
+  reg [3:0] memory_pointer; 
+  
   // Instruction memory
   reg [15:0] instruction_mem [0:9]; // Adjust the size as needed.
   reg [15:0] instruction;           // Instruction register
@@ -37,6 +41,29 @@ module control_unit (
   integer instruction_pointer;
   integer compute_cycle_counter;    // Counter for compute cycles
 
+  always @(posedge clk or posedge reset) begin // TODO: CHANGE THIS FSM SO I CAN LOAD IN 8 BITs.
+      if (reset) begin
+        state_rfm <= RFM_IDLE; 
+        memory_pointer <= 0; 
+      end else begin
+      case (state_rfm)
+          RFM_IDLE: begin
+            state_rfm <= RFM_IDLE;
+              if (fetch_ins) begin // if fetch_w flag is enabled. 
+                state_rfm <= READ_FROM_HOST; 
+              end
+            end
+          READ_FROM_HOST: begin
+              if (memory_pointer < 4) begin // could be delay issues from jumping immediateely to this state. may need to manually add another delay to fix the timing? 
+                instruction_mem[memory_pointer] <= ui_in; // memory pointer will always start from the first address
+                memory_pointer <= memory_pointer + 1; 
+              end else begin
+                state_rfm <= RFM_IDLE; 
+              end
+            end
+          endcase
+        end
+    end
     // Instruction decoding and control signal generation block
   always @(*) begin
       if (reset) begin

@@ -4,8 +4,8 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, ClockCycles
 
 async def initialize_instruction_mem(dut):
-    # Define the instructions
-    instructions = [
+    # TODO: CHANGE INSTRUCTIONS TO BE 8 BITS
+    instructions = [ 
         # TODO: test out more addresses to ensure everything works fine. 
         0b001_0000000001111,  # LOAD_ADDR (16th address)
         0b011_0000000000000,  # LOAD_INPUT (take input from unified buffer and transfer to input setup)
@@ -23,23 +23,9 @@ async def initialize_instruction_mem(dut):
     for i, instruction in enumerate(instructions):
         dut.cu.instruction_mem[i].value = instruction
         await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
+    
 
-async def initialize_weight_memory(dut):
-    # Hardcoded weights row-wise starting at binary address 0b0011 (3 in decimal)
-    # address = 0b0011
-    address = 0b0000 # 0th address
-
-    dut.wm.memory[address].value = 3
-    dut.wm.memory[address + 1].value = 4
-    dut.wm.memory[address + 2].value = 5
-    dut.wm.memory[address + 3].value = 6
-    await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
-
-
-
-
-# TODO: Replace the function initialize_weight_memory with the function below! 
-async def inititialize_weight_memory_REAL(dut):
+async def inititialize_weight_memory(dut):
     dut.fetch_w.value = 1 # Select bit for fetchig weight flag turns on
     await ClockCycles(dut.clk, 1)
 
@@ -65,17 +51,22 @@ async def inititialize_weight_memory_REAL(dut):
 
 
 
-
-
 async def initialize_unified_mem(dut):
     # Hardcoded dummy values row-wise starting at binary address 0b10000 (16 in decimal)
-    address = 0b01111
+    address = 0b01111 # TODO: create external addressing which is sent directly from host computer
+                    # which communicates with the tpu. is this considered as a DMA controller???
+                    # therefore i will have 2 types of instructions:
+                    # 1. instructions which directly react to host computer
+                    # 2. instructions which only execute when start flag is triggered 
+                    # probably should find a more professional term to dub this process...
 
     dut.ub.unified_mem[address].value = 11
     dut.ub.unified_mem[address + 1].value = 12
     dut.ub.unified_mem[address + 2].value = 21
     dut.ub.unified_mem[address + 3].value = 22
     await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
+
+
 
 @cocotb.test()
 async def test_tpu(dut):
@@ -94,14 +85,21 @@ async def test_tpu(dut):
     # Initialize the unified memory with dummy inputs
     await initialize_unified_mem(dut)
     # Initialize the weights
-    # await initialize_weight_memory(dut)
-    await inititialize_weight_memory_REAL(dut)
+    await inititialize_weight_memory(dut)
+
+
+
+
 
     print("Weights within first four addresses: ")
     print(int(dut.wm.memory[0].value))
     print(int(dut.wm.memory[1].value))
     print(int(dut.wm.memory[2].value))
     print(int(dut.wm.memory[3].value))
+
+
+
+
 
     # Assert the start signal to begin execution
     dut.start.value = 1

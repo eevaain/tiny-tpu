@@ -37,7 +37,8 @@ module tt_um_tpu (
             fetch_ins <= 0;
             start <= 0;
 
-            case (uio_in[7:5]) // TODO: Decode an address so that data can do go specific address of memory
+
+            case (uio_in[7:5]) // TODO: Decode address (5 bit) so that data can do go specific address of memory
                 3'b000: begin 
                     fetch_w <= 0; 
                     fetch_inp <= 0;
