@@ -4,50 +4,61 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, ClockCycles
 
 async def initialize_instruction_mem(dut):
-    # TODO: CHANGE INSTRUCTIONS TO BE 8 BITS
-    instructions = [ 
-        # TODO: test out more addresses to ensure everything works fine. 
-        0b001_0000000001111,  # LOAD_ADDR (16th address)
-        0b011_0000000000000,  # LOAD_INPUT (take input from unified buffer and transfer to input setup)
-        0b001_0000000000000,  # LOAD_ADDR (1st address)
-        0b010_0000000000000,  # LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
-        0b100_0000000000000,  # COMPUTE (Compute starts, systolic operations are automated by here)
-        0b001_0000000000111,  # LOAD_ADDR (load result in 8th address)
-        0b101_0000000000000,  # STORE (result is stored in address above within unified buffer)
-        0b001_0000000001001,  # LOAD_ADDR (10th address: which means only last two product matrix elements will be outputted)
-        0b111_0000000000000,  # EXT (output data off-chip, starting from the address specified above)
-        0b000_0000000000000,  # NOP or END (indicate end of instructions)
+    # Define the instructions in an array
+    instructions = [
+        0b001_01111,  # LOAD_ADDR (16th address)
+        0b011_00000,  # LOAD_INPUT (take input from unified buffer and transfer to input setup)
+        0b001_00000,  # LOAD_ADDR (1st address)
+        0b010_00000,  # LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
+        0b100_00000,  # COMPUTE (Compute starts, systolic operations are automated by here)
+        0b001_00111,  # LOAD_ADDR (load result in 8th address)
+        0b101_00000,  # STORE (result is stored in address above within unified buffer)
+        0b001_01001,  # LOAD_ADDR (10th address: which means only last two product matrix elements will be outputted)
+        0b111_00000,  # EXT (output data off-chip, starting from the address specified above)
+        0b000_00000   # NOP or END (indicate end of instructions)
     ]
 
-    # Load the instructions into instruction_mem
-    for i, instruction in enumerate(instructions):
-        dut.cu.instruction_mem[i].value = instruction
-        await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
-    
+    # By separating the instructions into ext fetch and internal program execution...
+    # ...I can fetch weights and inputs during runtime!
+
+    # Start fetching instructions
+    dut.fetch_ins.value = 1
+    await ClockCycles(dut.clk, 1)
+
+    # Load the instructions into the instruction memory
+    for ins in instructions:
+        dut.ui_in.value = ins
+        dut.fetch_ins.value = 1
+        await ClockCycles(dut.clk, 1)
+
+    # Stop receiving instructions
+    dut.fetch_ins.value = 0
+    await ClockCycles(dut.clk, 1)
+
+
 
 async def inititialize_weight_memory(dut):
-    dut.fetch_w.value = 1 # Select bit for fetchig weight flag turns on
+    # Define the weight elements in an array
+    weights = [
+        0b00000011,  # First weight element in the 2x2 weight matrix (3)
+        0b00000100,  # Second weight element in the 2x2 weight matrix (4)
+        0b00000101,  # Third weight element in the 2x2 weight matrix (5)
+        0b00000110   # Fourth weight element in the 2x2 weight matrix (6)
+    ]
+
+    # Start fetching weights
+    dut.fetch_w.value = 1
     await ClockCycles(dut.clk, 1)
 
-    dut.ui_in.value = 0b00000011 # Load in the first weight element in the 2x2 weight matrix
-    dut.fetch_w.value = 1 # Continue fetching weight
-    await ClockCycles(dut.clk, 1)
+    # Load the weights into the weight memory
+    for weight in weights:
+        dut.ui_in.value = weight
+        dut.fetch_w.value = 1
+        await ClockCycles(dut.clk, 1)
 
-    dut.ui_in.value = 0b00000100 # Load in the second weight element in the 2x2 weight matrix
-    dut.fetch_w.value = 1 # Continue fetching weight
+    # Stop fetching weights
+    dut.fetch_w.value = 0
     await ClockCycles(dut.clk, 1)
-
-    dut.ui_in.value = 0b00000101 # Load in the third weight element in the 2x2 weight matrix
-    dut.fetch_w.value = 1 # Continue fetching weight
-    await ClockCycles(dut.clk, 1)
-
-    dut.ui_in.value = 0b00000110 # Load in the fourth weight element in the 2x2 weight matrix
-    dut.fetch_w.value = 1 # Continue fetching weight
-    await ClockCycles(dut.clk, 1)
-
-    dut.fetch_w.value = 0 # Stop fetching weight!
-    await ClockCycles(dut.clk, 1)
-
 
 
 
@@ -70,43 +81,29 @@ async def initialize_unified_mem(dut):
 
 @cocotb.test()
 async def test_tpu(dut):
-    # Start the clock
-    cocotb.start_soon(Clock(dut.clk, 10, units="us").start())
+    cocotb.start_soon(Clock(dut.clk, 10, units="us").start()) # Start the clock
 
-    # Reset the DUT
-    dut.reset.value = 1
+    dut.reset.value = 1  # Reset the DUT
     dut.start.value = 0  # Ensure start is low during reset
     await ClockCycles(dut.clk, 1)
     dut.reset.value = 0
     await ClockCycles(dut.clk, 1)
 
-    # Initialize the instruction memory
-    await initialize_instruction_mem(dut)
-    # Initialize the unified memory with dummy inputs
-    await initialize_unified_mem(dut)
-    # Initialize the weights
-    await inititialize_weight_memory(dut)
+    await initialize_instruction_mem(dut)  # Initialize instructions
+    await initialize_unified_mem(dut) # Initialize inputs
+    await inititialize_weight_memory(dut) # Initialize weights
 
+    # print("Weights within first four addresses: ")
+    # print(int(dut.wm.memory[0].value))
+    # print(int(dut.wm.memory[1].value))
+    # print(int(dut.wm.memory[2].value))
+    # print(int(dut.wm.memory[3].value))
 
-
-
-
-    print("Weights within first four addresses: ")
-    print(int(dut.wm.memory[0].value))
-    print(int(dut.wm.memory[1].value))
-    print(int(dut.wm.memory[2].value))
-    print(int(dut.wm.memory[3].value))
-
-
-
-
-
-    # Assert the start signal to begin execution
-    dut.start.value = 1
+    dut.start.value = 1 # Assert the start signal to begin execution
     await ClockCycles(dut.clk, 1)  # Wait one cycle for the start signal to be registered
     dut.start.value = 0  # De-assert start signal
 
-    for cycle in range(29):
+    for cycle in range(28): # results dont change after a specific clk cycle but i forgot
         await RisingEdge(dut.clk)
         dut._log.info(f"Cycle {cycle + 1}:")
 

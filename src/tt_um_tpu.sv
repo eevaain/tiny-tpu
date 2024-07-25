@@ -30,7 +30,7 @@ module tt_um_tpu (
             fetch_inp <= 0;
             fetch_ins <= 0;
             start <= 0;
-            uio_oe_reg <= 8'b0000_0000; // All pins as inputs initially
+            uio_oe_reg <= 8'b0000_0000; // Set birectional pins as hardcoded inputs
         end else begin
             fetch_w <= 0; 
             fetch_inp <= 0;

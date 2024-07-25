@@ -20,7 +20,7 @@ module input_setup(
     reg [2:0] counter;
     integer i;
 
-    typedef enum reg [1:0] {IDLE, READ, WRITE, FINISH} state_t;
+    typedef enum reg [1:0] {IDLE, READ, WRITE} state_t;
     state_t state = IDLE;
 
     always @(posedge clk or posedge reset) begin
@@ -33,14 +33,15 @@ module input_setup(
             a_in1 <= 8'b0;
             a_in2 <= 8'b0;
             state <= IDLE; 
-        end
-            // make a state machine for read and write? 
-            // valid makes state machine set in read mode for one cycle
-            // but then on the next cycle then its in write mode
+        end else begin
 
         case (state)
             IDLE: begin
-                if (valid) state <= READ;
+                if (valid) begin
+                    state <= READ;
+                end
+                a_in1 <= 8'b0;
+                a_in2 <= 8'b0;
             end
             READ: begin
                 if (counter == 0) begin
@@ -60,13 +61,13 @@ module input_setup(
                     a_in2 <= augmented_activation_row2[counter];
                     counter <= counter + 1;
                 end else begin
-                    state <= FINISH; 
+                    state <= IDLE; 
+                    counter <= 3'b0;
                 end
             end
-            FINISH: begin 
-                a_in1 <= 8'b0;
-                a_in2 <= 8'b0; 
-            end
+     
         endcase
+
+        end
         end
 endmodule

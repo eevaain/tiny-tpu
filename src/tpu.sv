@@ -52,14 +52,12 @@ module tpu (
   wire [7:0] out_ub_to_input_setup_10;
   wire [7:0] out_ub_to_input_setup_11;
 
-  // Make a memory controller right here for memory input (routes the data to different memories: instruction mem, weightmem, unified buf)
-
   // Instantiate the control unit
   control_unit cu (
     .fetch_ins(fetch_ins),
     .ui_in(ui_in),
 
-    .start(start), // manually controlled by pins outside of chip
+    .start(start),
     .clk(clk),
     .reset(reset),
     .load_weight(load_weight),
@@ -160,7 +158,7 @@ module tpu (
     .out_ub_01(out_ub_to_input_setup_01),
     .out_ub_10(out_ub_to_input_setup_10),
     .out_ub_11(out_ub_to_input_setup_11),
-    // have a store or retrieve flag? (r/w)
+    
     .store(store),
     .ext(ext), // flag for dispatching data out of chip
     .final_out(wire_out) // bus of output data wires

@@ -17,13 +17,13 @@ module control_unit (
 );
 
   // Instruction definitions
-  localparam [15:0] NO_OP = 16'b000_0000000000000;
-  localparam [15:0] LOAD_ADDR = 16'b001_0000000000000;
-  localparam [15:0] LOAD_WEIGHT = 16'b010_0000000000000;
-  localparam [15:0] LOAD_INPUTS = 16'b011_0000000000000;
-  localparam [15:0] COMPUTE = 16'b100_0000000000000;
-  localparam [15:0] STORE = 16'b101_0000000000000;
-  localparam [15:0] EXT = 16'b111_0000000000000;
+  localparam [7:0] NO_OP = 16'b000_00000;
+  localparam [7:0] LOAD_ADDR = 16'b001_00000;
+  localparam [7:0] LOAD_WEIGHT = 16'b010_00000;
+  localparam [7:0] LOAD_INPUTS = 16'b011_00000;
+  localparam [7:0] COMPUTE = 16'b100_00000;
+  localparam [7:0] STORE = 16'b101_00000;
+  localparam [7:0] EXT = 16'b111_000000;
 
   // FSM states for interal instruction dispatch
   typedef enum reg [1:0] {IDLE, FETCH, EXECUTE, FINISH} state_t;
@@ -35,13 +35,13 @@ module control_unit (
   reg [3:0] memory_pointer; 
   
   // Instruction memory
-  reg [15:0] instruction_mem [0:9]; // Adjust the size as needed.
-  reg [15:0] instruction;           // Instruction register
+  reg [7:0] instruction_mem [0:9]; // Adjust the size as needed.
+  reg [7:0] instruction;           // Instruction register
 
   integer instruction_pointer;
   integer compute_cycle_counter;    // Counter for compute cycles
 
-  always @(posedge clk or posedge reset) begin // TODO: CHANGE THIS FSM SO I CAN LOAD IN 8 BITs.
+  always @(posedge clk or posedge reset) begin 
       if (reset) begin
         state_rfm <= RFM_IDLE; 
         memory_pointer <= 0; 
@@ -54,7 +54,7 @@ module control_unit (
               end
             end
           READ_FROM_HOST: begin
-              if (memory_pointer < 4) begin // could be delay issues from jumping immediateely to this state. may need to manually add another delay to fix the timing? 
+              if (memory_pointer < 10) begin // could be delay issues from jumping immediateely to this state. may need to manually add another delay to fix the timing? 
                 instruction_mem[memory_pointer] <= ui_in; // memory pointer will always start from the first address
                 memory_pointer <= memory_pointer + 1; 
               end else begin
@@ -80,8 +80,8 @@ module control_unit (
           ext = 0;
           store = 0; 
         // Dispatch
-        case (instruction[15:13])
-          3'b001: base_address = instruction[12:0]; // LOAD_ADDR
+        case (instruction[7:5])
+          3'b001: base_address = instruction[4:0]; // LOAD_ADDR
           3'b010: load_weight = 1;                   // LOAD_WEIGHT
           3'b011: load_input = 1;                    // LOAD_INPUTS
           3'b100: valid = 1;                         // VALID (COMPUTE)
