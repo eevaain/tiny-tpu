@@ -8,23 +8,22 @@ module weight_memory (
   input wire clk,
   input wire reset,
   input wire load_weight, 
-  input wire [12:0] addr,
+  input wire [4:0] addr, // 5 bit address but only need 3 of those bits to address 8 cells. 
   output reg [7:0] weight1,
   output reg [7:0] weight2,
   output reg [7:0] weight3,
   output reg [7:0] weight4
 );
-  reg [7:0] memory [0:15]; // Simple memory to store weights
-  integer i;
-
+  reg [7:0] memory [0:7]; // Simple memory to store weights (only 8 addresses)
   reg [3:0] memory_pointer; 
+  integer i;
 
   typedef enum reg [1:0] {IDLE, READ_FROM_HOST} state_t; 
   state_t state = IDLE;
  
   always @(posedge clk or posedge reset) begin
     if (reset) begin
-      for (i = 0; i < 16; i++) begin
+      for (i = 0; i < 8; i++) begin
         memory[i] <= 8'b0;
       end
       weight1 <= 8'b0;
@@ -32,7 +31,7 @@ module weight_memory (
       weight3 <= 8'b0;
       weight4 <= 8'b0;
 
-      memory_pointer <= 0; 
+      memory_pointer <= 3'b0; 
       state <= IDLE; 
 
     end else if (load_weight) begin // WRITE DATA

@@ -19,7 +19,7 @@ module tpu (
   wire [7:0] a_in2;
 
   // Internal signals for control unit
-  wire [12:0] base_address;
+  wire [4:0] base_address;
 
   wire load_weight;
   wire load_input;
@@ -158,7 +158,7 @@ module tpu (
     .out_ub_01(out_ub_to_input_setup_01),
     .out_ub_10(out_ub_to_input_setup_10),
     .out_ub_11(out_ub_to_input_setup_11),
-    
+
     .store(store),
     .ext(ext), // flag for dispatching data out of chip
     .final_out(wire_out) // bus of output data wires

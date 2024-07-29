@@ -24,6 +24,8 @@ module tt_um_tpu (
     reg fetch_ins; 
     reg start; 
 
+    // TODO: make another always block to decode address from uio_in? (concurrent task from below)
+
     always @(posedge clk or posedge reset) begin // might be smarter to change this block to be combinational. 
         if (reset) begin
             fetch_w <= 0; 

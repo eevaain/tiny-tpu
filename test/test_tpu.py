@@ -78,7 +78,6 @@ async def initialize_unified_mem(dut):
     await RisingEdge(dut.clk)  # Wait for the next clock rising edge to synchronize the write
 
 
-
 @cocotb.test()
 async def test_tpu(dut):
     cocotb.start_soon(Clock(dut.clk, 10, units="us").start()) # Start the clock
@@ -89,9 +88,9 @@ async def test_tpu(dut):
     dut.reset.value = 0
     await ClockCycles(dut.clk, 1)
 
-    await initialize_instruction_mem(dut)  # Initialize instructions
     await initialize_unified_mem(dut) # Initialize inputs
     await inititialize_weight_memory(dut) # Initialize weights
+    await initialize_instruction_mem(dut)  # Initialize instructions
 
     # print("Weights within first four addresses: ")
     # print(int(dut.wm.memory[0].value))

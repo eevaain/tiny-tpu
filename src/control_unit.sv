@@ -8,7 +8,7 @@ module control_unit (
   input wire clk,
   input wire reset,
   input wire start,          
-  output reg [12:0] base_address,
+  output reg [4:0] base_address,
   output reg load_input,
   output reg load_weight,
   output reg valid,
@@ -41,10 +41,10 @@ module control_unit (
   integer instruction_pointer;
   integer compute_cycle_counter;    // Counter for compute cycles
 
-  always @(posedge clk or posedge reset) begin 
-      if (reset) begin
+  always @(posedge clk or posedge reset) begin  // TODO: combine this FSM into the one below? add read from host state into enum below? 
+      if (reset) begin                          // .... or not because maybe its better to have this as a seperate, parallel process 
         state_rfm <= RFM_IDLE; 
-        memory_pointer <= 0; 
+        memory_pointer <= 0;
       end else begin
       case (state_rfm)
           RFM_IDLE: begin
@@ -54,7 +54,7 @@ module control_unit (
               end
             end
           READ_FROM_HOST: begin
-              if (memory_pointer < 10) begin // could be delay issues from jumping immediateely to this state. may need to manually add another delay to fix the timing? 
+              if (memory_pointer < 10) begin
                 instruction_mem[memory_pointer] <= ui_in; // memory pointer will always start from the first address
                 memory_pointer <= memory_pointer + 1; 
               end else begin
@@ -134,5 +134,9 @@ module control_unit (
       endcase
     end
   end
+
+
+
+
   
 endmodule

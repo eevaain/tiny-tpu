@@ -6,14 +6,13 @@ module unified_buffer (
   input wire [7:0] ui_in, 
     // TODO: Implement logic to load data into unified_mem using these two inputs above. 
 
-
   input wire clk,
   input wire reset,
 
   input wire full_acc1, // full flag from accumulator 1
   input wire full_acc2, // full flag from accumulator 2
 
-  input wire [12:0] addr, // address to input to
+  input wire [4:0] addr, // address to input to
   input wire load_input, // flag for loading input from own memory to input_setup buffer
 
   input wire store, // flag for storing data from accumulators to unified buffer
@@ -33,19 +32,24 @@ module unified_buffer (
   output reg [7:0] final_out
 );
 
-  // turn this all into an FSM for reading from memory, acc_to_ub, and ub to output pins
-  parameter MEM_SIZE = 32;
+  // TODO: WORK IN PROGRESS
+  typedef enum reg [1:0] {RFM_IDLE, READ_FROM_HOST} state_j; 
+  state_j state_rfm = RFM_IDLE;
+  reg [4:0] memory_pointer; // Addressable up to 32 bits
+  // TODO: WORK
 
-  reg [7:0] unified_mem [0:MEM_SIZE-1];
-  reg [1:0] incrementor; 
-  integer i;
+
 
   typedef enum reg [1:0] {IDLE, WRITE_TO_HOST} state_t; // this is for taking product matrix out of chip
   state_t state = IDLE;
 
+  parameter MEM_SIZE = 32; // TODO: change to 16
+  reg [7:0] unified_mem [0:MEM_SIZE-1];
+  integer i;
 
-  reg [12:0] addr_pointer; 
-  reg [12:0] end_addr; 
+
+  reg [4:0] addr_pointer; 
+  reg [4:0] end_addr; 
 
   always @(posedge clk or posedge reset) begin
     if (reset) begin
@@ -56,10 +60,9 @@ module unified_buffer (
       out_ub_01 <= 8'b0;
       out_ub_10 <= 8'b0;
       out_ub_11 <= 8'b0;
-      incrementor <= 2'b0;
       final_out <= 8'b0;
-      end_addr <= 13'b0; 
-      addr_pointer <= 13'b0;
+      end_addr <= 5'b0; 
+      addr_pointer <= 5'b0;
     end else begin
       /* READ FROM MEMORY */  
       if (load_input) begin
@@ -80,13 +83,13 @@ module unified_buffer (
         case (state)
           IDLE: begin
             final_out <= 8'b0; 
-            end_addr <= 13'b0; 
-            addr_pointer <= 13'b0;
+            end_addr <= 5'b0; 
+            addr_pointer <= 5'b0;
             if (ext) begin
               state <= WRITE_TO_HOST;
               addr_pointer <= addr; 
               end_addr <= addr + 4; 
-            end
+            end // TODO: else case for fetch_inp!!!! add this!!!
           end
           WRITE_TO_HOST: begin
             if (addr_pointer < end_addr) begin
