@@ -187,7 +187,7 @@ The diagram above illustrates the internal structure of a PE, showing the flow o
 
 ## Motivation
 
-I recently took on an interesting challenge – reverse-engineering Google's Tensor Processing Unit (TPU) design. Since the real TPU architecture is closed-source, I had to work from the [https://arxiv.org/pdf/1704.04760) to build a minimal version with a weight-stationary systolic array.
+I recently took on an interesting challenge – reverse-engineering Google's Tensor Processing Unit (TPU) design. Since the real TPU architecture is closed-source, I had to work from the [original paper](https://arxiv.org/pdf/1704.04760) to build a minimal version with a weight-stationary systolic array.
 
 This project was motivated by my belief that it's important for newcomers to explore different AI acceleration approaches beyond just GPUs. Many people want to understand how parallel processing actually works at the hardware level, not just in software.
 
