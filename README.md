@@ -54,7 +54,7 @@ The data flow in this architecture typically follows this pattern:
 
 ## Instructions
 
-This ISA defines the operations for a minimal TPU with a weight-stationary systolic array architecture. Below are the instructions, their purposes, and example usages.
+This ISA defines the operations for a minimal TPU with a weight-stationary [systolic array](https://en.wikipedia.org/wiki/Systolic_array) architecture. Below are the instructions, their purposes, and example usages.
 
 ### LOAD_ADDR
 
