@@ -14,8 +14,7 @@ module tt_um_tpu (
     input  wire       clk,      // clock
     input  wire       reset     // rst_n - low to reset --> // TODO: rename back to rst_n!
 );
-    reg [7:0] uio_oe_reg; 
-    assign uio_oe_reg = uio_oe_reg; // TODO: fix this. 
+    assign uio_oe  = 8'b0000_0000;
 
     // wire reset = ~rst_n
 
@@ -32,7 +31,7 @@ module tt_um_tpu (
             fetch_inp <= 0;
             fetch_ins <= 0;
             start <= 0;
-            uio_oe_reg <= 8'b0000_0000; // Set birectional pins as hardcoded inputs
+            // uio_oe_reg <= 8'b0000_0000; // Set birectional pins as hardcoded inputs
         end else begin
             fetch_w <= 0; 
             fetch_inp <= 0;
@@ -61,18 +60,18 @@ module tt_um_tpu (
         end
     end
 
-    // tpu tpu (
-    // // INPUTS
-    // .clk(clk),
-    // .reset(reset),
-    // .ui_in(ui_in), 
-    //  // Data select flags
-    // .start(start),  // flag to start the program
-    // .fetch_w(fetch_w), // flag to fetch weights from host
-    // .fetch_inp(fetch_inp), // flag to fetch inputs from host
-    // .fetch_ins(fetch_ins), // flag to fetch instructions from host
-    //  // OUTPUTS
-    // .wire_out(uo_out) 
-    // ); 
+    tpu tpu (
+    // INPUTS
+    .clk(clk),
+    .reset(reset),
+    .ui_in(ui_in), 
+     // Data select flags
+    .start(start),  // flag to start the program
+    .fetch_w(fetch_w), // flag to fetch weights from host
+    .fetch_inp(fetch_inp), // flag to fetch inputs from host
+    .fetch_ins(fetch_ins), // flag to fetch instructions from host
+     // OUTPUTS
+    .wire_out(uo_out) 
+    ); 
 
 endmodule

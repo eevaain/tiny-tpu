@@ -66,7 +66,7 @@ module control_unit (
     end
     // Instruction decoding and control signal generation block
   always @(*) begin
-      if (reset) begin
+      if (reset) begin // TODO: this creates a latch error i think. need to do the (!reset) method (look at the tt priv repo)
         base_address = 0;
         load_weight = 0;
         load_input = 0;
