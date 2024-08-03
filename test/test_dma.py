@@ -5,7 +5,7 @@ from cocotb.triggers import RisingEdge, ClockCycles
 
 # i think i want to make it so that it only fetches when a flag is high
 @cocotb.test() 
-async def test_tt_um_tpu(dut):
+async def test_dma(dut):
     cocotb.start_soon(Clock(dut.clk, 10, units="us").start())
     
     dut.reset.value = 1
@@ -17,19 +17,19 @@ async def test_tt_um_tpu(dut):
     dut.reset.value = 0
     await ClockCycles(dut.clk, 1)
 
-    dut.uio_in.value = 0b00100000 # fetch weight
+    dut.uio_in.value = 0b00100111 # fetch weight "i am holding this down!"
     await ClockCycles(dut.clk, 1)
 
-    dut.uio_in.value = 0b00100000 # fetch weight "i am holding this down!"
+    dut.uio_in.value = 0b00100111 # fetch weight "i am holding this down!"
     await ClockCycles(dut.clk, 1)
 
-    dut.uio_in.value = 0b00100000 # fetch weight "i am holding this down!"
+    dut.uio_in.value = 0b00100111 # fetch weight "i am holding this down!"
     await ClockCycles(dut.clk, 1)
 
-    dut.uio_in.value = 0b01000000 # fetch inputs
+    dut.uio_in.value = 0b01000011 # fetch inputs
     await ClockCycles(dut.clk, 1)
 
-    dut.uio_in.value = 0b01100000 # fetch instructions
+    dut.uio_in.value = 0b01100001 # fetch instructions
     await ClockCycles(dut.clk, 1)
 
     dut.uio_in.value = 0b10000000 # start (only needs to be high once and then tpu should just run on its own)

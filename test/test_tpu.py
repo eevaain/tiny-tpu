@@ -6,12 +6,12 @@ from cocotb.triggers import RisingEdge, ClockCycles
 async def initialize_instruction_mem(dut):
     # Define the instructions in an array
     instructions = [
-        0b001_01111,  # LOAD_ADDR (16th address)
+        0b001_00011,  # LOAD_ADDR (4th address)
         0b011_00000,  # LOAD_INPUT (take input from unified buffer and transfer to input setup)
         0b001_00000,  # LOAD_ADDR (1st address)
         0b010_00000,  # LOAD_WEIGHT (Weights are transferred from weight memory into mmu)
         0b100_00000,  # COMPUTE (Compute starts, systolic operations are automated by here)
-        0b001_00111,  # LOAD_ADDR (load result in 8th address)
+        0b001_01000,  # LOAD_ADDR (load result in 9th address)
         0b101_00000,  # STORE (result is stored in address above within unified buffer)
         0b001_01001,  # LOAD_ADDR (10th address: which means only last two product matrix elements will be outputted)
         0b111_00000,  # EXT (output data off-chip, starting from the address specified above)
@@ -53,7 +53,7 @@ async def inititialize_weight_memory(dut):
     # Load the weights into the weight memory
     for weight in weights:
         dut.ui_in.value = weight
-        dut.fetch_w.value = 1
+        dut.fetch_w.value = 1 # weight continues to be asserted
         await ClockCycles(dut.clk, 1)
 
     # Stop fetching weights
@@ -64,7 +64,7 @@ async def inititialize_weight_memory(dut):
 
 async def initialize_unified_mem(dut):
     # Hardcoded dummy values row-wise starting at binary address 0b10000 (16 in decimal)
-    address = 0b01111 # TODO: create external addressing which is sent directly from host computer
+    address = 0b00011 # TODO: create external addressing which is sent directly from host computer
                     # which communicates with the tpu. is this considered as a DMA controller???
                     # therefore i will have 2 types of instructions:
                     # 1. instructions which directly react to host computer
@@ -119,7 +119,7 @@ async def test_tpu(dut):
         dut._log.info(f"-----------------------------")
 
     # Print all 64 values of the unified memory from unified_buffer after the loop
-    for i in range(32):
+    for i in range(16):
         unified_mem_val = int(dut.ub.unified_mem[i].value)
         dut._log.info(f"unified_mem[{i}] = {unified_mem_val}")
     

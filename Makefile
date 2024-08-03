@@ -17,7 +17,7 @@ all: test_tpu
 test_tpu:
 	rm -rf sim_build/
 	mkdir sim_build/
-	iverilog -o sim_build/sim.vvp -s tpu -s dump -g2012 src/tpu.sv test/dump_tpu.sv src/accumulator.sv src/control_unit.sv src/input_setup.sv src/mmu.sv src/processing_element.sv src/unified_buffer.sv src/weight_memory.sv
+	iverilog -o sim_build/sim.vvp -s tpu -s dump -g2012 src/tpu.sv test/dump_tpu.sv src/accumulator.sv src/control_unit.sv src/input_setup.sv src/mmu.sv src/processing_element.sv src/unified_buffer.sv src/weight_memory.sv src/dma.sv
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_tpu vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 
@@ -42,11 +42,11 @@ test_is:
 	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_is vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 
-test_tt_um_tpu:
+test_dma:
 	rm -rf sim_build/
 	mkdir sim_build/
-	iverilog -o sim_build/sim.vvp -s tt_um_tpu -s dump -g2012 src/tt_um_tpu.sv test/dump_tt_um_tpu.sv
-	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_tt_um_tpu vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
+	iverilog -o sim_build/sim.vvp -s dma -s dump -g2012 src/dma.sv test/dump_dma.sv
+	PYTHONOPTIMIZE=${NOASSERT} MODULE=test.test_dma vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 	
 # will need to make another make command for testing my entire chip (command should be just like the tpu command but add the tt_um_tpu src files)

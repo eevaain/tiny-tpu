@@ -39,11 +39,10 @@ module unified_buffer (
   // TODO: WORK
 
 
-
   typedef enum reg [1:0] {IDLE, WRITE_TO_HOST} state_t; // this is for taking product matrix out of chip
   state_t state = IDLE;
 
-  parameter MEM_SIZE = 32; // TODO: change to 16
+  parameter MEM_SIZE = 16; // TODO: change to 16
   reg [7:0] unified_mem [0:MEM_SIZE-1];
   integer i;
 

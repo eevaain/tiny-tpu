@@ -5,22 +5,27 @@ module tpu (
   // INPUTS
   input wire clk,
   input wire reset,
-  input wire [7:0] ui_in, 
-  // Data select flags
-  input wire start,  
-  input wire fetch_w, 
-  input wire fetch_inp, 
-  input wire fetch_ins, 
+  input wire [7:0] ui_in,  
+  input wire [7:0] uio_in, 
    // OUTPUTS 
-  output wire [7:0] wire_out
+  output wire [7:0] uo_out // this is uo_out (should rename to uo_out)
 );
 
+  // TODO: perhaps create an assign statement to COMBINE both ui_in and uio_in so i can have a 16 bit bus??? 
+
+  // Internal signals which connect dma controller flags to memory devices (data select flags)
+  wire start; 
+  wire fetch_w;
+  wire fetch_inp; 
+  wire fetch_ins; 
+  wire dma_address; // TODO: connect this to each memory device?? perhaps merge this with base address wire? 
+
+  // "zero-buffered" staggered "x" value matrix data transfer from input setup into mmu
   wire [7:0] a_in1;
   wire [7:0] a_in2;
 
   // Internal signals for control unit
-  wire [4:0] base_address;
-
+  wire [4:0] base_address; // this is the address decoded from the ISA (ran from program mem)
   wire load_weight;
   wire load_input;
   wire valid;
@@ -51,6 +56,21 @@ module tpu (
   wire [7:0] out_ub_to_input_setup_01;
   wire [7:0] out_ub_to_input_setup_10;
   wire [7:0] out_ub_to_input_setup_11;
+
+  // Instantiate direct memory controller 
+  dma dma ( 
+    // INPUTS
+    .clk(clk),
+    .reset(reset),
+    .uio_in(uio_in),
+    // OUTPUTS
+    .fetch_w(fetch_w),
+    .fetch_inp(fetch_inp),
+    .fetch_ins(fetch_ins),
+    .start(start), 
+    .dma_address(dma_address)
+  );
+
 
   // Instantiate the control unit
   control_unit cu (
@@ -161,7 +181,7 @@ module tpu (
 
     .store(store),
     .ext(ext), // flag for dispatching data out of chip
-    .final_out(wire_out) // bus of output data wires
+    .final_out(uo_out) // bus of output data wires
   );
 
 endmodule
