@@ -36,13 +36,13 @@ module unified_buffer (
   typedef enum reg [1:0] {RFM_IDLE, READ_FROM_HOST} state_j; 
   state_j state_rfm = RFM_IDLE;
   reg [4:0] memory_pointer; // Addressable up to 32 bits
-  // TODO: WORK
+  // WORK IN PROGRESS
 
 
   typedef enum reg [1:0] {IDLE, WRITE_TO_HOST} state_t; // this is for taking product matrix out of chip
   state_t state = IDLE;
 
-  parameter MEM_SIZE = 16; // TODO: change to 16
+  parameter MEM_SIZE = 16;
   reg [7:0] unified_mem [0:MEM_SIZE-1];
   integer i;
 

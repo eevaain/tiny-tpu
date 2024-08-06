@@ -6,61 +6,35 @@ module dma (
     input clk, 
     input reset, 
     input wire [7:0] uio_in, 
-    // OUPUTS
-    output reg fetch_w,
-    output reg fetch_inp,
-    output reg fetch_ins,
-    output reg start,
-    output reg [3:0] dma_address
+    input wire [7:0] ui_in, // TODO: delete this later
+    // OUTPUTS
+    output wire fetch_w,
+    output wire fetch_inp,
+    output wire fetch_ins,
+    output wire start,
+    output wire [3:0] dma_address
 );
 
-    always @(*) begin // might be smarter to change this block to be combinational. 
-        if (reset) begin
-            fetch_w = 0; 
-            fetch_inp = 0;
-            fetch_ins = 0;
-            start = 0;
-            dma_address = 0;
-        end else begin
-            fetch_w = 0; 
-            fetch_inp = 0;
-            fetch_ins = 0;
-            start = 0;
-            dma_address = 0; 
-            // IMPORTANT ^^^ these are necessary to deassert flag if not "held." by host computer
+    // Internal register
+    reg [7:0] test_storage [0:4];
+    integer i;
 
-            case (uio_in[7:5])
-                3'b000: begin 
-                    fetch_w = 0; 
-                    fetch_inp = 0;
-                    fetch_ins = 0;
-                    start = 0;
-                    dma_address = 0;
-                end
-                3'b001: begin 
-                    fetch_w = 1; 
-                    dma_address = uio_in[3:0];
-                end
-                3'b010: begin
-                    fetch_inp = 1;
-                    dma_address = uio_in[3:0];
-                end
-                3'b011: begin
-                    fetch_ins = 1; 
-                    dma_address = uio_in[3:0];
-                end
-                3'b100: begin
-                    start = 1; 
-                    dma_address = 0; 
-                end
-                default: begin 
-                    fetch_w = 0; 
-                    fetch_inp = 0;
-                    fetch_ins = 0;
-                    start = 0;
-                    dma_address = 0;
-                end
-            endcase
+    // Combinational logic for outputs
+    assign fetch_w = uio_in[7:5] == 3'b001 ? 1 : 0;
+    assign fetch_inp = uio_in[7:5] == 3'b010 ? 1 : 0;
+    assign fetch_ins = uio_in[7:5] == 3'b011 ? 1 : 0;  
+    assign start = uio_in[7:5] == 3'b100 ? 1 : 0;   
+    assign dma_address = uio_in[3:0];
+
+
+    // TODO: delete this later?
+    always @(posedge clk) begin
+        if (reset) begin
+            for (i = 0; i < 5; i = i + 1) begin
+                test_storage[i] <= 8'b0;
+            end
+        end else if (fetch_w) begin
+            test_storage[dma_address] <= ui_in;
         end
     end
 

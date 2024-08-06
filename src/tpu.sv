@@ -5,22 +5,20 @@ module tpu (
   // INPUTS
   input wire clk,
   input wire reset,
-  input wire [7:0] ui_in,  
+  input wire [7:0] ui_in,   // TODO: perhaps create an assign statement to COMBINE both ui_in and uio_in so i can have a 16 bit bus??? 
   input wire [7:0] uio_in, 
    // OUTPUTS 
   output wire [7:0] uo_out // this is uo_out (should rename to uo_out)
 );
-
-  // TODO: perhaps create an assign statement to COMBINE both ui_in and uio_in so i can have a 16 bit bus??? 
 
   // Internal signals which connect dma controller flags to memory devices (data select flags)
   wire start; 
   wire fetch_w;
   wire fetch_inp; 
   wire fetch_ins; 
-  wire dma_address; // TODO: connect this to each memory device?? perhaps merge this with base address wire? 
+  wire [3:0] dma_address; // TODO: connect this to each memory device?? perhaps merge this with base address wire? 
 
-  // "zero-buffered" staggered "x" value matrix data transfer from input setup into mmu
+  // "Zero-buffered" staggered "x" value matrix data transfer from input setup into mmu
   wire [7:0] a_in1;
   wire [7:0] a_in2;
 
@@ -36,6 +34,7 @@ module tpu (
   wire [7:0] systolic_acc_out1;
   wire [7:0] systolic_acc_out2;
 
+  // Flags from each accumulator which go high when they're full 
   wire acc1_full;
   wire acc2_full;
 
@@ -59,6 +58,7 @@ module tpu (
 
   // Instantiate direct memory controller 
   dma dma ( 
+    .ui_in(ui_in), // TODO:  delete this after -> keep it here for testing 
     // INPUTS
     .clk(clk),
     .reset(reset),
@@ -70,7 +70,6 @@ module tpu (
     .start(start), 
     .dma_address(dma_address)
   );
-
 
   // Instantiate the control unit
   control_unit cu (
@@ -92,7 +91,6 @@ module tpu (
   weight_memory wm (
     .fetch_w(fetch_w),
     .ui_in(ui_in),
-
 
     .clk(clk),
     .reset(reset),
@@ -158,11 +156,11 @@ module tpu (
 
   // Instantiate the unified buffer
   unified_buffer ub (
-      .fetch_inp(fetch_inp),
-      .ui_in(ui_in), 
-
-
-    // inputs 
+    // INPUTS
+    .ext(ext), // flag for dispatching data out of chip
+    .store(store),
+    .fetch_inp(fetch_inp),
+    .ui_in(ui_in), 
     .clk(clk),
     .reset(reset),
     .load_input(load_input),
@@ -173,14 +171,11 @@ module tpu (
     .acc2_mem_0(acc2_mem_0_to_ub),
     .acc2_mem_1(acc2_mem_1_to_ub),
     .addr(base_address),
-    // outputs
+    // OUTPUTS
     .out_ub_00(out_ub_to_input_setup_00),
     .out_ub_01(out_ub_to_input_setup_01),
     .out_ub_10(out_ub_to_input_setup_10),
     .out_ub_11(out_ub_to_input_setup_11),
-
-    .store(store),
-    .ext(ext), // flag for dispatching data out of chip
     .final_out(uo_out) // bus of output data wires
   );
 

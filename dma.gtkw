@@ -1,0 +1,58 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Tue Aug  6 22:14:24 2024
+[*]
+[dumpfile] "/Users/evanlin/Desktop/tiny-tpu/dma.vcd"
+[dumpfile_mtime] "Tue Aug  6 22:14:02 2024"
+[dumpfile_size] 1477
+[savefile] "/Users/evanlin/Desktop/tiny-tpu/dma.gtkw"
+[timestart] 45510
+[size] 1000 600
+[pos] -1 -1
+*-14.000000 80320 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 193
+[signals_width] 251
+[sst_expanded] 1
+[sst_vpaned_height] 168
+@28
+dma.clk
+dma.reset
+@22
+dma.ui_in[7:0]
+@c00028
+dma.uio_in[7:0]
+@28
+(0)dma.uio_in[7:0]
+(1)dma.uio_in[7:0]
+(2)dma.uio_in[7:0]
+(3)dma.uio_in[7:0]
+(4)dma.uio_in[7:0]
+(5)dma.uio_in[7:0]
+(6)dma.uio_in[7:0]
+(7)dma.uio_in[7:0]
+@1401200
+-group_end
+@c00028
+dma.dma_address[3:0]
+@28
+(0)dma.dma_address[3:0]
+(1)dma.dma_address[3:0]
+(2)dma.dma_address[3:0]
+(3)dma.dma_address[3:0]
+@1401200
+-group_end
+@28
+dma.fetch_w
+dma.fetch_inp
+dma.fetch_inp
+dma.fetch_ins
+dma.start
+@22
+dma.\test_storage[0][7:0]
+dma.\test_storage[1][7:0]
+dma.\test_storage[2][7:0]
+dma.\test_storage[3][7:0]
+dma.\test_storage[4][7:0]
+dma.\test_storage[5][7:0]
+[pattern_trace] 1
+[pattern_trace] 0
